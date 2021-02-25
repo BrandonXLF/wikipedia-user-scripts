@@ -5,6 +5,7 @@ API = 'https://en.wikipedia.org/w/api.php'
 USERNAME = 'BrandonXLF'
 USER = os.environ['ENWIKI_USER']
 PASS = os.environ['ENWIKI_PASS']
+SUMMARY = os.environ['GIT_MSG']
 
 s = requests.Session()
 
@@ -40,7 +41,7 @@ def edit_file(file, text):
 		'title': 'User:' + USERNAME + '/' + file,
 		'token': csrf,
 		'text': text,
-		'summary': 'test'
+		'summary': SUMMARY
 	})
 
 for subdir, dirs, files in os.walk(os.getcwd()):

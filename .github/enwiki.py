@@ -34,17 +34,17 @@ r = s.get(API, params={
 
 csrf = r.json()['query']['tokens']['csrftoken']
 
-for subdir, dirs, files in os.walk(os.getcwd()):
-    for file in files:
-        filepath = subdir + os.sep + file
-        if file.endswith('.js') or file.endswith('.css'):
-            print(file)
-
 def edit_file(file, text):
-    s.post(API, data={
-        'action': 'edit',
-        'title': 'User:' + USERNAME + '/' + file,
-        'token': csrf,
-        'text': text,
-        'summary': 'test'
-    })
+	s.post(API, data={
+		'action': 'edit',
+		'title': 'User:' + USERNAME + '/' + file,
+		'token': csrf,
+		'text': text,
+		'summary': 'test'
+	})
+
+for subdir, dirs, files in os.walk(os.getcwd()):
+	for file in files:
+		if file.endswith('.js') or file.endswith('.css'):
+			with open(subdir + os.sep + file) as f:
+				edit_file(file, f.read())

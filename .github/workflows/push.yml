@@ -28,4 +28,4 @@ jobs:
           ENWIKI_USER: ${{ secrets.USER }}
           ENWIKI_PASS: ${{ secrets.PASS }}
           GIT_MSG: ${{ github.event.head_commit.message }}
-        run: python .github/enwiki.py
+        run: python .github/push.py

@@ -1,0 +1,20 @@
+body:not(.nocsmarker) cite.cs1::after {
+	content: ' CS1';
+	color: #BB44BB;
+	font-weight: bold;
+}
+body:not(.nocsmarker) cite.cs2::after {
+	content: ' CS2';
+	color: #BB4400;
+	font-weight: bold;
+}
+body:not(.nocsmarker) .csvan::after {
+	content: ' CSVAN';
+	color: #BB0066;
+	font-weight: bold;
+}
+body:not(.nocsmarker) .cslsa::after {
+	content: ' CSLSA';
+	color: #884488;
+	font-weight: bold;
+}

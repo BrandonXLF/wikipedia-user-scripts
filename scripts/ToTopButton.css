@@ -1,0 +1,37 @@
+/*** To Top Button ***/
+
+/* Adds a floating "go to top" button on the bottom-right of the screen */
+/* Documentation at [[User:BrandonXLF/TopButton]] */
+/* By [[User:BrandonXLF]] */
+
+.topButtonCircle {
+	height: 3em;
+	width: 3em;
+	border-radius: 100%;
+	box-shadow: 0.05em 0.2em 0.35em 0.05em #b8babd;
+	background: #2273f7;
+	position: fixed;
+	right: 1em;
+	bottom: 1em;
+	display: none;
+	z-index: 999999;
+	cursor: pointer;
+}
+
+.topButtonCircle:hover {
+	background: #1369f4;
+}
+
+.topButtonCircle > div {
+	border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 12.5px solid #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.backtotop {
+	display: none;
+}

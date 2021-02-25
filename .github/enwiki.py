@@ -44,7 +44,7 @@ def edit_file(file, text):
 		'summary': SUMMARY
 	})
 
-for subdir, dirs, files in os.walk(os.getcwd()):
+for subdir, dirs, files in os.walk(os.getcwd() + '/scripts'):
 	for file in files:
 		if file.endswith('.js') or file.endswith('.css'):
 			with open(subdir + os.sep + file) as f:

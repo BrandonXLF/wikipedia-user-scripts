@@ -1,0 +1,9 @@
+/*** Green Redirects ***/
+
+/* Makes redirects green */
+/* Documentation at [[User:BrandonXLF/GreenRedirects]] */
+/* By [[User:BrandonXLF]] */
+
+a.mw-redirect { 
+	color:#006600 !important; /* Make redirects green */
+}

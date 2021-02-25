@@ -27,4 +27,4 @@ jobs:
         env:
           ENWIKI_USER: ${{secrets.USER}}
           ENWIKI_PASS: ${{secrets.PASS}}
-        run: python enwiki.py
+        run: python .github/enwiki.py

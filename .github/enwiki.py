@@ -3,8 +3,8 @@ import os
 
 API = 'https://en.wikipedia.org/w/api.php'
 USERNAME = 'BrandonXLF'
-USER = os.environ['USER']
-PASS = os.environ['PASS']
+USER = os.environ['ENWIKI_USER']
+PASS = os.environ['ENWIKI_PASS']
 
 s = requests.Session()
 

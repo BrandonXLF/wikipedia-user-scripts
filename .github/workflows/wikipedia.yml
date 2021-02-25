@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -25,6 +25,6 @@ jobs:
           
       - name: Push to Wikipedia
         env:
-          ENWIKI_USER: ${{secrets.USER}}
-          ENWIKI_PASS: ${{secrets.PASS}}
+          ENWIKI_USER: ${{ secrets.USER }}
+          ENWIKI_PASS: ${{ secrets.PASS }}
         run: python .github/enwiki.py

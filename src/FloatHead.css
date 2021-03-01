@@ -46,8 +46,8 @@
 }
 
 /* Visual editor toolbar */
-.ve-init-mw-desktopArticleTarget {
-	margin-top: 3em;
+.ve-active .ve-init-mw-desktopArticleTarget {
+	margin-top: 4em;
 }
 
 .ve-init-mw-desktopArticleTarget > .ve-ui-toolbar > .oo-ui-toolbar-bar {

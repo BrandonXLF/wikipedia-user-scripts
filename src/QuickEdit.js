@@ -95,6 +95,22 @@ function showCompare(title, from, to){
     }).then(showPreview());
 }
 
+// Parts taken from EditPage::extractSectionTitle and Parser::stripSectionName
+function getSectionSummary(text) {
+    var match = text.match(/^(=+)(.+)\1\s*(\n|$)/);
+
+    return !match ? '' : '/* ' + match[2].trim()
+        // Strip internal link markup
+        .replace(/\[\[:?([^[|]+)\|([^[]+)\]\]/g, '$2')
+        .replace(/\[\[:?([^[]+)\|?\]\]/g, '$1' )
+        // Strip external link markup
+        .replace(new RegExp('\\[(?:' + mw.config.get('wgUrlProtocols') + ')([^ ]+?) ([^\\[]+)\\]', 'ig'), '$2')
+        // Remove wikitext quotes
+        .replace(/(''|'''|''''')(?!')/g, '')
+        // Strip HTML tags
+        .replace(/<[^>]+?>/g, '') + ' */ ';
+}
+
 function showEditor(title, sectionID, el, heading, progress) {
     getPageInfo(title, sectionID).then(function(r){
         var start = r.start,
@@ -120,7 +136,6 @@ function showEditor(title, sectionID, el, heading, progress) {
                 : level == 2 ? 'h1,h2:has(*),#toc'
                 : 'h1'
             ),
-            isSection = heading.is('h1,h2,h3,h4,h5,h6'),
             textarea = new OO.ui.MultilineTextInputWidget({
                 rows: 1,
                 maxRows: 20,
@@ -128,7 +143,7 @@ function showEditor(title, sectionID, el, heading, progress) {
                 value: part,
             }),
             summary = new OO.ui.TextInputWidget({
-                value: isSection ? '/* ' + heading.find('.mw-headline').text() + ' */ ' : ''
+                value: getSectionSummary(part) 
             }),
             minor = new OO.ui.CheckboxInputWidget(),
             save = new OO.ui.ButtonInputWidget({
@@ -163,7 +178,7 @@ function showEditor(title, sectionID, el, heading, progress) {
         }
 
         partSection.addClass('quickedit-hide');
-        heading.addClass(isSection ? 'quickedit-heading' : 'quickedit-hide');
+        heading.addClass(heading.is('h1,h2,h3,h4,h5,h6') ? 'quickedit-heading' : 'quickedit-hide');
         el.removeClass('quickedit-loading');
         progress.$element.remove();
         textarea.$input.css({

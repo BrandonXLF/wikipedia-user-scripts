@@ -54,7 +54,9 @@ $(function(){
 		return;
 	}
 	function addLinks () {
+		var link;
 		$('.plm-portletitem').remove();
+
 		for (i = 0; i < links.length; i++) {
 			link = links[i];
 			try {
@@ -63,7 +65,9 @@ $(function(){
 				console.error('PortletLinks.js: Unable to add portlet link to #' + link.area + ' for ' + link.url);
 			}
 		}
-		mw.util.addPortletLink('p-navigation',mw.util.getUrl('Special:BlankPage/PortletManager'),'(edit portlet links)').className += ' plm-portletitem';
+		
+		link = mw.util.addPortletLink('p-navigation',mw.util.getUrl('Special:BlankPage/PortletManager'),'(edit portlet links)');
+		if (link) link.className += ' plm-portletitem';
 	}
 	function save () {
 		var el = this;

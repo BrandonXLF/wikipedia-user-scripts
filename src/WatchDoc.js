@@ -5,12 +5,17 @@
 // By [[User:BrandonXLF]]
 
 $(function() {
-	if (mw.config.get('wgNamespaceNumber') !== 10 && mw.config.get('wgNamespaceNumber') !== 11) return;
+	var namespace = mw.config.get('wgNamespaceNumber'),
+		title = mw.config.get('wgPageName'),
+		watchlink = $('#ca-watch a, #ca-unwatch a');
 
-	var clone = $('#ca-watch a, #ca-unwatch a').clone();
+	if (namespace !== 10 && namespace !== 11 || title.includes('/doc')) return;
 
-	mw.loader.using('mediawiki.page.watch.ajax').then(function(require) {
-		require('mediawiki.page.watch.ajax').watchstar(clone, mw.config.get('wgPageName') + '/doc', function() {});
-		clone.click();
+	watchlink.click(function() {
+		mw.loader.using('mediawiki.page.watch.ajax').then(function(require) {
+			var clone = watchlink.clone();
+			require('mediawiki.page.watch.ajax').watchstar(clone, title + '/doc', function() {});
+			clone.click();
+		});
 	});
 });

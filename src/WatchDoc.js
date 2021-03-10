@@ -5,33 +5,12 @@
 // By [[User:BrandonXLF]]
 
 $(function() {
-	if (mw.config.get('wgNamespaceNumber') == 10 || mw.config.get('wgNamespaceNumber') == 11) {
-		$('#ca-watch a, #ca-unwatch a').click(function() {
-			var unwatch = this.parentNode.id == 'ca-unwatch' ? '1' : undefined,
-				title = mw.config.get('wgPageName') + '/doc';
+	if (mw.config.get('wgNamespaceNumber') !== 10 && mw.config.get('wgNamespaceNumber') !== 11) return;
 
-			if (title.includes('/doc/doc')) return;
+	var clone = $('#ca-watch a, #ca-unwatch a').clone();
 
-			$.post(mw.config.get('wgScriptPath') + '/api.php', {
-				action: 'watch',
-				titles: title,
-				unwatch: unwatch,
-				format: 'json',
-				token: mw.user.tokens.get('watchToken')
-			}).done(function(a) {
-				mw.notify($(
-					'<div>"<a href="' +
-					mw.util.getUrl(a.watch[0].title) +
-					'">' + a.watch[0].title +
-					'</a>" and its ' +
-					(mw.config.get('wgNamespaceNumber') == 10 ? 'talk page' : 'associated page') +
-					' have been ' +
-					(unwatch ? 'removed' : 'added') +
-					' to your <a href="' +
-					mw.util.getUrl('special:watchlist') +
-					'">watchlist</a>.</div>'
-				), {tag: 'docpagewatch'});
-			});
-		});
-	}
+	mw.loader.using('mediawiki.page.watch.ajax').then(function(require) {
+		require('mediawiki.page.watch.ajax').watchstar(clone, 'Template:Toronto/doc', function() {});
+		clone.click();
+	});
 });

@@ -13,8 +13,18 @@ $(function() {
 
 	watchlink.click(function() {
 		mw.loader.using('mediawiki.page.watch.ajax').then(function(require) {
-			var clone = watchlink.clone().removeClass('loading');
-			require('mediawiki.page.watch.ajax').watchstar(clone, title + '/doc', function() {});
+			var clone = watchlink.clone().removeClass('loading'),
+				oldNotify = mw.notify;
+
+			mw.notify = function(msg, opts) {
+				opts.tag += '-doc';
+				oldNotify(msg, opts);
+			};
+
+			require('mediawiki.page.watch.ajax').watchstar(clone, title + '/doc', function() {
+				mw.notify = oldNotify;
+			});
+
 			clone.click();
 		});
 	});

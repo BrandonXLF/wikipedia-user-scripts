@@ -4,28 +4,34 @@
 // Documentation at [[User:BrandonXLF/Autoref]]
 // By [[User:BrandonXLF]]
 
-$.when( mw.loader.using('ext.wikiEditor'), mw.loader.getScript('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/Citoid.js&action=raw&ctype=text/javascript'), $.ready).then(function(){
-	$('#wikiEditor-section-main [rel="reference"] > a').unbind().click(function(){
+/* global getCitoidRef */
+
+$.when(mw.loader.using('ext.wikiEditor'), mw.loader.getScript(
+	'https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/Citoid.js&action=raw&ctype=text/javascript'
+), $.ready).then(function() {
+	$('#wikiEditor-section-main [rel="reference"] > a').unbind().click(function() {
 		var pos = {
-			start: $( '#wpTextbox1' ).textSelection( 'getCaretPosition' ),
-			end: $( '#wpTextbox1' ).textSelection( 'getCaretPosition' ) + $( '#wpTextbox1' ).textSelection( 'getSelection' ).length
+			start: $('#wpTextbox1').textSelection('getCaretPosition'),
+			end: $('#wpTextbox1').textSelection('getCaretPosition') + $('#wpTextbox1').textSelection('getSelection').length
 		};
+
 		OO.ui.prompt($('<span>Enter a <abbr title="URL, DOI, ISBN, PMID, PMCID, or QID">source</abbr>:</span>'), {
 			textInput: {
 				placeholder: 'Leave blank for none'
 			}
-		}).done(function(source){
-			$( '#wpTextbox1' ).textSelection( 'setSelection', pos );
-			if (source === null) {
-				return;
-			}
+		}).done(function(source) {
+			$('#wpTextbox1').textSelection('setSelection', pos);
+
+			if (source === null) return;
+
 			if (source === '') {
-				$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', { pre: '<ref>', post: '</ref>' } );
+				$('#wpTextbox1').textSelection('encapsulateSelection', {pre: '<ref>', post: '</ref>'});
 				return;
 			}
-			getCitoidRef(source).then(function(ref){
-				$( '#wpTextbox1' ).textSelection( 'replaceSelection', '<ref>' + ref + '</ref>');
-			},function(err){
+
+			getCitoidRef(source).then(function(ref) {
+				$('#wpTextbox1').textSelection('replaceSelection', '<ref>' + ref + '</ref>');
+			}, function(err) {
 				mw.notify(err, {type: 'error'});
 			});
 		});

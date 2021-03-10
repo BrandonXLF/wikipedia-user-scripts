@@ -1,17 +1,17 @@
-$(function(){
+$(function() {
 	mw.loader.load('//en.wikipedia.org/w/index.php?title=User:BrandonXLF/CitationStyleMarker.css&action=raw&ctype=text/css', 'text/css');
 	if (window.CSMarkerMode != 'always') {
 		var portletItem = mw.util.addPortletLink('p-tb', '#', 'Hide CS marker'),
 			classes = ['cs1', 'cs2', 'csvan', 'calsa'],
-			typeCount = classes.reduce(function(acc, cur){
+			typeCount = classes.reduce(function(acc, cur) {
 				return acc + !!document.getElementsByClassName(cur).length;
 			}, 0);
-			
+
 		if (!portletItem) return;
-		
+
 		var portlet = portletItem.getElementsByTagName('a')[0];
 
-		portlet.addEventListener('click', function(e){
+		portlet.addEventListener('click', function(e) {
 			var enabled = document.body.classList.contains('nocsmarker');
 			e.preventDefault();
 			document.body.classList[enabled ? 'remove' : 'add']('nocsmarker');

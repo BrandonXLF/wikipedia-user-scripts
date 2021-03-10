@@ -8,7 +8,8 @@ $(function() {
 	$('<li>')
 		.html('<a>Back to top</a>')
 		.attr('id', 'footer-places-totop')
-		.on('click', () => $('html, body').animate({scrollTop: 0}))
-		.appendTo('#footer-places')
-	;
+		.on('click', function() {
+			$('html, body').animate({scrollTop: 0});
+		})
+		.appendTo('#footer-places');
 });

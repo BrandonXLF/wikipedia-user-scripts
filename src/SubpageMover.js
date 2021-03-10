@@ -7,32 +7,35 @@
 $(function() {
 	function moveSubpages() {
 		var allowed = false;
-		$.each(mw.config.get('wgUserGroups'), function(i,v) {
+
+		$.each(mw.config.get('wgUserGroups'), function(i, v) {
 			if (v == 'extendedconfirmed') {
 				allowed = true;
-				var from = $('input[name=wpOldTitle]').val();
-		    	var to_ns = mw.config.get('wgFormattedNamespaces')[$('select[name=wpNewTitleNs]').val()].replace(' ','_');
-		    	var to_page = $('input[name=wpNewTitleMain]').val();
-		    	var to = (to_ns === '' ? to_page : to_ns + ':' + to_page); 
-				var reason = $('input[name=wpReason]').val();
-				var talk = $('input[name=wpMovetalk]').prop('checked') ? 'yes' : void 0;
-				var watch = $('input[name=wpWatch]').prop('checked') ? 'watch' : void 0;
-				$.get( mw.config.get('wgScriptPath') + '/api.php', {
+
+				var from = $('input[name=wpOldTitle]').val(),
+					to_ns = mw.config.get('wgFormattedNamespaces')[$('select[name=wpNewTitleNs]').val()].replace(' ', '_'),
+					to_page = $('input[name=wpNewTitleMain]').val(),
+					to = (to_ns === '' ? to_page : to_ns + ':' + to_page),
+					reason = $('input[name=wpReason]').val(),
+					talk = $('input[name=wpMovetalk]').prop('checked') ? 'yes' : void 0,
+					watch = $('input[name=wpWatch]').prop('checked') ? 'watch' : void 0;
+
+				$.get(mw.config.get('wgScriptPath') + '/api.php', {
 					action: 'query',
 					list: 'prefixsearch',
 					pssearch: from + '/',
 					pslimit: '500',
 					format: 'json'
-				})
-				.done(function(apiQuery){
+				}).done(function(apiQuery) {
 					$('#moveSubpages-log').remove();
+
 					var log = $('<span>')
 						.appendTo($('#movepage'))
 						.append('<br /><hr />')
-						.attr('id','moveSubpages-log')
-					;
-					function movePage (from, to, noerror) {
-						$.post( mw.config.get('wgScriptPath') + '/api.php', {
+						.attr('id', 'moveSubpages-log');
+
+					function movePage(from, to, noerror) {
+						$.post(mw.config.get('wgScriptPath') + '/api.php', {
 							action: 'move',
 							from: from,
 							to: to,
@@ -41,45 +44,53 @@ $(function() {
 							watchlist: watch,
 							token: mw.user.tokens.get('csrfToken'),
 							format: 'json'
-						})
-						.done(function(response){
+						}).done(function(response) {
 							if (response.move) {
 								if (response.move['talkmove-errors']) {
-									var talkpage = text.match(':') ? from.replace(':',' talk:') : 'Talk:' + from;
-									log.append($('<p>').text(talkpage + ' could not be moved.').css('color','red'));
+									var talkpage = from.match(':') ? from.replace(':', ' talk:') : 'Talk:' + from;
+									log.append($('<p>').text(talkpage + ' could not be moved.').css('color', 'red'));
 								} else if (response.move.talkfrom) {
-									log.append('<p>Successfully moved ' + response.move.talkfrom + ' to ' + response.move.talkto + '.</p>').css('color','green');
+									log.append(
+										'<p>Successfully moved ' +
+										response.move.talkfrom +
+										' to ' +
+										response.move.talkto +
+										'.</p>'
+									).css('color', 'green');
 								}
 							}
+
 							if (response.error) {
-								log.append($('<p>').text(from + ' could not be moved.').css('color','red'));
-								log.append($('<p>').append('&bull; Reason: ' + response.error.info + '</li>').css('color','red'));
+								log.append($('<p>').text(from + ' could not be moved.').css('color', 'red'));
+								log.append($('<p>').append('&bull; Reason: ' + response.error.info + '</li>').css('color', 'red'));
 							} else {
-								log.append('<p>Successfully moved ' + response.move.from + ' to ' + response.move.to + '.</p>').css('color','green');
+								log.append('<p>Successfully moved ' + response.move.from + ' to ' + response.move.to + '.</p>').css('color', 'green');
 								noerror();
 							}
 						});
 					}
-					movePage(from, to, function(){
-						apiQuery.query.prefixsearch.forEach(function(info){
+
+					movePage(from, to, function() {
+						apiQuery.query.prefixsearch.forEach(function(info) {
 							if (info.title === from) return;
-							movePage(info.title, info.title.replace(from,to));
+							movePage(info.title, info.title.replace(from, to));
 						});
 					});
 				});
-		    }
+			}
 		});
+
 		if (!allowed) {
-		    mw.notify('You must be at least extended confimed.', {title: 'Cannot move page and subpages', type: 'error'});
+			mw.notify('You must be at least extended confimed.', {title: 'Cannot move page and subpages', type: 'error'});
 		}
 	}
-	if (window.location.href.match('Special:MovePage') && ! $("p:contains('This page has no subpages.')")[0] ) {
-		var $subpagesButton = new OO.ui.ButtonWidget({
-			label:'Move page and subpages',
-			flags: ['primary','progressive']
+
+	if (window.location.href.match('Special:MovePage') && ! $('p:contains(\'This page has no subpages.\')')[0]) {
+		new OO.ui.ButtonWidget({
+			label: 'Move page and subpages',
+			flags: ['primary', 'progressive']
 		}).$element
-			.on('click',moveSubpages)
-			.appendTo($('button[name=wpMove]').parent().parent())
-		;
+			.on('click', moveSubpages)
+			.appendTo($('button[name=wpMove]').parent().parent());
 	}
 });

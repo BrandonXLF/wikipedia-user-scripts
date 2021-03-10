@@ -4,7 +4,7 @@
 // Documentation at [[User:BrandonXLF/ShowRevisionID]]
 // By [[User:BrandonXLF]]
 
-$(function(){
+$(function() {
 	if (location.search.includes('action=history') || location.href.includes('Special:Watchlist') || location.href.includes('Special:Contributions')) {
 		var items = document.querySelectorAll('li[data-mw-revid]');
 		for (var i = 0; i < items.length; i++) {

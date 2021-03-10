@@ -1,0 +1,9 @@
+{
+    "devDependencies": {
+        "eslint": "^7.21.0"
+    },
+    "scripts": {
+        "test": "eslint src/*.js",
+        "fix": "eslint src/*.js --fix"
+    }
+}

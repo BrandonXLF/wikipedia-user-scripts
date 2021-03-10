@@ -4,4 +4,4 @@
 // Documentation at [[User:BrandonXLF/FloatHead]]
 // By [[User:BrandonXLF]]
 
-mw.loader.load('//en.wikipedia.org/w/index.php?title=User:BrandonXLF/FloatHead.css&action=raw&ctype=text/css', 'text/css'); // Import stylesheet
+mw.loader.load('//en.wikipedia.org/w/index.php?title=User:BrandonXLF/FloatHead.css&action=raw&ctype=text/css', 'text/css');

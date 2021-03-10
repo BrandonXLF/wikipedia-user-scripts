@@ -16,12 +16,12 @@ mw.hook('wikipage.categories').add(function($cats) {
 		remove = document.createElement('a'),
 		modify = document.createElement('a'),
 		api = new mw.Api();
-	
+
 	function resize() {
 		this.style.width = '0px';
 		this.style.width = this.scrollWidth + 2 + 'px';
 	}
-	
+
 	function transformPage(transform) {
 		status.style.display = 'inline';
 		edit.disabled = true;
@@ -36,7 +36,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 			edit.disabled = false;
 		});
 	}
-	
+
 	function closeEditor() {
 		sort.replaceChild(dsort, edit);
 		actions.replaceChild(remove, save);
@@ -45,20 +45,27 @@ mw.hook('wikipage.categories').add(function($cats) {
 
 	function saveEditor() {
 		if (!edit.value) {
-			return removeSortKey().done(function(){
+			return removeSortKey().done(function() {
 				closeEditor();
 			});
 		}
 
 		return transformPage(function(rev) {
 			var catNS = mw.config.get('wgFormattedNamespaces')[14],
-				catRegex = new RegExp('(\\[\\[[' + catNS.charAt(0).toLowerCase() + catNS.charAt(0).toUpperCase() + ']' + mw.util.escapeRegExp(catNS.substr(1)) + '\\:.*)'),
-				textParts = rev.content.replace(/\n*{{DEFAULTSORT:.*?}}\n*/g,'').split(catRegex),
+				catRegex = new RegExp(
+					'(\\[\\[[' +
+					catNS.charAt(0).toLowerCase() +
+					catNS.charAt(0).toUpperCase() +
+					']' +
+					mw.util.escapeRegExp(catNS.substr(1)) +
+					'\\:.*)'
+				),
+				textParts = rev.content.replace(/\n*{{DEFAULTSORT:.*?}}\n*/g, '').split(catRegex),
 				main = textParts.shift() || '',
 				cats = textParts.join('');
-			
+
 			return {
-				text:  main + (main.endsWith('\n') ? '' : '\n\n') + '{{DEFAULTSORT:' + edit.value.trim() + '}}\n' + cats,
+				text: main + (main.endsWith('\n') ? '' : '\n\n') + '{{DEFAULTSORT:' + edit.value.trim() + '}}\n' + cats,
 				summary: 'Setting DEFAULTSORT key to ' + edit.value + ' using [[User:BrandonXLF/HotDefaultSort|Hot Default Sort]]'
 			};
 		}).done(function() {
@@ -70,7 +77,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 			closeEditor();
 		});
 	}
-	
+
 	function removeSortKey() {
 		return transformPage(function(rev) {
 			return {
@@ -90,7 +97,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 		action: 'query',
 		pageids: mw.config.get('wgArticleId'),
 		prop: 'pageprops'
-	}).then(function(res){
+	}).then(function(res) {
 		var unset = false,
 			pp = res.query.pages[mw.config.get('wgArticleId')].pageprops,
 			key = pp && pp.defaultsort ? pp.defaultsort : (unset = true) && mw.config.get('wgTitle');
@@ -143,20 +150,20 @@ mw.hook('wikipage.categories').add(function($cats) {
 		modify.title = unset ? 'Add' : 'Modify';
 		modify.style.marginLeft = '0.25em';
 		modify.addEventListener('click', function() {
-			sort.replaceChild(edit,dsort);
+			sort.replaceChild(edit, dsort);
 			edit.value = window.hotDefaultSortInitKey ? window.hotDefaultSortInitKey(dsort.innerText, dflt.style.display === 'inline') : dsort.innerText;
 			resize.apply(edit);
-			actions.replaceChild(save,remove);
-			actions.replaceChild(cancel,modify);
+			actions.replaceChild(save, remove);
+			actions.replaceChild(cancel, modify);
 		});
-		
+
 		actions.appendChild(remove);
 		actions.appendChild(modify);
 
 		sort.appendChild(dflt);
 		sort.appendChild(status);
 		sort.appendChild(actions);
-		
+
 		$cats.append(sort);
 	});
 });

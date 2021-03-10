@@ -5,13 +5,13 @@
 // By [[User:BrandonXLF]]
 
 $(function() {
-	mw.util.addPortletLink(   
-	    'p-tb',
-	    location.href.replace(/[?&]useformat=[A-Za-z]/g,'') + (location.href.includes('?') ? '&' : '?') + 'useformat=mobile',
-	    'Mobile view',
-	    'Mobile view',
-	    'See the page in the mobile version of the page',
-	    ''
+	mw.util.addPortletLink(
+		'p-tb',
+		location.href.replace(/[?&]useformat=[A-Za-z]/g, '') + (location.href.includes('?') ? '&' : '?') + 'useformat=mobile',
+		'Mobile view',
+		'Mobile view',
+		'See the page in the mobile version of the page',
+		''
 	);
 });
 

@@ -5,13 +5,15 @@
 // Documentation at [[User:BrandonXLF/TestCode]]
 // By [[User:BrandonXLF]]
 
-$(function(){
-	var config = mw.config.get(['wgAction','wgPageContentModel']);
-	if (config.wgAction != 'edit' || ['css','javascript'].indexOf(config.wgPageContentModel) == -1) return;
+$(function() {
+	var config = mw.config.get(['wgAction', 'wgPageContentModel']);
+	if (config.wgAction != 'edit' || ['css', 'javascript'].indexOf(config.wgPageContentModel) == -1) return;
+
 	var run = new OO.ui.ButtonWidget({
 		label: 'Run'
 	});
-	run.on('click',function(){
+
+	run.on('click', function() {
 		var ele = document.getElementById('testcodeelement');
 		if (ele) ele.parentNode.removeChild(ele);
 		ele = document.createElement(config.wgPageContentModel == 'css' ? 'style' : 'script');
@@ -19,5 +21,6 @@ $(function(){
 		ele.innerHTML = $('#wpTextbox1').textSelection('getContents');
 		document.head.appendChild(ele);
 	});
+
 	$('#wpDiffWidget').after(run.$element);
 });

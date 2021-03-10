@@ -17,7 +17,8 @@ $(function() {
 				oldNotify = mw.notify;
 
 			mw.notify = function(msg, opts) {
-				opts.tag += '-doc';
+				// Both the doc and non-doc messages need to be shown...
+				if (~msg.text().indexOf(title + '/doc')) opts.tag += '-doc';
 				oldNotify(msg, opts);
 			};
 

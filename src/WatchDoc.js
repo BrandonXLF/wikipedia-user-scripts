@@ -10,7 +10,7 @@ $(function() {
 	var clone = $('#ca-watch a, #ca-unwatch a').clone();
 
 	mw.loader.using('mediawiki.page.watch.ajax').then(function(require) {
-		require('mediawiki.page.watch.ajax').watchstar(clone, 'Template:Toronto/doc', function() {});
+		require('mediawiki.page.watch.ajax').watchstar(clone, mw.config.get('wgPageName') + '/doc', function() {});
 		clone.click();
 	});
 });

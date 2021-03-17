@@ -7,16 +7,9 @@
 $(function() {
 	var lang = mw.config.get('wgPageContentLanguage'),
 		title = mw.config.get('wgPageName'),
-		titlee = encodeURIComponent(title),
-		summary = 'Sorted bullet lists using [[User:BrandonXLF/ListSorter|ListSorter]]';
-
-	function lineageMatch(node, test) {
-		while (node) {
-			if (node.nodeName == 'HTML') return false;
-			if (test(node)) return node;
-			node = node.parentNode;
-		}
-	}
+		summary = 'Sorted bullet lists using [[User:BrandonXLF/ListSorter|ListSorter]]',
+		skip = '<includeonly.*?>[\\s\\S]*?<\\/includeonly>|<!--[\\s\\S]*?-->|\\{\\{[\\s\\S]*?\\}\\}',
+		regex = new RegExp('((?:' + skip + ')*(?:\\n|^)(?:' + skip + ')*)(\\*+)((?:' + skip + '|.)*)', 'g');
 
 	function sortList(list) {
 		var children = Array.prototype.slice.call(list.children);
@@ -24,9 +17,7 @@ $(function() {
 		while (list.firstChild) list.removeChild(list.firstChild);
 
 		children.sort(function(a, b) {
-			return a.innerText.trim().localeCompare(b.innerText.trim(), lang, {
-				sensitivity: 'accent'
-			});
+			return a.innerText.trim().localeCompare(b.innerText.trim(), lang, {sensitivity: 'accent'});
 		});
 
 		for (var i = 0; i < children.length; i++) list.appendChild(children[i]);
@@ -35,43 +26,33 @@ $(function() {
 	function recursiveShow(sortables) {
 		var options = [],
 			values = [],
-			widget = new OO.ui.CheckboxMultiselectInputWidget();
+			widget = new OO.ui.CheckboxMultiselectInputWidget(),
+			data = 0;
 
 		for (var i = 0; i < sortables.length; i++) {
 			var sortable = sortables[i],
 				cnt = $('<div>'),
 				preview = $('<div>');
 
-			preview
-				.css({
-					overflow: 'hidden',
-					maxHeight: '2.75em',
-					pointerEvents: 'none'
-				})
-				.appendTo(cnt)
-				.append(sortable.list.cloneNode(true));
+			preview.css({overflow: 'hidden', maxHeight: '2.75em', pointerEvents: 'none'}).appendTo(cnt).append(sortable.cloneNode(true));
 
-			if (sortable.children.length) {
-				$('<div>')
-					.css({
-						paddingTop: '12px'
-					})
-					.appendTo(cnt)
-					.append(recursiveShow(sortable.children).$element);
+			if (sortable.listSortChildren.length) {
+				$('<div>').css({paddingTop: '12px'}).appendTo(cnt).append(recursiveShow(sortable.listSortChildren).$element);
 			}
 
+			sortable.listSortInputIndex = '' + data++;
 			options.push({
-				data: sortable.list.id,
+				data: sortable.listSortInputIndex,
 				label: cnt
 			});
-			values.push(sortable.list.id);
+			values.push(sortable.listSortInputIndex);
 		}
 
 		widget.setOptions(options);
 		widget.setValue(values);
 
 		for (i = 0; i < sortables.length; i++) {
-			sortables[i].widget = widget.checkboxMultiselectWidget.findItemFromData(sortables[i].list.id);
+			sortables[i].listSortWidget = widget.checkboxMultiselectWidget.findItemFromData(sortables[i].listSortInputIndex);
 		}
 
 		return widget;
@@ -80,134 +61,138 @@ $(function() {
 	function recursiveDo(sortables, action) {
 		for (var i = 0; i < sortables.length; i++) {
 			action(sortables[i]);
-			recursiveDo(sortables[i].children, action);
+			recursiveDo(sortables[i].listSortChildren, action);
 		}
 	}
 
 	function sort() {
-		$.get({
-			url: 'https://en.wikipedia.org/api/rest_v1/page/html/' + titlee,
-			data: {
-				stash: true,
-				redirect: false
-			}
-		}).then(function(html, status, xhr) {
-			var parser = new DOMParser(),
-				etag = xhr.getResponseHeader('ETag'),
-				rev = etag.match(/^(?:W\/|)"(.*)\/.*"$/)[1],
-				doc = parser.parseFromString(html, 'text/html'),
-				lists = doc.querySelectorAll('ul'),
-				sortables = [],
-				sortableIndex = {};
+		var params = {
+			action: 'query',
+			format: 'json',
+			prop: 'revisions',
+			titles: title,
+			formatversion: 2,
+			rvprop: 'content',
+			rvslots: 'main'
+		};
 
-			for (var i = 0; i < lists.length; i++) {
-				var list = lists[i];
-
-				if (list.children.length < 2 || lineageMatch(list, function(node) {
-					return node.hasAttribute && node.hasAttribute('about');
-				})) continue;
-
-				var parent = lineageMatch(list.parentNode, function(node) {
-					return node.nodeName == 'UL';
+		new mw.Api().get(params).then(function(res) {
+			var text = res.query.pages[0].revisions[0].slots.main.content,
+				afters = [],
+				marked = text.replace(regex, function(_, before, bullets, after) {
+					return before + bullets +
+						'<div class="listsorter-start" data-bullets="' + bullets + '" data-index="' + (afters.push(after) - 1) + '">' +
+						after +
+						'</div><div class="listsorter-end"></div>';
 				});
 
-				if (parent && !sortableIndex[parent.id]) continue;
+			new mw.Api().parse(marked).then(function(parsed) {
+				var container = document.createElement('div'),
+					topLevel = [];
 
-				var sortable = {
-					list: list,
-					children: [],
-					widget: null
-				};
+				container.innerHTML = parsed;
 
-				sortableIndex[list.id] = sortable;
-				(parent ? sortableIndex[parent.id].children : sortables).push(sortable);
-			}
+				var nodes = container.querySelectorAll('.listsorter-start');
 
-			var sort = new OO.ui.ButtonInputWidget({
-					label: 'Sort selected',
-					flags: ['primary', 'progressive']
-				}),
-				select = new OO.ui.ButtonInputWidget({
-					label: 'Select all'
-				}),
-				deselect = new OO.ui.ButtonInputWidget({
-					label: 'Deselect all'
-				}),
-				cancel = new OO.ui.ButtonInputWidget({
-					label: 'Cancel',
-					framed: false,
-					flags: ['destructive']
-				}),
-				inputs = recursiveShow(sortables),
-				buttons = new OO.ui.HorizontalLayout({
-					items: [sort, select, deselect, cancel]
-				}),
-				fieldset = new OO.ui.FieldsetLayout({
-					label: 'Select lists to sort',
-					items: [inputs, buttons],
-					id: 'listsorterui'
+				for (var i = 0; i < nodes.length; i++) {
+					var list = nodes[i].parentNode.parentNode;
+
+					if (nodes[i].parentNode.previousElementSibling) continue;
+
+					list.listSortChildren = [];
+
+					if (list.children.length < 2) continue;
+
+					var parent = $(list).parents('ul')[0];
+
+					(parent ? parent.listSortChildren : topLevel).push(list);
+				}
+
+				var sort = new OO.ui.ButtonInputWidget({
+						label: 'Sort selected',
+						flags: ['primary', 'progressive']
+					}),
+					select = new OO.ui.ButtonInputWidget({
+						label: 'Select all'
+					}),
+					deselect = new OO.ui.ButtonInputWidget({
+						label: 'Deselect all'
+					}),
+					cancel = new OO.ui.ButtonInputWidget({
+						label: 'Cancel',
+						framed: false,
+						flags: ['destructive']
+					}),
+					inputs = recursiveShow(topLevel),
+					buttons = new OO.ui.HorizontalLayout({
+						items: [sort, select, deselect, cancel]
+					}),
+					fieldset = new OO.ui.FieldsetLayout({
+						label: 'Select lists to sort',
+						items: [inputs, buttons],
+						id: 'listsorterui'
+					});
+
+				inputs.$element.css({
+					border: '1px solid #888',
+					borderBottom: '0',
+					padding: '1em'
 				});
 
-			inputs.$element.css({
-				border: '1px solid #888',
-				borderBottom: '0',
-				padding: '1em'
-			});
-
-			buttons.$element.css({
-				paddingTop: '12px',
-				position: 'sticky',
-				bottom: '0',
-				background: '#fff',
-				borderTop: '1px solid #888',
-				marginRight: '8px',
-				boxShadow: '0 -4px 4px -4px #888'
-			});
-
-			select.on('click', function() {
-				recursiveDo(sortables, function(sortable) {
-					sortable.widget.setSelected(true);
-				});
-			});
-
-			deselect.on('click', function() {
-				recursiveDo(sortables, function(sortable) {
-					sortable.widget.setSelected(false);
-				});
-			});
-
-			sort.on('click', function() {
-				recursiveDo(sortables, function(sortable) {
-					if (sortable.widget.isSelected()) sortList(sortable.list);
+				buttons.$element.css({
+					paddingTop: '12px',
+					position: 'sticky',
+					bottom: '0',
+					background: '#fff',
+					borderTop: '1px solid #888',
+					marginRight: '8px',
+					boxShadow: '0 -4px 4px -4px #888'
 				});
 
-				$.post({
-					url: 'https://en.wikipedia.org/api/rest_v1/transform/html/to/wikitext/' + titlee + '/' + rev,
-					data: {
-						html: doc.documentElement.outerHTML
-					},
-					headers: {
-						'If-Match': etag
-					}
-				}).then(function(text) {
+				select.on('click', function() {
+					recursiveDo(topLevel, function(sortable) {
+						sortable.listSortWidget.setSelected(true);
+					});
+				});
+
+				deselect.on('click', function() {
+					recursiveDo(topLevel, function(sortable) {
+						sortable.listSortWidget.setSelected(false);
+					});
+				});
+
+				sort.on('click', function() {
+					recursiveDo(topLevel, function(sortable) {
+						if (sortable.listSortWidget.isSelected()) sortList(sortable);
+					});
+
+					var nodes = container.querySelectorAll('.listsorter-start'),
+						i = -1;
+
+					text = text.replace(regex, function(_, before) {
+						i++;
+						return before + nodes[i].getAttribute('data-bullets') + afters[+nodes[i].getAttribute('data-index')];
+					});
+
 					$('<form method="post" action="' + mw.config.get('wgScript') + '" style="display:none;">')
 						.append($('<textarea name="wpTextbox1">').val(text))
 						.append($('<input name="title">').val(title))
 						.append('<input name="wpDiff" value="wpDiff">')
 						.append('<input name="wpUltimateParam" value="1">')
+						.append('<input name="wpIgnoreBlankSummary" value="1">')
 						.append('<input name="wpSummary" value="' + summary + '">')
 						.append('<input name="action" value="submit">')
 						.appendTo(document.body)
 						.submit();
 				});
-			});
 
-			cancel.on('click', function() {
-				fieldset.$element.remove();
-			});
+				cancel.on('click', function() {
+					fieldset.$element.remove();
+				});
 
-			$('#listsorterui').remove();
-			$('#mw-content-text').prepend(fieldset.$element);
+				$('#listsorterui').remove();
+				$('#mw-content-text').prepend(fieldset.$element);
+			});
 		});
 	}
 

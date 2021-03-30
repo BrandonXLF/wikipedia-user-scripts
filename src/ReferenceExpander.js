@@ -1,3 +1,4 @@
+// <nowiki>
 /*** Reference Expander ***/
 
 // Expands references that are a link to a expanded reference using {{cite ..}}
@@ -135,3 +136,4 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 		});
 	});
 });
+// </nowiki>

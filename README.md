@@ -4,6 +4,7 @@ This is my collection of [Wikipedia user scripts](https://en.wikipedia.org/wiki/
 
 Most of them should work fine on other MediaWiki wikis, but some scripts are wiki specific. Some scripts also come with a .css file, in some cases the .css file can just be imported and the .js file isn't required.
 
+<!-- Update using py update-readme.py -->
 ## List
 
 * AJAXUndo - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/AJAXUndo), [JS](/src/AJAXUndo.js)
@@ -47,4 +48,5 @@ Most of them should work fine on other MediaWiki wikis, but some scripts are wik
 * ToTopButton - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ToTopButton), [CSS](/src/ToTopButton.css), [JS](/src/ToTopButton.js)
 * UpdateNotifications - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/UpdateNotifications), [JS](/src/UpdateNotifications.js)
 * WatchDoc - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/WatchDoc), [JS](/src/WatchDoc.js)
+* WPBannerNavbar - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/WPBannerNavbar), [JS](/src/WPBannerNavbar.js)
 

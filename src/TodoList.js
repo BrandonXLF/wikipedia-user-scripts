@@ -325,60 +325,7 @@ $.when(mw.loader.using([
 					invisibleLabel: true,
 					title: 'Help'
 				}).$element.click(function() {
-					$('.userjs-todo-list').css('width', '40em').children().css('display', 'none');
-
-					var helppage = $('<div style="padding:0.5em;overflow-x:hidden;"></div>')
-						.append((new OO.ui.ButtonWidget({
-							label: 'Return',
-						}).$element.css('width', '100%').children().css('width', '100%').parent()).click(function() {
-							helppage.remove();
-							$('.userjs-todo-list').children().css('display', '');
-						}))
-						.append('<h3>Todo List Help</h3>')
-						.append('<h4>Adding and editing items</h4>')
-						.append($('<ul></ul>')
-							.append('<li><b>Page name or URL</b>: A page name or any valid URL.<br><ul><li>Ex: <code>Main Page</code></li><li>Ex: <code>://www.example.com</code></li><li>Ex: <code>https://example.com&nbsp;Example</code></li></ul>')
-							.append('<li><b>Comment</b>: An additional comment.</li>')
-						)
-						.append('<h5>Notes</h5>')
-						.append($('<ol style="margin-left:2em!important;"></ol>')
-							.append('<li>A valid URL must start with <code>https://</code>, <code>http://</code> or <code>://</code> or else it will be treated as a page name. Page names will by automatically converted to a link to the wiki article with that title.</li>')
-							.append('<li>If the URL contains a space, the text after the space will be used as the display text. For example, <code>https://example.com&nbsp;Example</code> will show up as <code>Example</code> since URLs cannot contain spaces. Spaces can be repersented as <code>%20</code>, <code>_</code> or <code>+</code>.</li>')
-							.append('<li>Page names cannot be be displayed differently than the page name. If you desire to diplay the name differently, use the URL of the page followed by your desired display text instead.</li>')
-							.append('<li>Page name and Comment are optional, but at least one is required.</li>')
-						)
-						.append('<h4>Managing and deleting items</h4>')
-						.append('<h5>Global</h5>')
-						.append($('<ul></ul>')
-							.append('<li><b>Redo</b> and <b>Undo</b>: Redo and undo changes. You should not expect to be able to undo all changes. Changes including uploading a todo list, deleting an item, reordering items, deleting the todo list, editing an item, redoing a change, and adding an item. Redo will redo the last undone change. Once you reload the editor, all change history is lost.</li>')
-							.append('<li><b>Clear</b>: Delete your entire todo list, this should be able to be undone, but don\'t rely on it. Once you reload the editor, this action cannot be undone.</li>')
-							.append('<li><b>Download</b>: Download all itmes currently in the todo list as a JSON file. The file can later to uploaded again the replace the current todo list. Do not edit the JSON file unless you understand the risks associated with doing so and you understand the structure of the file.</li>')
-							.append('<li><b>Upload</b>: Upload a todo list JSON file. The new list will replace the current list. The operation should be able to be undone. Only upload a file created by the download fiel button, or else you may cause issues with the script, causing it to become non functional.</li>')
-						)
-						.append('<h5>Item specfic</h5>')
-						.append($('<ul></ul>')
-							.append($('<li></li>')
-								.append((new OO.ui.IconWidget({icon: 'draggable'}).$element.css({height: '1.2em', width: '1.2em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'})))
-								.append('<b>Drag</b>: <span>Drag to change the position of the item.</span><br>')
-							)
-							.append($('<li></li>')
-								.append((new OO.ui.IconWidget({icon: 'trash', flags: ['destructive']})).$element.css({height: '1.1em', width: '1.1em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'}))
-								.append('<b>Delete</b>: <span>Delete an item.</span><br>')
-							)
-							.append($('<li></li>')
-								.append((new OO.ui.IconWidget({icon: 'edit', flags: ['progressive']})).$element.css({height: '1em', width: '1em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'}))
-								.append('<b>Edit</b>: <span>Edit an item (page name & comment)</span><br>')
-							)
-							.append($('<li></li>')
-								.append((new OO.ui.IconWidget({icon: 'info'})).$element.css({height: '1.3em', width: '1.3em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.2em'}))
-								.append('<b>More information</b>: <span>View more information about an item.</span>')
-							)
-						)
-						.append('<h4>Saving changes</h4>')
-						.append('<ul><li>All changes are synced with the API after an action is performed (saving, deleting, dragging etc.).</li><li>When a change is being saved the text "Saving changes..." should appear at the end of the list. Do not leave the page or close the popup until the text dissapears as this may cause changes to not be saved.</li></ul>')
-						.append('<h4>About</h4>')
-						.append('<div><a href="' + mw.util.getUrl('User:BrandonXLF/TodoList') + '">Todo List</a> (<a href="' + mw.util.getUrl('User:BrandonXLF/TodoList.js') + '">code</a>) by <a href="' + mw.util.getUrl('User:BrandonXLF') + '">User:BrandonXLF</a> (<a href="' + mw.util.getUrl('User talk:BrandonXLF') + '">talk</a>)</div>')
-						.appendTo($('.userjs-todo-list'));
+					window.open('https://en.wikipedia.org/wiki/User:BrandonXLF/TodoList/Help');
 				}))
 			)
 			.append($('<div style="padding:0 0.5em 0.5em;"></div>')

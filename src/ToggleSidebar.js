@@ -21,9 +21,8 @@ $.when(mw.loader.using(['oojs-ui-core', 'oojs-ui.styles.icons-layout']), $.ready
 			always: true,
 			never: false
 		},
-		hidden = opts[window.hidesidebar];
-	if (hidden === undefined) hidden = false;
-	var style = $(
+		hidden = opts[window.hidesidebar] || false,
+		style = $(
 			'<style>#mw-head:before, .ve-init-target.ve-init-mw-target > .ve-ui-toolbar > .oo-ui-toolbar-bar {left: 0 !important;}' +
 			'#content, .mw-body, #left-navigation, #footer {margin-left: 0 !important;}' +
 			'#mw-panel {display: none;}</style>'
@@ -91,7 +90,7 @@ $.when(mw.loader.using(['oojs-ui-core', 'oojs-ui.styles.icons-layout']), $.ready
 		style.appendTo(document.body);
 	});
 
-	$('#p-navigation').css('margin-top', '0.5em').prepend($('<div class="body" style="margin-bottom:0.5em">').append(hide.$element));
+	$('#p-navigation').css('margin-top', '0.5em').prepend($('<div class="body" style="margin:0 0 0.5em 0.5em">').append(hide.$element));
 
 	if (hidden) {
 		show.$element.prependTo('#mw-head');

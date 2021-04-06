@@ -1,6 +1,6 @@
 /*** No Redirect Link ***/
 
-// Adds a link to the redirect page that doesn't get redirected
+// Adds a link beside links to redirects that doesn't get redirected
 // Documentation at [[User:BrandonXLF/NoRedirect]]
 // By [[User:BrandonXLF]]
 

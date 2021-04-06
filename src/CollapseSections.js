@@ -1,10 +1,10 @@
-/*** Collaspe sections ***/
+/*** Collapse sections ***/
 
 // Adds an arrow to sections to make them collasible
 // Documentation at [[User:BrandonXLF/CollaspeSections]]
 // By [[User:BrandonXLF]]
 
-// window.collaspeSections - Set to true to collaspe all sections by default
+// window.collapseSections - Set to true to collapse all sections by default
 
 $.when($.ready, mw.loader.using(['oojs-ui-core', 'oojs-ui-windows', 'oojs-ui.styles.icons-movement'])).then(function() {
 	if (mw.config.get('skin') === 'minerva') return;
@@ -33,7 +33,7 @@ $.when($.ready, mw.loader.using(['oojs-ui-core', 'oojs-ui-windows', 'oojs-ui.sty
 				}
 			});
 
-			if (window.collaspeSections) icon.click();
+			if (window.collapseSections) icon.click();
 			heading.prepend(icon);
 		});
 	}

@@ -87,10 +87,8 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		};
 
 		IncrementParametersDialog.prototype.getActionProcess = function(action) {
-			var dialog = this;
-
 			return new OO.ui.Process(function() {
-				if (!action) return dialog.close();
+				if (!action) return this.close();
 
 				text.setValue(text.getValue().replace(regex[opts.getValue()], function(match, prefix, num, suffix) {
 					if (
@@ -101,7 +99,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 					}
 					return '|' + prefix + (parseInt(num, 10) + parseInt(increment.getNumericValue(), 10)).toString() + suffix + '=';
 				}));
-			});
+			}, this);
 		};
 
 		IncrementParametersDialog.prototype.getBodyHeight = function() {

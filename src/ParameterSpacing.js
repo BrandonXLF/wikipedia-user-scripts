@@ -64,10 +64,8 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		};
 
 		ParameterSpacingDialog.prototype.getActionProcess = function(action) {
-			var dialog = this;
-
 			return new OO.ui.Process(function() {
-				if (!action) return dialog.close();
+				if (!action) return this.close();
 
 				var val = expand.getValue(),
 					max = 0;
@@ -86,7 +84,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 				});
 
 				expand.setValue(val);
-			});
+			}, this);
 		};
 
 		ParameterSpacingDialog.prototype.getBodyHeight = function() {

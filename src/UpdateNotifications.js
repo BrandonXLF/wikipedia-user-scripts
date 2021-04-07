@@ -5,7 +5,7 @@
 // By [[User:BrandonXLF]]
 
 $(function() {
-	var worker = new SharedWorker('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/UpdateNotifcationsWorker.js&action=raw&ctype=text/javascript'),
+	var worker = new SharedWorker('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/UpdateNotificationsWorker.js&action=raw&ctype=text/javascript'),
 		shownTime = new Date();
 
 	function updateIcon(id, data) {

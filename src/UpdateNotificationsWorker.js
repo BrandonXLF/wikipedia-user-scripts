@@ -19,7 +19,7 @@ setInterval(function() {
 		},
 		paramArray = [];
 
-	for(var key in params) paramArray.push(key + '=' + params[key]);
+	for (var key in params) paramArray.push(key + '=' + params[key]);
 
 	var url = self.config.scriptPath + '/api.php?' + paramArray.join('&'),
 		req = new XMLHttpRequest();

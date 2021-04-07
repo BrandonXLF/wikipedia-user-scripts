@@ -30,89 +30,79 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			});
 
 		e.preventDefault();
-
 		expand.$element.css({fontFamily: 'monospace, monospace'});
-		function ProcessDialog(config) {
-			ProcessDialog.super.call(this, config);
+
+		function ParameterSpacingDialog(config) {
+			ParameterSpacingDialog.super.call(this, config);
 		}
 
-		OO.inheritClass(ProcessDialog, OO.ui.ProcessDialog);
+		OO.inheritClass(ParameterSpacingDialog, OO.ui.ProcessDialog);
 
-		ProcessDialog.static.name = 'paramspacing';
-		ProcessDialog.static.title = 'Parameter spacing';
-		ProcessDialog.static.actions = [
-			{
-				action: 'run',
-				label: 'Run',
-				flags: ['primary', 'progressive']
-			},
-			{
-				label: 'Cancel',
-				flags: 'safe'
-			}
+		ParameterSpacingDialog.static.name = 'paramspacing';
+		ParameterSpacingDialog.static.title = 'Parameter spacing';
+		ParameterSpacingDialog.static.actions = [
+			{label: 'Close', flags: ['safe', 'close']},
+			{label: 'Run', flags: ['primary', 'progressive'], action: 'run'}
 		];
-		ProcessDialog.prototype.getBodyHeight = function() {
-			return this.panel.$element.outerHeight(true);
-		};
 
-		ProcessDialog.prototype.initialize = function() {
-			ProcessDialog.super.prototype.initialize.apply(this, arguments);
+		ParameterSpacingDialog.prototype.initialize = function() {
+			ParameterSpacingDialog.super.prototype.initialize.apply(this, arguments);
+
 			this.content = new OO.ui.PanelLayout({
 				padded: true,
 				expanded: false
 			});
+
 			this.content.$element.append(
 				(new OO.ui.FieldLayout(extra, {label: 'Equalize equal signs', align: 'left'})).$element,
 				(new OO.ui.FieldLayout(pre, {label: 'Spaces before equal sign', align: 'left'})).$element,
 				(new OO.ui.FieldLayout(post, {label: 'Spaces after equal sign', align: 'left'})).$element,
 				(new OO.ui.FieldLayout(expand, {align: 'top'})).$element
 			);
+
 			this.$body.append(this.content.$element);
 		};
 
-		ProcessDialog.prototype.getActionProcess = function(action) {
+		ParameterSpacingDialog.prototype.getActionProcess = function(action) {
 			var dialog = this;
-			if (action) {
-				return new OO.ui.Process(function() {
-					var val = expand.getValue(),
-						max = 0;
-					val.replace(/(.*?\|.*?)( *)(=.*)( *)/g, function(m, m1) {
-						if (m1.length > max) max = m1.length;
-						return m;
-					});
-					val = val.replace(/(.*?\|.*?)( *)=( *)(.*)/g, function(m, m1, m2, m3, m4) {
-						return m1 +
-						' '.repeat(Math.max(0, (extra.isSelected() ? max - m1.length : 0) + pre.getNumericValue())) +
-						'=' +
-						' '.repeat(Math.max(0, post.getNumericValue())) +
-						m4;
-					});
-					expand.setValue(val);
-					return true;
-				});
-			}
+
 			return new OO.ui.Process(function() {
-				dialog.close();
+				if (!action) return dialog.close();
+
+				var val = expand.getValue(),
+					max = 0;
+
+				val.replace(/(.*?\|.*?)( *)(=.*)( *)/g, function(m, m1) {
+					if (m1.length > max) max = m1.length;
+					return m;
+				});
+
+				val = val.replace(/(.*?\|.*?)( *)=( *)(.*)/g, function(m, m1, m2, m3, m4) {
+					return m1 +
+					' '.repeat(Math.max(0, (extra.isSelected() ? max - m1.length : 0) + pre.getNumericValue())) +
+					'=' +
+					' '.repeat(Math.max(0, post.getNumericValue())) +
+					m4;
+				});
+
+				expand.setValue(val);
 			});
 		};
 
-		ProcessDialog.prototype.getBodyHeight = function() {
+		ParameterSpacingDialog.prototype.getBodyHeight = function() {
 			this.content.resetScroll();
 			return this.content.$element.outerHeight(true);
 		};
 
-		var windowManager = new OO.ui.WindowManager(),
-			processDialog = new ProcessDialog({
-				size: 'large'
-			});
+		var dialog = new ParameterSpacingDialog({
+			size: 'large'
+		});
 
-		$(document.body).append(windowManager.$element);
-
-		windowManager.addWindows([processDialog]);
-		windowManager.openWindow(processDialog);
+		OO.ui.getWindowManager().addWindows([dialog]);
+		OO.ui.getWindowManager().openWindow(dialog);
 
 		expand.on('change', function() {
-			processDialog.updateSize();
+			dialog.updateSize();
 		});
 	});
 });

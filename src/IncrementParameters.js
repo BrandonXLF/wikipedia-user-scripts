@@ -6,7 +6,7 @@
 
 
 $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
-	$(mw.util.addPortletLink('p-tb', '#', 'Increment parameters')).click(function(e) {
+	$(mw.util.addPortletLink('p-tb', '#', 'Increment params')).click(function(e) {
 		var regex = {
 				all: new RegExp('\\|(\\s*[^ =|_-]?[^ =|]*?\\s*)([1-9]\\d*)(\\s*[^ =|]*?[^ =|]?\\s*)=', 'g'),
 				suffix: new RegExp('\\|(\\s*(?:header|label|data|rowclass|class)*?\\s*)([1-9]\\d*)(\\s*[^ =|]*?[^ =|]?\\s*)=', 'g'),
@@ -53,31 +53,22 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 
 		e.preventDefault();
 		text.$element.css({fontFamily: 'monospace, monospace'});
-		function ProcessDialog(config) {
-			ProcessDialog.super.call(this, config);
+
+		function IncrementParametersDialog(config) {
+			IncrementParametersDialog.super.call(this, config);
 		}
 
-		OO.inheritClass(ProcessDialog, OO.ui.ProcessDialog);
+		OO.inheritClass(IncrementParametersDialog, OO.ui.ProcessDialog);
 
-		ProcessDialog.static.name = 'incrementparams';
-		ProcessDialog.static.title = 'Increment parameters';
-		ProcessDialog.static.actions = [
-			{
-				action: 'run',
-				label: 'Run',
-				flags: ['primary', 'progressive']
-			},
-			{
-				label: 'Cancel',
-				flags: 'safe'
-			}
+		IncrementParametersDialog.static.name = 'incrementparams';
+		IncrementParametersDialog.static.title = 'Increment parameters';
+		IncrementParametersDialog.static.actions = [
+			{label: 'Close', flags: ['safe', 'close']},
+			{label: 'Run', flags: ['primary', 'progressive'], action: 'run'}
 		];
-		ProcessDialog.prototype.getBodyHeight = function() {
-			return this.panel.$element.outerHeight(true);
-		};
 
-		ProcessDialog.prototype.initialize = function() {
-			ProcessDialog.super.prototype.initialize.apply(this, arguments);
+		IncrementParametersDialog.prototype.initialize = function() {
+			IncrementParametersDialog.super.prototype.initialize.apply(this, arguments);
 
 			this.content = new OO.ui.PanelLayout({
 				padded: true,
@@ -95,45 +86,38 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			this.$body.append(this.content.$element);
 		};
 
-		ProcessDialog.prototype.getActionProcess = function(action) {
+		IncrementParametersDialog.prototype.getActionProcess = function(action) {
 			var dialog = this;
 
-			if (action) {
-				return new OO.ui.Process(function() {
-					text.setValue(text.getValue().replace(regex[opts.getValue()], function(match, prefix, num, suffix) {
-						if (
-							parseInt(num, 10) < parseInt(min.getNumericValue() || 0, 10) ||
-							parseInt(num, 10) > parseInt(max.getNumericValue() || Infinity, 10)
-						) {
-							return match;
-						}
-						return '|' + prefix + (parseInt(num, 10) + parseInt(increment.getNumericValue(), 10)).toString() + suffix + '=';
-					}));
-				});
-			}
-
 			return new OO.ui.Process(function() {
-				dialog.close();
+				if (!action) return dialog.close();
+
+				text.setValue(text.getValue().replace(regex[opts.getValue()], function(match, prefix, num, suffix) {
+					if (
+						parseInt(num, 10) < parseInt(min.getNumericValue() || 0, 10) ||
+						parseInt(num, 10) > parseInt(max.getNumericValue() || Infinity, 10)
+					) {
+						return match;
+					}
+					return '|' + prefix + (parseInt(num, 10) + parseInt(increment.getNumericValue(), 10)).toString() + suffix + '=';
+				}));
 			});
 		};
 
-		ProcessDialog.prototype.getBodyHeight = function() {
+		IncrementParametersDialog.prototype.getBodyHeight = function() {
 			this.content.resetScroll();
 			return this.content.$element.outerHeight(true);
 		};
 
-		var windowManager = new OO.ui.WindowManager(),
-			processDialog = new ProcessDialog({
-				size: 'large'
-			});
+		var dialog = new IncrementParametersDialog({
+			size: 'large'
+		});
 
-		$(document.body).append(windowManager.$element);
-
-		windowManager.addWindows([processDialog]);
-		windowManager.openWindow(processDialog);
+		OO.ui.getWindowManager().addWindows([dialog]);
+		OO.ui.getWindowManager().openWindow(dialog);
 
 		text.on('change', function() {
-			processDialog.updateSize();
+			dialog.updateSize();
 		});
 	});
 });

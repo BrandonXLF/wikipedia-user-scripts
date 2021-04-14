@@ -57,14 +57,14 @@
 			maxWidth: '100%',
 			borderRadius: 0,
 			boxShadow: 'none',
-			margin: '0.5em 0'
+			margin: '8px 0'
 		}).addClass('preview').appendTo('#quickedit-editor');
 
 		return function(html) {
 			$('#quickedit-editor .preview').remove();
 
 			$('<div>').html(html).css({
-				margin: '0.5em 0',
+				margin: '8px 0',
 				border: '1px solid #a2a9b1',
 				padding: '8px',
 				overflowX: 'hidden'
@@ -274,7 +274,8 @@
 				}).append(
 					$('<div>').css({
 						backgroundColor: '#eaecf0',
-						borderBottom: '1px solid #a2a9b1'
+						borderBottom: '1px solid #a2a9b1',
+						marginBottom: '8px'
 					}).append(
 						textarea.$element.css({
 							width: '100%',

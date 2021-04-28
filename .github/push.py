@@ -15,6 +15,8 @@ r = s.get('https://en.wikipedia.org/w/api.php', params={
 	'format': 'json'
 })
 
+print('Got login token')
+
 login = r.json()['query']['tokens']['logintoken']
 
 r = s.post('https://en.wikipedia.org/w/api.php', data={
@@ -25,6 +27,8 @@ r = s.post('https://en.wikipedia.org/w/api.php', data={
 	'lgtoken': login
 })
 
+print('Logged into English Wikipedia')
+
 r = s.get('https://en.wikipedia.org/w/api.php', params={
 	'action': 'query',
 	'meta': 'tokens',
@@ -34,6 +38,8 @@ r = s.get('https://en.wikipedia.org/w/api.php', params={
 
 csrf = r.json()['query']['tokens']['csrftoken']
 
+print('Got edit token')
+
 def edit_file(file, text):
 	req = s.get('https://en.wikipedia.org/w/index.php', data={
 		'action': 'raw',
@@ -41,6 +47,7 @@ def edit_file(file, text):
 	})
 	
 	if req.ok and req.text == text:
+		print('Skipping file ' + file)
 		return
 	
 	s.post('https://en.wikipedia.org/w/api.php', data={
@@ -50,6 +57,8 @@ def edit_file(file, text):
 		'text': text,
 		'summary': SUMMARY
 	})
+	
+	print('Saved file ' + file)
 
 for subdir, dirs, files in os.walk(os.getcwd() + '/src'):
 	for file in files:

@@ -41,13 +41,13 @@ csrf = r.json()['query']['tokens']['csrftoken']
 print('Got edit token')
 
 def edit_file(file, text):
-	req = s.get('https://en.wikipedia.org/w/index.php', data={
+	req = s.get('https://en.wikipedia.org/w/index.php', params={
 		'action': 'raw',
 		'title': 'User:' + USERNAME + '/' + file
 	})
 	
 	if req.ok and req.text == text:
-		print('Skipping file ' + file)
+		print('Skipped file ' + file)
 		return
 	
 	s.post('https://en.wikipedia.org/w/api.php', data={
@@ -62,5 +62,5 @@ def edit_file(file, text):
 
 for subdir, dirs, files in os.walk(os.getcwd() + '/src'):
 	for file in files:
-		with open(subdir + os.sep + file) as f:
+		with open(subdir + os.sep + file, encoding='utf8') as f:
 			edit_file(file, f.read())

@@ -5,8 +5,9 @@
 // By [[User:BrandonXLF]]
 // <syntaxhighlight lang=javascript>
 
-mw.hook('wikipage.content').add(function() {
+mw.hook('wikipage.content').add(function(content) {
 	if (mw.config.get('wgPageName') !== 'Wikipedia:Files_for_upload') return;
+
 	var i = 0,
 		active = '',
 		activeSection = -1,
@@ -214,8 +215,10 @@ mw.hook('wikipage.content').add(function() {
 		);
 	}
 
+	console.log(content);
+
 	// Add links to sections
-	$('.mw-parser-output>h2').each(function() {
+	content.find('.mw-parser-output > h2').each(function() {
 		var section = /[?&]v?e?section=T?-?(\d*)/.exec($('[href*="title="][href*="section="]', this).attr('href'))[1];
 
 		if ($(this).next().hasClass('navbox')) {

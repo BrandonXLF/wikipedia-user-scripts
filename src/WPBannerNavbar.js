@@ -1,5 +1,5 @@
-mw.hook('wikipage.content').add(function($content) {
-	var headers = $content.find('.wpb .wpb-header');
+mw.hook('wikipage.content').add(function(content) {
+	var headers = content.find('.wpb .wpb-header');
 
 	function addNavbar() {
 		headers.each(function() {

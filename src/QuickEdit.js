@@ -449,8 +449,8 @@
 	$.when(mw.loader.using('oojs-ui-core'), $.ready).done(function() {
 		$(document.body).on('click', clickHandler);
 
-		mw.hook('wikipage.content').add(function() {
-			$('.mw-editsection').each(function() {
+		mw.hook('wikipage.content').add(function(content) {
+			content.find('.mw-editsection').each(function() {
 				$('[href*="section="]', this).last().after(
 					mobile ? '' : '<span class="quickedit-section"> | </span>',
 					$('<a>').html(mobile ? '&nbsp;Q' : 'quick edit').addClass('quickedit-section quickedit-editlink')

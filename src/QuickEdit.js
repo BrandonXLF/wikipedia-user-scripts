@@ -209,7 +209,6 @@
 						page: mw.config.get('wgPageName'),
 						prop: ['text', 'categorieshtml']
 					}).then(function(r) {
-						$('#quickedit-editor, .quickedit-section').remove();
 						$('.mw-parser-output').replaceWith(r.parse.text['*']);
 						mw.hook('wikipage.content').fire($('#mw-content-text'));
 						$('.catlinks').replaceWith(r.parse.categorieshtml['*']);
@@ -446,17 +445,22 @@
 		showEditor(title, sectionID, el, heading, progress);
 	}
 
-	$.when(mw.loader.using('oojs-ui-core'), $.ready).done(function() {
-		$(document.body).on('click', clickHandler);
-
-		mw.hook('wikipage.content').add(function(content) {
-			content.find('.mw-editsection').each(function() {
-				$('[href*="section="]', this).last().after(
-					mobile ? '' : '<span class="quickedit-section"> | </span>',
-					$('<a>').html(mobile ? '&nbsp;Q' : 'quick edit').addClass('quickedit-section quickedit-editlink')
-				).addClass('quickedit-target');
-			});
+	function addLinksToChildren(element) {
+		element.find('#quickedit-editor, .quickedit-section').remove();
+		element.find('.mw-editsection').each(function() {
+			$('[href*="section="]', this).last().after(
+				mobile ? '' : '<span class="quickedit-section mw-editsection-divider"> | </span>',
+				$('<a>').html(mobile ? '&nbsp;Q' : 'quick edit').addClass('quickedit-section quickedit-editlink')
+			).addClass('quickedit-target');
 		});
+	}
+
+	$.when(mw.loader.using('oojs-ui-core'), $.ready).done(function() {
+		var body = $(document.body);
+
+		body.on('click', clickHandler);
+		addLinksToChildren(body);
+		mw.hook('wikipage.content').add(addLinksToChildren);
 	});
 
 	mw.loader.addStyleTag(

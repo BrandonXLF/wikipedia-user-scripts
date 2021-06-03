@@ -209,10 +209,15 @@
 						page: mw.config.get('wgPageName'),
 						prop: ['text', 'categorieshtml']
 					}).then(function(r) {
-						$('.mw-parser-output').replaceWith(r.parse.text['*']);
-						mw.hook('wikipage.content').fire($('#mw-content-text'));
-						$('.catlinks').replaceWith(r.parse.categorieshtml['*']);
-						mw.hook('wikipage.categories').fire($('.catlinks'));
+						var contentText = $('#mw-content-text'),
+							catLinks = $('#catlinks');
+
+						contentText.find('.mw-parser-output').replaceWith(r.parse.text['*']);
+						mw.hook('wikipage.content').fire(contentText);
+
+						catLinks.replaceWith(r.parse.categorieshtml['*']);
+						mw.hook('wikipage.categories').fire(catLinks);
+
 						saving = false;
 					});
 				}, function(code) {

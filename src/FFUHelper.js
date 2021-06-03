@@ -156,10 +156,15 @@ mw.hook('wikipage.content').add(function(content) {
 									prop: 'text|categorieshtml',
 									format: 'json'
 								}).done(function(r) {
-									$('.mw-parser-output').replaceWith(r.parse.text['*']);
-									mw.hook('wikipage.content').fire($('#mw-content-text'));
-									$('#catlinks').replaceWith(r.parse.categorieshtml['*']);
-									mw.hook('wikipage.categories').fire($('.catlinks'));
+									var contentText = $('#mw-content-text'),
+										catLinks = $('#catlinks');
+
+									contentText.find('.mw-parser-output').replaceWith(r.parse.text['*']);
+									mw.hook('wikipage.content').fire(contentText);
+
+									catLinks.replaceWith(r.parse.categorieshtml['*']);
+									mw.hook('wikipage.categories').fire(catLinks);
+
 									mw.notify('Page updated.');
 								});
 							}
@@ -214,8 +219,6 @@ mw.hook('wikipage.content').add(function(content) {
 			)
 		);
 	}
-
-	console.log(content);
 
 	// Add links to sections
 	content.find('.mw-parser-output > h2').each(function() {

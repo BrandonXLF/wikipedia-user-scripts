@@ -112,7 +112,29 @@
 			.replace(/<[^>]+?>/g, '') + ' */ ';
 	}
 
-	function showEditor(title, sectionID, el, heading, progress) {
+	function showEditor(el) {
+		var progress = new OO.ui.ProgressBarWidget(),
+			heading = el.closest(':header'),
+			targetEl = el.siblings('.quickedit-target').last(),
+			titleMatch = targetEl.attr('href').match(titleRegexp),
+			title = decodeURIComponent(titleMatch[1] || titleMatch[2]),
+			sectionID = /[?&]v?e?section=T?-?(\d*)/.exec(targetEl.attr('href'))[1];
+
+		if (!heading.closest('.mw-parser-output').length) {
+			heading = $('#mw-content-text .mw-parser-output').children().first();
+		}
+
+		heading.after(progress.$element.css({
+			maxWidth: '100%',
+			borderRadius: 0,
+			boxShadow: 'none'
+		}));
+
+		el.addClass('quickedit-loading');
+		$('.quickedit-hide').removeClass('quickedit-hide');
+		$('.quickedit-heading').removeClass('quickedit-heading');
+		$('#quickedit-editor').remove();
+
 		getPageInfo(title, sectionID).then(function(r) {
 			var start = r.start,
 				base = r.base,
@@ -175,7 +197,7 @@
 			}
 
 			partSection.addClass('quickedit-hide');
-			heading.addClass(heading.is('h1,h2,h3,h4,h5,h6') ? 'quickedit-heading' : 'quickedit-hide');
+			heading.addClass(heading.is(':header') ? 'quickedit-heading' : 'quickedit-hide');
 			el.removeClass('quickedit-loading');
 			progress.$element.remove();
 			textarea.$input.css({
@@ -419,35 +441,13 @@
 	}
 
 	function clickHandler(e) {
-		var el = $(e.target),
-			heading = el.closest('h1,h2,h3,h4,h5,h6');
+		var el = $(e.target);
 
 		if (!el.hasClass('quickedit-editlink') || el.hasClass('quickedit-loading')) return;
 
 		e.preventDefault();
 
-		if (!$.contains(document.getElementsByClassName('mw-parser-output')[0], heading[0])) {
-			heading = $('.mw-parser-output').children().first();
-		}
-
-		var progress = new OO.ui.ProgressBarWidget();
-		heading.after(progress.$element.css({
-			maxWidth: '100%',
-			borderRadius: 0,
-			boxShadow: 'none'
-		}));
-
-		el.addClass('quickedit-loading');
-		$('.quickedit-hide').removeClass('quickedit-hide');
-		$('.quickedit-heading').removeClass('quickedit-heading');
-		$('#quickedit-editor').remove();
-
-		var targetEl = el.siblings('.quickedit-target').last(),
-			titleMatch = targetEl.attr('href').match(titleRegexp),
-			title = decodeURIComponent(titleMatch[1] || titleMatch[2]),
-			sectionID = /[?&]v?e?section=T?-?(\d*)/.exec(targetEl.attr('href'))[1];
-
-		showEditor(title, sectionID, el, heading, progress);
+		showEditor(el);
 	}
 
 	function addLinksToChildren(element) {

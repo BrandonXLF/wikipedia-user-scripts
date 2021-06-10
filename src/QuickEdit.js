@@ -55,7 +55,7 @@
 
 		new OO.ui.ProgressBarWidget().$element.css({
 			maxWidth: '100%',
-			borderRadius: 0,
+			borderRadius: '0',
 			boxShadow: 'none',
 			margin: '8px 0'
 		}).addClass('preview').appendTo(editor);
@@ -127,7 +127,7 @@
 
 		heading.after(progress.$element.css({
 			maxWidth: '100%',
-			borderRadius: 0,
+			borderRadius: '0',
 			boxShadow: 'none'
 		}));
 
@@ -203,7 +203,7 @@
 			el.removeClass('quickedit-loading');
 			progress.$element.remove();
 			textarea.$input.css({
-				borderRadius: 0
+				borderRadius: '0'
 			});
 
 			save.on('click', function() {
@@ -387,7 +387,7 @@
 			}
 
 			textarea.$input.css({
-				borderRadius: 0
+				borderRadius: '0'
 			});
 			$('#quickedit-editor > :first-child > :first-child').remove();
 

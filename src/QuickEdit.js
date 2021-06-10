@@ -116,16 +116,23 @@
 	function showEditor(el) {
 		var progress = new OO.ui.ProgressBarWidget(),
 			heading = el.closest(':header'),
+			matcher = heading.nextUntil.bind(heading),
+			inserter = heading.after.bind(heading),
 			targetEl = el.siblings('.quickedit-target').last(),
 			titleMatch = targetEl.attr('href').match(titleRegexp),
 			title = decodeURIComponent(titleMatch[1] || titleMatch[2]),
 			sectionID = /[?&]v?e?section=T?-?(\d*)/.exec(targetEl.attr('href'))[1];
 
 		if (!heading.closest('.mw-parser-output').length) {
-			heading = $('#mw-content-text .mw-parser-output').children().first();
+			var articleContent = $('#mw-content-text .mw-parser-output');
+
+			matcher = function(selector) {
+				return articleContent.children(':not(' + selector + ',' + selector + '~)');
+			};
+			inserter = articleContent.prepend.bind(articleContent);
 		}
 
-		heading.after(progress.$element.css({
+		inserter(progress.$element.css({
 			maxWidth: '100%',
 			borderRadius: '0',
 			boxShadow: 'none'
@@ -155,8 +162,8 @@
 			var levelMatch = 'h1';
 			for (var i = 2; i <= level; i++) levelMatch += ',h' + i + ':has(*)';
 
-			var partSection = heading.nextUntil('#toc,h2:has(*),h3,h4,h5,h6'),
-				fullSection = heading.nextUntil(levelMatch),
+			var partSection = matcher(':header:has(*)'),
+				fullSection = matcher(levelMatch),
 				textarea = new OO.ui.MultilineTextInputWidget({
 					rows: 1,
 					maxRows: 20,
@@ -199,7 +206,7 @@
 			}
 
 			partSection.addClass('quickedit-hide');
-			heading.addClass(heading.is(':header') ? 'quickedit-heading' : 'quickedit-hide');
+			heading.addClass('quickedit-heading');
 			el.removeClass('quickedit-loading');
 			progress.$element.remove();
 			textarea.$input.css({
@@ -352,7 +359,7 @@
 				)
 			);
 
-			heading.after(editor);
+			inserter(editor);
 		}, function() {
 			el.removeClass('quickedit-loading');
 			progress.$element.remove();

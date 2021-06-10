@@ -50,30 +50,31 @@
 		});
 	}
 
-	function showPreview() {
-		$('#quickedit-editor .preview').remove();
+	function getPreviewCallback(editor) {
+		editor.children('.preview').remove();
 
 		new OO.ui.ProgressBarWidget().$element.css({
 			maxWidth: '100%',
 			borderRadius: 0,
 			boxShadow: 'none',
 			margin: '8px 0'
-		}).addClass('preview').appendTo('#quickedit-editor');
+		}).addClass('preview').appendTo(editor);
 
 		return function(html) {
-			$('#quickedit-editor .preview').remove();
+			editor.children('.preview').remove();
 
 			$('<div>').html(html).css({
 				margin: '8px 0',
 				border: '1px solid #a2a9b1',
 				padding: '8px',
 				overflowX: 'hidden'
-			}).addClass('preview').appendTo('#quickedit-editor');
+			}).addClass('preview').appendTo(editor);
 		};
 	}
 
-	function showCompare(title, from, to) {
+	function showCompare(editor, title, from, to) {
 		mw.loader.load('mediawiki.diff.styles');
+
 		api('post', {
 			action: 'compare',
 			fromslots: 'main',
@@ -93,7 +94,7 @@
 					$('<col>').addClass('diff-content')
 				)
 			).append(r.compare['*']) : 'No differences.';
-		}).then(showPreview());
+		}).then(getPreviewCallback(editor));
 	}
 
 	// Parts taken from EditPage::extractSectionTitle and Parser::stripSectionName
@@ -143,7 +144,8 @@
 				expanded = false,
 				part = full.split(/(?:^|\n)(=+.+=+)/, 3).join(''),
 				post = full.replace(part, ''),
-				level = 0;
+				level = 0,
+				editor;
 
 			full.replace(/^(=+).+?(=+)(?:\n|$)/, function(m, a, b) {
 				level = Math.min(a.length, b.length);
@@ -274,17 +276,17 @@
 					text: textarea.getValue()
 				}).then(function(r) {
 					return r.parse.text['*'] + '<div style="clear:both;"></div>';
-				}).then(showPreview());
+				}).then(getPreviewCallback(editor));
 			});
 
 			compare.on('click', function() {
-				showCompare(title, part + (expanded ? post : ''), textarea.getValue());
+				showCompare(editor, title, part + (expanded ? post : ''), textarea.getValue());
 			});
 
 			cancel.on('click', function() {
-				$('#quickedit-editor').remove();
+				editor.remove();
+				heading.removeClass('quickedit-heading');
 				fullSection.removeClass('quickedit-hide');
-				$('.quickedit-heading').removeClass('quickedit-heading');
 			});
 
 			more.on('click', function() {
@@ -294,63 +296,63 @@
 				more.setDisabled(true);
 			});
 
-			heading.after(
-				$('<div id="quickedit-editor">').css({
-					overflowX: 'hidden'
+			editor = $('<div id="quickedit-editor">').css({
+				overflowX: 'hidden'
+			}).append(
+				$('<div>').css({
+					backgroundColor: '#eaecf0',
+					borderBottom: '1px solid #a2a9b1',
+					marginBottom: '8px'
 				}).append(
+					textarea.$element.css({
+						width: '100%',
+						maxWidth: '100%',
+						fontFamily: 'monospace, monospace'
+					}).addClass('quickedit-textarea'),
 					$('<div>').css({
-						backgroundColor: '#eaecf0',
-						borderBottom: '1px solid #a2a9b1',
-						marginBottom: '8px'
+						border: '1px solid #a2a9b1',
+						borderWidth: '0 1px'
 					}).append(
-						textarea.$element.css({
+						$('<div>').css({
+							padding: '8px 4px 8px 8px',
+							display: 'table-cell',
+							verticalAlign: 'middle'
+						}).html('Edit&nbsp;summary:'),
+						summary.$element.css({
 							width: '100%',
 							maxWidth: '100%',
-							fontFamily: 'monospace, monospace'
-						}).addClass('quickedit-textarea'),
-						$('<div>').css({
-							border: '1px solid #a2a9b1',
-							borderWidth: '0 1px'
-						}).append(
-							$('<div>').css({
-								padding: '8px 4px 8px 8px',
-								display: 'table-cell',
-								verticalAlign: 'middle'
-							}).html('Edit&nbsp;summary:'),
-							summary.$element.css({
-								width: '100%',
-								maxWidth: '100%',
-								padding: '8px 0px',
-								display: 'table-cell',
-								verticalAlign: 'middle'
-							}),
-							new OO.ui.FieldLayout(minor, {
-								label: new OO.ui.HtmlSnippet('Minor&nbsp;edit?'),
-								align: 'inline'
-							}).$element.css({
-								padding: '8px 8px 8px 4px',
-								display: 'table-cell',
-								verticalAlign: 'middle'
-							})
-						),
-						buttons.$element.css({
-							border: '1px solid #a2a9b1',
-							borderWidth: '0 1px',
-							padding: '0px 8px 0'
+							padding: '8px 0px',
+							display: 'table-cell',
+							verticalAlign: 'middle'
 						}),
-						title !== mw.config.get('wgPageName') ? $('<div>').css({
-							border: '1px solid #a2a9b1',
-							borderWidth: '0 1px',
-							padding: '0px 8px 8px'
-						}).append(
-							'Editing page: ',
-							$('<a>').attr('href', mw.config.get('wgArticlePath').replace('$1', title)).css({
-								fontWeight: 'bold'
-							}).text(title.replace(/_/g, ' '))
-						) : undefined
-					)
+						new OO.ui.FieldLayout(minor, {
+							label: new OO.ui.HtmlSnippet('Minor&nbsp;edit?'),
+							align: 'inline'
+						}).$element.css({
+							padding: '8px 8px 8px 4px',
+							display: 'table-cell',
+							verticalAlign: 'middle'
+						})
+					),
+					buttons.$element.css({
+						border: '1px solid #a2a9b1',
+						borderWidth: '0 1px',
+						padding: '0px 8px 0'
+					}),
+					title !== mw.config.get('wgPageName') ? $('<div>').css({
+						border: '1px solid #a2a9b1',
+						borderWidth: '0 1px',
+						padding: '0px 8px 8px'
+					}).append(
+						'Editing page: ',
+						$('<a>').attr('href', mw.config.get('wgArticlePath').replace('$1', title)).css({
+							fontWeight: 'bold'
+						}).text(title.replace(/_/g, ' '))
+					) : undefined
 				)
 			);
+
+			heading.after(editor);
 		}, function() {
 			el.removeClass('quickedit-loading');
 			progress.$element.remove();

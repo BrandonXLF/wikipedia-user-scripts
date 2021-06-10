@@ -127,7 +127,10 @@
 			var articleContent = $('#mw-content-text .mw-parser-output');
 
 			matcher = function(selector) {
-				return articleContent.children(':not(' + selector + ',' + selector + '~)');
+				var child = articleContent.children(selector).first();
+
+				if (child.length) return child.prevAll();
+				return articleContent.children();
 			};
 			inserter = articleContent.prepend.bind(articleContent);
 		}

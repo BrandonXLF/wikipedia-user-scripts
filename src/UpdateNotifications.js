@@ -17,7 +17,7 @@ $(function() {
 	}
 
 	worker.port.onmessage = function(e) {
-		if (e.data.alert.latest > shownTime || e.data.message.latest > shownTime) {
+		if (!window.noUpdateNotificationNotice && (e.data.alert.latest > shownTime || e.data.message.latest > shownTime)) {
 			shownTime = new Date();
 			mw.notify('New notification received!');
 		}

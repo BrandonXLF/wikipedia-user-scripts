@@ -16,7 +16,8 @@ $(function() {
 			maxHeight: '70vh',
 			maxWidth: '30em',
 			overflow: 'auto',
-			display: 'block'
+			display: 'block',
+			zIndex: 999
 		})).prependTo('body');
 
 	toc2.find('#toctogglecheckbox').attr('id', 'toctogglecheckbox2').prop('checked', !data.expand);

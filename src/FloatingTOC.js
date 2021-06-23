@@ -6,19 +6,20 @@
 
 $(function() {
 	var data = JSON.parse(mw.user.options.get('userjs-floatingtoc') || '{}'),
-		toc2 = $('<div>').css({
-			zIndex: 5
-		}).addClass('mw-body-content').append((data.remove ? $('#toc') : $('#toc').clone().attr('id', 'toc2')).addClass('floatingtoc').css({
-			position: 'fixed',
-			left: data.left ? 10 : undefined,
-			right: data.left ? undefined : 10,
-			bottom: 10,
-			maxHeight: '70vh',
-			maxWidth: '30em',
-			overflow: 'auto',
-			display: 'block',
-			zIndex: 999
-		})).appendTo(mw.util.$content);
+		toc2 = (data.remove ? $('#toc') : $('#toc').clone().attr('id', 'toc2'))
+			.addClass('floatingtoc')
+			.css({
+				position: 'fixed',
+				left: data.left ? 10 : undefined,
+				right: data.left ? undefined : 10,
+				bottom: 10,
+				maxHeight: '70vh',
+				maxWidth: '30em',
+				overflow: 'auto',
+				display: 'block',
+				zIndex: 999
+			})
+			.appendTo(mw.util.$content.find('.mw-parser-output'));
 
 	toc2.find('#toctogglecheckbox').attr('id', 'toctogglecheckbox2').prop('checked', !data.expand);
 	!data.remove && $('#toc').find('#toctogglecheckbox').prop('checked', !!data.hide);

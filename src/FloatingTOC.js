@@ -18,7 +18,7 @@ $(function() {
 			overflow: 'auto',
 			display: 'block',
 			zIndex: 999
-		})).prependTo('body');
+		})).appendTo(mw.util.$content);
 
 	toc2.find('#toctogglecheckbox').attr('id', 'toctogglecheckbox2').prop('checked', !data.expand);
 	!data.remove && $('#toc').find('#toctogglecheckbox').prop('checked', !!data.hide);

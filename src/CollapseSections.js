@@ -6,37 +6,29 @@
 
 // window.collapseSections - Set to true to collapse all sections by default
 
-$.when($.ready, mw.loader.using(['oojs-ui-core', 'oojs-ui-windows', 'oojs-ui.styles.icons-movement'])).then(function() {
+mw.hook('wikipage.content').add(function() {
 	if (mw.config.get('skin') === 'minerva') return;
 
 	mw.util.addCSS('[class*="hide-sec"]{display:none!important}');
 
-	function main(level) {
-		$('.mw-parser-output h' + level + ':has(*)').each(function() {
-			var heading = $(this),
-				icon = $('<i class="mw-ui-icon-before mw-ui-icon-small mw-ui-icon mw-ui-icon-collapse" style="margin-left:-0.8em;"></i>');
+	$('.mw-parser-output :header:has(*)').each(function() {
+		var level = +this.nodeName[1],
+			heading = $(this),
+			icon = $('<i class="mw-ui-icon-before mw-ui-icon-small mw-ui-icon mw-ui-icon-collapse" style="margin-left:-0.8em;"></i>');
 
-			icon.click(function() {
-				var levelMatch = 'h1';
-				for (var i = 2; i <= level; i++) levelMatch += ',h' + i + ':has(*)';
+		icon.click(function() {
+			var levelMatch = 'h1';
+			for (var i = 2; i <= level; i++) levelMatch += ',h' + i + ':has(*)';
 
-				var sect = heading.nextUntil(levelMatch);
-
-				if (icon.hasClass('mw-ui-icon-collapse')) {
-					icon.removeClass('mw-ui-icon-collapse');
-					icon.addClass('mw-ui-icon-expand');
-					sect.addClass('hide-sect-h' + i);
-				} else {
-					icon.removeClass('mw-ui-icon-expand');
-					icon.addClass('mw-ui-icon-collapse');
-					sect.removeClass('hide-sect-h' + i);
-				}
-			});
-
-			if (window.collapseSections) icon.click();
-			heading.prepend(icon);
+			icon.toggleClass('mw-ui-icon-collapse');
+			icon.toggleClass('mw-ui-icon-expand');
+			heading.nextUntil(levelMatch).toggleClass('hide-sect-h' + level);
 		});
-	}
 
-	for (var i = 1; i < 7; i++) main(i);
+		if (window.collapseSections) icon.click();
+		heading.prepend(icon);
+	});
 });
+
+mw.loader.load(['mediawiki.ui.icon', 'oojs-ui.styles.icons-movement']);
+mw.util.addCSS('[class*="hide-sec"]{display:none!important}');

@@ -126,9 +126,9 @@ $.when(mw.loader.using([
 					$(this).parent().attr('draggable', 'false');
 				})
 			)
-			.append('<span><a class="page" href="' + url + '">' + txt + '</a></span>')
+			.append($('<a>').addClass('page').attr('href', url).text(txt))
 			.append(array[0] && array[1] ? ' . . ' : '')
-			.append('<span class="info">' + (array[1] || '') + '</span>')
+			.append($('<span>').addClass('info').text(array[1] || ''))
 			.append(array[0] || array[1] ? '<span class="act" style="visibility:hidden;"> . . </span>' : '')
 			.append((new OO.ui.IconWidget({icon: 'trash', title: 'Delete', flags: ['destructive']})).$element
 				.css({cursor: 'pointer', visibility: 'hidden', height: '1.1em', width: '1.1em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'})

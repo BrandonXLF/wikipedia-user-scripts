@@ -6,12 +6,12 @@
 
 // window.collapseSections - Set to true to collapse all sections by default
 
-mw.hook('wikipage.content').add(function() {
+mw.hook('wikipage.content').add(function(content) {
 	if (mw.config.get('skin') === 'minerva') return;
 
 	mw.util.addCSS('[class*="hide-sec"]{display:none!important}');
 
-	$('.mw-parser-output :header:has(*)').each(function() {
+	content.find('.mw-parser-output :header:has(*)').each(function() {
 		var level = +this.nodeName[1],
 			heading = $(this),
 			icon = $('<i class="mw-ui-icon-before mw-ui-icon-small mw-ui-icon mw-ui-icon-collapse" style="margin-left:-0.8em;"></i>');

@@ -106,14 +106,14 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 					return;
 				}
 
-				var parts = refs[i].match(/(<ref.*?>)(.*?)(<\/ref>)/);
-				parts[2] = parts[2].match(/\[?([^ \]]*)*\]?/)[1];
+				var parts = refs[i].match(/(<ref.*?>)(.*?)(<\/ref>)/),
+					unexpanded = parts[2].trim().match(/\[?([^ \]]*)*\]?/)[1].trim();
 
-				getCitoidRef(parts[2]).then(function(ref) {
-					refs[i] = parts[1] + ref + parts[3];
-					afterRef('Expanded reference to "' + parts[2].trim() + '".', 'green');
+				getCitoidRef(unexpanded).then(function(expanded) {
+					refs[i] = parts[1] + expanded + parts[3];
+					afterRef('Expanded reference to "' + unexpanded + '".', 'green');
 				}, function() {
-					afterRef('Error expanding reference to "' + parts[2].trim() + '".', 'red');
+					afterRef('Error expanding reference to "' + unexpanded + '".', 'red');
 				});
 			}
 

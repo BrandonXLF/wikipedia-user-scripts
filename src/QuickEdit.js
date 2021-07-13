@@ -152,8 +152,9 @@
 				full = r.full,
 				saving = false,
 				expanded = false,
-				part = full.split(/(?:^|\n)(=+.+=+)/, 3).join(''),
-				post = full.replace(part, ''),
+				parts = full.split(/((?:^|\n)=+.+=+(?:\n|$))/),
+				part = parts.splice(0, 3).join(''),
+				post = parts.join(''),
 				level = 0,
 				editor;
 

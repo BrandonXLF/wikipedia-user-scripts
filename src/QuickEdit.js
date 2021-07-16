@@ -172,7 +172,7 @@
 					rows: 1,
 					maxRows: 20,
 					autosize: true,
-					value: part,
+					value: part
 				}),
 				summary = new OO.ui.TextInputWidget({
 					value: getSectionSummary(part)
@@ -215,6 +215,10 @@
 			progress.$element.remove();
 			textarea.$input.css({
 				borderRadius: '0'
+			});
+
+			summary.on('enter', function() {
+				save.emit('click');
 			});
 
 			save.on('click', function() {

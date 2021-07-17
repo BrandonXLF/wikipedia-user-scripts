@@ -261,7 +261,7 @@
 					});
 				}, function(code) {
 					if (code == 'editconflict') {
-						showEditConflict(title, sectionID, fullText).then(function(r) {
+						showEditConflict(editor, title, sectionID, fullText).then(function(r) {
 							start = r.start;
 							base = r.base;
 							textarea = r.textarea;
@@ -374,7 +374,7 @@
 		});
 	}
 
-	function showEditConflict(title, sectionID, text) {
+	function showEditConflict(editor, title, sectionID, text) {
 		return getPageInfo(title, sectionID).then(function(r) {
 			var textarea = new OO.ui.MultilineTextInputWidget({
 					rows: 1,
@@ -404,13 +404,13 @@
 			textarea.$input.css({
 				borderRadius: '0'
 			});
-			$('#quickedit-editor > :first-child > :first-child').remove();
+			editor.find('> :first-child > :first-child').remove();
 
 			$('<table>').css({
 				width: '100%',
 				border: '1px solid #a2a9b1',
 				borderBottom: 'none',
-				borderSpacing: 0,
+				borderSpacing: '0',
 				margin: '0 !important'
 			}).append(
 				$('<tr>').append(
@@ -445,12 +445,12 @@
 						})
 					)
 				)
-			).prependTo('#quickedit-editor > :first-child');
+			).prependTo(editor.find('> :first-child'));
 
 			textarea.on('change', syncSize);
 			textarea2.on('change', syncSize);
 			syncSize();
-			showCompare(title, text, r.full);
+			showCompare(editor, title, text, r.full);
 
 			r.textarea = textarea;
 			return r;

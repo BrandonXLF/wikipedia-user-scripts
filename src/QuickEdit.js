@@ -152,9 +152,9 @@
 				full = r.full,
 				saving = false,
 				expanded = false,
-				parts = full.split(/((?:^|\n)=+.+=+(?:\n|$))/),
-				part = parts.splice(0, 3).join(''),
-				post = parts.join(''),
+				remainderStart = full.match(/\n=+.+=+(?:\n|$)/),
+				part =  remainderStart ? full.substring(0, remainderStart.index + 1) : full,
+				remainder = remainderStart ? full.substring(remainderStart.index + 1) : '',
 				level = 0,
 				editor;
 
@@ -224,7 +224,7 @@
 			save.on('click', function() {
 				if (saving) return;
 
-				var fullText = textarea.getValue() + (expanded ? '' : post);
+				var fullText = textarea.getValue() + (expanded ? '' : remainder);
 				saving = true;
 				save.setLabel('Saving...');
 				compare.setDisabled(true);
@@ -295,7 +295,7 @@
 			});
 
 			compare.on('click', function() {
-				showCompare(editor, title, part + (expanded ? post : ''), textarea.getValue());
+				showCompare(editor, title, part + (expanded ? remainder : ''), textarea.getValue());
 			});
 
 			cancel.on('click', function() {
@@ -306,7 +306,7 @@
 
 			more.on('click', function() {
 				expanded = true;
-				textarea.setValue(textarea.getValue() + post);
+				textarea.setValue(textarea.getValue() + remainder);
 				fullSection.addClass('quickedit-hide');
 				more.setDisabled(true);
 			});

@@ -153,8 +153,8 @@
 				saving = false,
 				expanded = false,
 				remainderStart = full.match(/\n=+.+=+(?:\n|$)/),
-				part =  remainderStart ? full.substring(0, remainderStart.index + 1) : full,
-				remainder = remainderStart ? full.substring(remainderStart.index + 1) : '',
+				part =  remainderStart ? full.substring(0, remainderStart.index) : full,
+				remainder = remainderStart ? full.substring(remainderStart.index) : '',
 				level = 0,
 				editor;
 

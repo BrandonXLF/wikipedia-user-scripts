@@ -47,7 +47,6 @@ Most of them should work fine on other MediaWiki wikis, but some scripts are wik
 * ToTop - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ToTop), [JS](/src/ToTop.js)
 * ToTopButton - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ToTopButton), [CSS](/src/ToTopButton.css), [JS](/src/ToTopButton.js)
 * UpdateNotifications - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/UpdateNotifications), [JS](/src/UpdateNotifications.js)
-* UpdateNotificationsWorker - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/UpdateNotificationsWorker), [JS](/src/UpdateNotificationsWorker.js)
 * WatchDoc - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/WatchDoc), [JS](/src/WatchDoc.js)
 * WPBannerNavbar - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/WPBannerNavbar), [JS](/src/WPBannerNavbar.js)
 

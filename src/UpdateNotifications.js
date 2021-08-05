@@ -6,51 +6,7 @@
 
 $(function() {
 	var crossWiki = mw.user.options.get('echo-cross-wiki-notifications'),
-		apiEntry = window.location.origin + mw.config.get('wgScriptPath') + '/api.php',
-		shownTime = new Date();
-
-	function getData() {
-		var params = {
-				action: 'query',
-				format: 'json',
-				meta: 'notifications',
-				notprop: 'list|count|seenTime',
-				notlimit: 1,
-				notgroupbysection: true,
-				notalertunreadfirst: true,
-				notmessageunreadfirst: true,
-				notcrosswikisummary: crossWiki
-			},
-			paramArray = [];
-
-		for (var key in params) paramArray.push(key + '=' + params[key]);
-
-		var url = apiEntry + '?' + paramArray.join('&'),
-			req = new XMLHttpRequest();
-
-		req.addEventListener('load', function() {
-			var res = JSON.parse(req.responseText),
-				info = res.query.notifications,
-				status = {
-					alert: {
-						seen: new Date(info.alert.seenTime).getTime(),
-						latest: new Date(info.alert.list[0].timestamp.utciso8601).getTime(),
-						count: info.alert.rawcount
-					},
-					message: {
-						seen: new Date(info.message.seenTime).getTime(),
-						latest: new Date(info.message.list[0].timestamp.utciso8601).getTime(),
-						count: info.message.rawcount
-					}
-				};
-
-			localStorage.setItem('update-notifications-status', JSON.stringify(status));
-			updateCount(status);
-		});
-
-		req.open('GET', url);
-		req.send();
-	}
+		shownTime = Date.now();
 
 	function updateIcon(id, data) {
 		$('#' + id + ' a')
@@ -62,12 +18,43 @@ $(function() {
 
 	function updateCount(status) {
 		if (!window.noUpdateNotificationNotice && (status.alert.latest > shownTime || status.message.latest > shownTime)) {
-			shownTime = new Date();
+			shownTime = Date.now();
 			mw.notify('New notification received!');
 		}
 
 		updateIcon('pt-notifications-alert', status.alert);
 		updateIcon('pt-notifications-notice', status.message);
+	}
+
+	function getData() {
+		new mw.Api().get({
+			action: 'query',
+			format: 'json',
+			meta: 'notifications',
+			notprop: 'list|count|seenTime',
+			notlimit: 1,
+			notgroupbysection: true,
+			notalertunreadfirst: true,
+			notmessageunreadfirst: true,
+			notcrosswikisummary: crossWiki
+		}).then(function(res) {
+			var info = res.query.notifications,
+				status = {
+					alert: {
+						seen: Date.parse(info.alert.seenTime),
+						latest: info.alert.list[0].timestamp.utcunix,
+						count: info.alert.rawcount
+					},
+					message: {
+						seen: Date.parse(info.message.seenTime),
+						latest: info.message.list[0].timestamp.utcunix,
+						count: info.message.rawcount
+					}
+				};
+
+			localStorage.setItem('update-notifications-status', JSON.stringify(status));
+			updateCount(status);
+		});
 	}
 
 	window.addEventListener('storage', function(e) {
@@ -76,7 +63,7 @@ $(function() {
 
 	setInterval(function() {
 		var lastRequestTime = +localStorage.getItem('update-notifications-last-request-time'),
-			now = new Date().getTime();
+			now = Date.now();
 
 		if (now - lastRequestTime >= 4900) {
 			localStorage.setItem('update-notifications-last-request-time', now);

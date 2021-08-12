@@ -471,7 +471,7 @@
 		element.find('#quickedit-editor, .quickedit-section').remove();
 		element.find('.mw-editsection').each(function() {
 			$('[href*="section="]', this).last().after(
-				mobile ? '' : '<span class="mw-editsection-divider quickedit-section"> | </span>',
+				mobile ? '' : '<span class="quickedit-section"> | </span>',
 				$('<a>').html(mobile ? '&nbsp;Q' : 'quick edit').addClass('quickedit-section quickedit-editlink')
 			).addClass('quickedit-target');
 		});

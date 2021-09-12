@@ -25,7 +25,7 @@
         "brace-style": "error",
         "space-before-blocks": "error",
         "one-var": ["error", "consecutive"],
-        "one-var-declaration-per-line": ["error", "always"],
+        "one-var-declaration-per-line": ["error", "initializations"],
         "space-in-parens": "error",
         "func-call-spacing": "error",
         "function-call-argument-newline": ["error", "consistent"],

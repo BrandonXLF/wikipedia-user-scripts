@@ -1,28 +1,41 @@
 /*** To Bottom ***/
 
-// Adds a link in the right navagation menu to got to the bottom of the page
+// Adds a link in the right navigation menu to got to the bottom of the page
 // Documentation at [[User:BrandonXLF/ToBottom]]
 // By [[User:BrandonXLF]]
 
-// window.arrow = 'never'   ; To always see Bottom
-// window.arrow = 'always'  ; To always see ↓ (down arrow)
-// window.arrow = 'hybrid'  ; To see ↓ (down arrow) normally and Bottom when in menu (default)
+// window.arrow = 'never';   // To always see Bottom
+// window.arrow = 'always;   // To always see ↓ (down arrow)
+// window.arrow = 'hybrid';  // To see ↓ (down arrow) normally and Bottom when in menu (default)
 
 $(function() {
-	$(mw.util.addPortletLink(
-		'p-views',
-		'#',
-		window.arrow == 'never' ? 'Bottom' : window.arrow == 'always' ? '↓' : '',
-		'ca-bottom',
-		null,
-		null,
-		'.mw-watchlink'
-	)).addClass('collapsible').click(function(e) {
+	function scroll(e) {
 		e.preventDefault();
 		$('html, body').animate({scrollTop: $(document).height()});
-	});
+	}
+
+	var mode = 'hybrid';
+
+	if (window.arrow == 'never' || window.arrow == 'always') {
+		mode = window.arrow;
+	}
+
+	$(mw.util.addPortletLink('p-views', '#', mode == 'never' ? 'Bottom' : '↓', 'ca-to-bottom', null, null, '.mw-watchlink'))
+		.addClass('collapsible')
+		.click(scroll);
+
+	if (mode == 'hybrid') {
+		$(mw.util.addPortletLink('p-views', '#', 'Bottom', 'ca-to-bottom-text', null, null, '.mw-watchlink'))
+			.addClass('collapsible')
+			.click(scroll);
+	}
 
 	if (window.arrow != 'never' && window.arrow != 'always') {
-		mw.util.addCSS('#ca-bottom a:before{content:\'↓\';}#p-cactions #ca-bottom a:before{content:\'Bottom\';}');
+		mw.util.addCSS(
+			'#ca-to-bottom { display: initial !important; }' +
+			'#ca-to-bottom-text { display: none !important; }' +
+			'#p-cactions #ca-to-bottom { display: none !important; }' +
+			'#p-cactions #ca-to-bottom-text { display: initial !important; }'
+		);
 	}
 });

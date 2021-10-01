@@ -11,7 +11,7 @@ $(function() {
 		.appendTo('body')
 		.addClass('topButtonCircle')
 		.on('click', function() {
-			$('html, body').animate({scrollTop: 0}, 'slow');
+			$('html').animate({scrollTop: 0});
 		})
 		.append('<div></div>');
 

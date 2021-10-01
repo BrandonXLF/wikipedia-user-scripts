@@ -11,7 +11,7 @@
 $(function() {
 	function scroll(e) {
 		e.preventDefault();
-		$('html, body').animate({scrollTop: $(document).height()});
+		$('html').animate({scrollTop: $(document).height()});
 	}
 
 	var mode = 'hybrid';

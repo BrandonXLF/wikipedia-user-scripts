@@ -9,7 +9,7 @@ $(function() {
 		.html('<a>Back to top</a>')
 		.attr('id', 'footer-places-totop')
 		.on('click', function() {
-			$('html, body').animate({scrollTop: 0});
+			$('html').animate({scrollTop: 0});
 		})
 		.appendTo('#footer-places');
 });

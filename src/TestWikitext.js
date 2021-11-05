@@ -17,9 +17,12 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		});
 
 		preview.on('click', function() {
-			output.empty().append((new OO.ui.ProgressBarWidget({
-				progress: false
-			})).$element.css('min-width', '100%'));
+			output.empty().append(
+				new OO.ui.ProgressBarWidget({
+					progress: false
+				}).$element.css('min-width', '100%')
+			);
+
 			$.post(mw.config.get('wgScriptPath') + '/api.php', {
 				action: 'parse',
 				pst: 'true',
@@ -28,12 +31,17 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 				format: 'json',
 				prop: 'text|displaytitle|categorieshtml|limitreporthtml'
 			}).done(function(r) {
-				output.html('<h1>' + r.parse.displaytitle + '</h1>' + r.parse.text['*'] + r.parse.categorieshtml['*']).append(new OO.ui.PanelLayout({
-					expanded: false,
-					framed: true,
-					padded: true,
-					$content: $(r.parse.limitreporthtml['*'])
-				}).$element.css({marginTop: '2em', clear: 'both'}));
+				output.html('<h1>' + r.parse.displaytitle + '</h1>' + r.parse.text['*'] + r.parse.categorieshtml['*']).append(
+					new OO.ui.PanelLayout({
+						expanded: false,
+						framed: true,
+						padded: true,
+						$content: $(r.parse.limitreporthtml['*'])
+					}).$element.css({
+						marginTop: '2em',
+						clear: 'both'
+					})
+				);
 			});
 		});
 
@@ -42,7 +50,12 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			name: 'title',
 			placeholder: 'Title'
 		});
-		title.$element.css({width: '100%', maxWidth: '100%', marginBottom: '1em'});
+
+		title.$element.css({
+			width: '100%',
+			maxWidth: '100%',
+			marginBottom: '1em'
+		});
 
 		var code = new OO.ui.MultilineTextInputWidget({
 			rows: 10,
@@ -51,7 +64,13 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			placeholder: 'Wikitext'
 		});
 
-		code.$element.css({width: '100%', maxWidth: '100%', fontFamily: 'monospace, monospace', marginBottom: '1em'});
+		code.$element.css({
+			width: '100%',
+			maxWidth: '100%',
+			fontFamily: 'monospace, monospace',
+			marginBottom: '1em'
+		});
+
 		code.on('change', function(v) {
 			localStorage.setItem('testwikitext', v);
 		});
@@ -59,8 +78,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		var parent = $('<div>')
 				.append(title.$element)
 				.append(code.$element)
-				.append($('<div>').append(preview.$element))
-			,
+				.append($('<div>').append(preview.$element)),
 			panel = new OO.ui.PanelLayout({
 				expanded: false,
 				framed: true,
@@ -70,11 +88,13 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			output = $('<div>');
 
 		document.title = 'Test wikitext - ' + mw.config.get('wgSiteName');
-		mw.util.$content.empty()
-			.append($('<div class="mw-body-content" id="bodyContent">')
-				.append('<h1 style="margin-bottom:0.5em;">Test wikitext</h1>')
-				.append(panel.$element)
-				.append(output)
-			);
+
+		mw.util.$content.empty().append(
+			$('<h1>').attr('id', 'firstHeading').addClass('firstHeading').text('Test wikitext'),
+			$('<div>').attr('id', 'bodyContent').addClass('mw-body-content').append(
+				panel.$element,
+				output
+			)
+		);
 	}
 });

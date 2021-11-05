@@ -26,8 +26,8 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			$.post(mw.config.get('wgScriptPath') + '/api.php', {
 				action: 'parse',
 				pst: 'true',
-				title: title.getValue() || 'Test wikitext',
-				text: code.getValue() || '',
+				title: title.getValue() || 'Test Wikitext',
+				text: code.getValue(),
 				format: 'json',
 				prop: 'text|displaytitle|categorieshtml|limitreporthtml'
 			}).done(function(r) {
@@ -46,7 +46,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		});
 
 		var title = new OO.ui.TextInputWidget({
-			value: 'API',
+			value: localStorage.getItem('testwikitext-title'),
 			name: 'title',
 			placeholder: 'Title'
 		});
@@ -60,7 +60,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		var code = new OO.ui.MultilineTextInputWidget({
 			rows: 10,
 			name: 'wpTextbox1',
-			value: localStorage.getItem('testwikitext') || '',
+			value: localStorage.getItem('testwikitext'),
 			placeholder: 'Wikitext'
 		});
 
@@ -87,9 +87,9 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			}),
 			output = $('<div>');
 
-		document.title = 'Test wikitext - ' + mw.config.get('wgSiteName');
+		document.title = 'Test Wikitext - ' + mw.config.get('wgSiteName');
 
-		$('#firstHeading').text('Test wikitext');
+		$('#firstHeading').text('Test Wikitext');
 		$('#mw-content-text').empty().append(panel.$element, output);
 	}
 });

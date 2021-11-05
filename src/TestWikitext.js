@@ -89,7 +89,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 
 		document.title = 'Test wikitext - ' + mw.config.get('wgSiteName');
 
-		mw.util.$content.empty().append(
+		$('#mw-content-text').empty().append(
 			$('<h1>').attr('id', 'firstHeading').addClass('firstHeading').text('Test wikitext'),
 			$('<div>').attr('id', 'bodyContent').addClass('mw-body-content').append(
 				panel.$element,

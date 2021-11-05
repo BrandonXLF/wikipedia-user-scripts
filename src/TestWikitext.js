@@ -57,6 +57,10 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			marginBottom: '1em'
 		});
 
+		title.on('change', function(value) {
+			localStorage.setItem('testwikitext-title', value);
+		});
+
 		var code = new OO.ui.MultilineTextInputWidget({
 			rows: 10,
 			name: 'wpTextbox1',
@@ -71,8 +75,8 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			marginBottom: '1em'
 		});
 
-		code.on('change', function(v) {
-			localStorage.setItem('testwikitext', v);
+		code.on('change', function(value) {
+			localStorage.setItem('testwikitext', value);
 		});
 
 		var parent = $('<div>')

@@ -63,6 +63,8 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 
 		var code = new OO.ui.MultilineTextInputWidget({
 			rows: 10,
+			maxRows: 20,
+			autosize: true,
 			name: 'wpTextbox1',
 			value: localStorage.getItem('testwikitext'),
 			placeholder: 'Wikitext'
@@ -71,7 +73,6 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		code.$element.css({
 			width: '100%',
 			maxWidth: '100%',
-			fontFamily: 'monospace, monospace',
 			marginBottom: '1em'
 		});
 
@@ -79,10 +80,18 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			localStorage.setItem('testwikitext', value);
 		});
 
+		mw.loader.using('ext.wikiEditor', function() {
+			mw.addWikiEditor(code.$input);
+			mw.loader.load(['ext.TemplateWizard', 'ext.CodeMirror']);
+		});
+
 		var parent = $('<div>')
+				.attr('id', 'testwikitext')
 				.append(title.$element)
 				.append(code.$element)
-				.append($('<div>').append(preview.$element)),
+				.append(
+					$('<div>').append(preview.$element)
+				),
 			panel = new OO.ui.PanelLayout({
 				expanded: false,
 				framed: true,
@@ -96,4 +105,11 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		$('#firstHeading').text('Test Wikitext');
 		$('#mw-content-text').empty().append(panel.$element, output);
 	}
+
+	mw.loader.addStyleTag(
+		'#testwikitext .wikiEditor-ui-view { border: none; }' +
+		'#testwikitext .wikiEditor-ui-top { border: 1px solid #a2a9b1; border-bottom: none; }' +
+		'#testwikitext .wikiEditor-ui .oo-ui-textInputWidget .oo-ui-inputWidget-input { font-family: monospace; border-radius: 0; }' +
+		'#testwikitext .CodeMirror { border: 1px solid #a2a9b1; }'
+	);
 });

@@ -5,6 +5,8 @@
 // By [[User:BrandonXLF]]
 
 $(function() {
+	if (mw.config.get('wgAction') != 'history') return;
+
 	window.restorerSummary = window.restorerSummary || 'Restored revision $ID by [[Special:Contributions/$USER|$USER]] ([[User:BrandonXLF/Restorer|Restorer]])';
 
 	function restore(user, revid) {
@@ -32,34 +34,31 @@ $(function() {
 			el,
 			parent;
 
-		if (revid != mw.config.get('wgCurRevisionId')) {
-			user = item.getElementsByClassName('mw-userlink')[0].textContent.replace('User:', '');
-			links = item.getElementsByClassName('mw-changeslist-links');
-			links = links[links.length - 1];
-			parent = document.createElement('span');
-			el = document.createElement('a');
+		if (revid == mw.config.get('wgCurRevisionId')) return;
 
-			el.addEventListener('click', function() {
-				el.className = 'restorer-loading';
+		user = item.getElementsByClassName('mw-userlink')[0].textContent.replace('User:', '');
+		links = item.getElementsByClassName('mw-changeslist-links');
+		links = links[links.length - 1];
+		parent = document.createElement('span');
+		el = document.createElement('a');
 
-				restore(user, revid).always(function() {
-					el.className = '';
-				});
+		el.addEventListener('click', function() {
+			el.className = 'restorer-loading';
+
+			restore(user, revid).always(function() {
+				el.className = '';
 			});
+		});
 
-			el.innerHTML = 'restore';
-			parent.appendChild(el);
-			links.appendChild(parent);
-		}
+		el.innerHTML = 'restore';
+		parent.appendChild(el);
+		links.appendChild(parent);
 	}
 
-	if (location.search.includes('action=history')) {
-		var i,
-			parents = document.querySelectorAll('li[data-mw-revid]');
+	var parents = document.querySelectorAll('li[data-mw-revid]');
 
-		for (i = 0; i < parents.length; i++) {
-			addLink(parents[i]);
-		}
+	for (var i = 0; i < parents.length; i++) {
+		addLink(parents[i]);
 	}
 
 	mw.loader.addStyleTag(

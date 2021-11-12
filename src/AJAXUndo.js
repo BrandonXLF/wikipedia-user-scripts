@@ -5,10 +5,12 @@
 // By [[User:BrandonXLF]]
 
 $(function() {
-	function undo(undo, undoafter) {
+	if (mw.config.get('wgAction') != 'history') return;
+
+	function undo(undoId, undoafter) {
 		return new mw.Api().postWithEditToken({
 			action: 'edit',
-			undo: undo,
+			undo: undoId,
 			undoafter: undoafter,
 			title: mw.config.get('wgPageName'),
 		}).then(
@@ -22,30 +24,28 @@ $(function() {
 		);
 	}
 
-	if (mw.config.get('wgAction') == 'history') {
-		$('.mw-history-undo').parent().after(
-			$('<span>').append(
-				$('<a>')
-					.text('ajax undo')
-					.click(function() {
-						var el = $(this),
-							undoLink = el
-								.closest('.mw-changeslist-links')
-								.find('.mw-history-undo a')
-								.attr('href');
+	$('.mw-history-undo').parent().after(
+		$('<span>').append(
+			$('<a>')
+				.text('ajax undo')
+				.click(function() {
+					var el = $(this),
+						undoLink = el
+							.closest('.mw-changeslist-links')
+							.find('.mw-history-undo a')
+							.attr('href');
 
-						el.addClass('ajax-undo-loading');
+					el.addClass('ajax-undo-loading');
 
-						undo(
-							undoLink.match(/undo=([0-9]+)/)[1],
-							undoLink.match(/undoafter=([0-9]+)/)[1]
-						).always(function() {
-							el.removeClass('ajax-undo-loading');
-						});
-					})
-			)
-		);
-	}
+					undo(
+						undoLink.match(/undo=([0-9]+)/)[1],
+						undoLink.match(/undoafter=([0-9]+)/)[1]
+					).always(function() {
+						el.removeClass('ajax-undo-loading');
+					});
+				})
+		)
+	);
 
 	mw.loader.addStyleTag(
 		'@keyframes ajax-undo-loading {' +

@@ -8,31 +8,28 @@ $(function() {
 	window.restorerSummary = window.restorerSummary || 'Restored revision $ID by [[Special:Contributions/$USER|$USER]] ([[User:BrandonXLF/Restorer|Restorer]])';
 
 	function restore(user, revid) {
-		$.post(mw.config.get('wgScriptPath') + '/api.php', {
+		return new mw.Api().postWithEditToken({
 			action: 'edit',
 			pageid: mw.config.get('wgArticleId'),
 			undo: mw.config.get('wgCurRevisionId'),
 			undoafter: revid,
-			summary: window.restorerSummary.replace(/\$ID/g, revid).replace(/\$USER/g, user),
-			token: mw.user.tokens.get('csrfToken'),
-			format: 'json'
-		}).fail(function() {
-			mw.notify('An error occured while restoring the revision.', {type: 'error'});
-		}).done(function(result) {
-			if (result.error) {
-				mw.notify(result.error.info, {type: 'error'});
-			} else {
-				mw.notify('Restored revision sucessfully.');
+			summary: window.restorerSummary.replace(/\$ID/g, revid).replace(/\$USER/g, user)
+		}).then(
+			function() {
+				mw.notify('Restored revision successfully.');
 				location.reload();
+			},
+			function(_, data) {
+				mw.notify(new mw.Api().getErrorMessage(data), {type: 'error'});
 			}
-		});
+		);
 	}
 
 	function addLink(item) {
 		var revid = item.getAttribute('data-mw-revid'),
 			user,
 			links,
-			ele,
+			el,
 			parent;
 
 		if (revid != mw.config.get('wgCurRevisionId')) {
@@ -40,14 +37,18 @@ $(function() {
 			links = item.getElementsByClassName('mw-changeslist-links');
 			links = links[links.length - 1];
 			parent = document.createElement('span');
-			ele = document.createElement('a');
+			el = document.createElement('a');
 
-			ele.addEventListener('click', function() {
-				restore(user, revid);
+			el.addEventListener('click', function() {
+				el.className = 'restorer-loading';
+
+				restore(user, revid).always(function() {
+					el.className = '';
+				});
 			});
 
-			ele.innerHTML = 'restore';
-			parent.appendChild(ele);
+			el.innerHTML = 'restore';
+			parent.appendChild(el);
 			links.appendChild(parent);
 		}
 	}
@@ -55,8 +56,15 @@ $(function() {
 	if (location.search.includes('action=history')) {
 		var i,
 			parents = document.querySelectorAll('li[data-mw-revid]');
+
 		for (i = 0; i < parents.length; i++) {
 			addLink(parents[i]);
 		}
 	}
+
+	mw.loader.addStyleTag(
+		'@keyframes restorer-loading {' +
+		'0%, 100% {content: " ⡁"} 16% {content: " ⡈"} 33% {content: " ⠔"} 50% {content: " ⠒"} 66% {content: " ⠢"} 83% {content: " ⢁"}}' +
+		'.restorer-loading::after {white-space: pre; content: ""; animation: restorer-loading 0.5s infinite}'
+	);
 });

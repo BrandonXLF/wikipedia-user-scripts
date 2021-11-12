@@ -7,9 +7,10 @@
 mw.hook('wikipage.content').add(function(content) {
 	content.find('.mw-redirect')
 		.filter(function() {
-			return this.href.indexOf('oldid=') == -1 &&
+			return this.href.indexOf('redirect=no') == -1 &&
+				this.href.indexOf('oldid=') == -1 &&
 				this.href.indexOf('diff=') == -1 &&
-				this.href.indexOf('action=') == -1;
+				(this.href.indexOf('action=') == -1 || this.href.indexOf('action=view') != -1);
 		})
 		.after(function() {
 			return $('<a>')

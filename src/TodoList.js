@@ -14,6 +14,97 @@ $.when(mw.loader.using([
 	'oojs-ui.styles.icons-moderation',
 	'oojs-ui.styles.icons-content'
 ]), $.ready).then(function() {
+	var messages = function() {
+		var translations = {
+			en: {
+				todoPortlet: 'Todo',
+				todoHover: 'Click to see your todo list',
+				saving: 'Saving changes...',
+				drag: 'Drag',
+				delete: 'Delete',
+				edit: 'Edit',
+				pageNameUrl: 'Page name or URL',
+				comment: 'Comment',
+				save: 'Save',
+				cancel: 'Cancel',
+				moreinfo: 'More information',
+				undo: 'Undo',
+				redo: 'Redo',
+				clear: 'Clear',
+				clearConfirm: 'Are you sure you want to clear your todo list?',
+				download: 'Download',
+				upload: 'Upload',
+				help: 'Help',
+				add: 'Add',
+				close: 'Close',
+				yourList: 'Your todo list',
+				noPopup: 'Unable to open todo list popup while on the todo list page.',
+				addedTime: 'Added: $dateDate $dateMonth, $dateYear at $dateHours:$dateMinutes'
+			},
+			nb: {
+				todoPortlet: 'Huskeliste',
+				todoHover: 'Klikk for å se huskelista di',
+				saving: 'Lagrer endringer …',
+				drag: 'Dra',
+				delete: 'Slett',
+				edit: 'Rediger',
+				pageNameUrl: 'Sidenavn eller URL',
+				comment: 'Merknad',
+				save: 'Lagre',
+				cancel: 'Avbryt',
+				moreinfo: 'Mer informasjon',
+				undo: 'Angre',
+				redo: 'Angre angring',
+				clear: 'Tøm',
+				clearConfirm: 'Er du sikker på at du vil tømme huskelista di?',
+				download: 'Last ned',
+				upload: 'Last opp',
+				help: 'Hjelp',
+				add: 'Legg til',
+				close: 'Lukk',
+				yourList: 'Huskelista di',
+				noPopup: 'Kan ikke åpne oppsprettsboksen med huskelista mens du er på huskelistesiden.',
+				addedTime: 'Lagt til: $dateDate. $dateMonth $dateYear kl. $dateHours.$dateMinutes'
+			},
+			nn: {
+				todoPortlet: 'Hugseliste',
+				todoHover: 'Klikk for å sjå hugselista di',
+				saving: 'Lagrar endringar …',
+				drag: 'Dra',
+				delete: 'Slett',
+				edit: 'Endre',
+				pageNameUrl: 'Sidenamn eller URL',
+				comment: 'Merknad',
+				save: 'Lagre',
+				cancel: 'Avbryt',
+				moreinfo: 'Meir informasjon',
+				undo: 'Angre',
+				redo: 'Angre angring',
+				clear: 'Tøm',
+				clearConfirm: 'Er du sikker på at du vil tømme hugselista di?',
+				download: 'Last ned',
+				upload: 'Last opp',
+				help: 'Hjelp',
+				add: 'Legg til',
+				close: 'Lukk',
+				yourList: 'Hugselista di',
+				noPopup: 'Kan ikkje opna oppsprettsboksen med hugselista mens du er på hugselistesida.',
+				addedTime: 'Lagt til: $dateDate. $dateMonth $dateYear kl. $dateHours.$dateMinutes'
+			}
+		},
+			chain = mw.language.getFallbackLanguageChain(),
+			len = chain.length,
+			ret = {},
+			i = len - 1;
+		while ( i >= 0 ) {
+			if ( translations.hasOwnProperty( chain[ i ] ) ) {
+      	$.extend( ret, translations[ chain[ i ] ] );
+    	}
+    	i = i - 1;
+  	}
+		return ret;
+	}();
+	
 	mw.util.addCSS(
 		'.userjs-todo-list .item:hover .act { visibility: visible !important; }' +
 		'[data-drop="above"]::before { display: block; border-top: 2px solid #066; margin-top: -2px; content: ""; }' +
@@ -35,9 +126,9 @@ $.when(mw.loader.using([
 		link = $(mw.util.addPortletLink(
 			'p-personal',
 			mw.util.getUrl('Special:BlankPage/todo'),
-			'Todo',
+			messages.todoPortlet,
 			'userjs-todo',
-			'Click to see your todo list',
+			messages.todoHover,
 			'd',
 			'#pt-preferences')
 		),
@@ -67,7 +158,7 @@ $.when(mw.loader.using([
 
 		mw.user.options.set('userjs-todo-script', what);
 		req++;
-		parent.find('.status').text('Saving changes...');
+		parent.find('.status').text( messages.saving );
 
 		api.saveOption('userjs-todo-script', what).done(function() {
 			req--;
@@ -91,7 +182,7 @@ $.when(mw.loader.using([
 			list();
 
 			if (req > 0) {
-				parent.find('.status').text('Saving changes...');
+				parent.find('.status').text( messages.saving );
 			}
 		}
 	}
@@ -117,7 +208,7 @@ $.when(mw.loader.using([
 			.attr('data-page', array[0] || '')
 			.attr('data-info', array[1] || '')
 			.attr('data-date', array[2] || '')
-			.append((new OO.ui.IconWidget({icon: 'draggable', title: 'Drag'})).$element
+			.append((new OO.ui.IconWidget({icon: 'draggable', title: messages.drag })).$element
 				.css({cursor: 'move', height: '1.2em', width: '1.2em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'})
 				.on('mousedown', function() {
 					$(this).parent().attr('draggable', 'true');
@@ -130,7 +221,7 @@ $.when(mw.loader.using([
 			.append(array[0] && array[1] ? ' . . ' : '')
 			.append($('<span>').addClass('info').text(array[1] || ''))
 			.append(array[0] || array[1] ? '<span class="act" style="visibility:hidden;"> . . </span>' : '')
-			.append((new OO.ui.IconWidget({icon: 'trash', title: 'Delete', flags: ['destructive']})).$element
+			.append((new OO.ui.IconWidget({icon: 'trash', title: messages.delete, flags: ['destructive']})).$element
 				.css({cursor: 'pointer', visibility: 'hidden', height: '1.1em', width: '1.1em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'})
 				.addClass('act')
 				.click(function() {
@@ -142,39 +233,41 @@ $.when(mw.loader.using([
 					save(arr);
 				})
 			)
-			.append((new OO.ui.IconWidget({icon: 'edit', title: 'Edit', flags: ['progressive']})).$element
+			.append((new OO.ui.IconWidget({icon: 'edit', title: messages.edit, flags: ['progressive']})).$element
 				.css({cursor: 'pointer', visibility: 'hidden', height: '1em', width: '1em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'})
 				.addClass('act edit')
 				.click(function() {
 					$(this).css('display', 'none');
 					$('<div style="border:1px solid #a2a9b1;padding:0 4px;margin:0.5em 0;border-radius:4px;"></div>')
 						.append((new OO.ui.TextInputWidget({
-							placeholder: 'Page name or URL',
+							placeholder: messages.pageNameUrl,
+							classes: [ 'todo-pageNameUrl' ],
 							value: $(this).parent().attr('data-page')
 						})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 						.append((new OO.ui.TextInputWidget({
-							placeholder: 'Comment',
+							placeholder: messages.comment,
+							classes: [ 'todo-comment' ],
 							value: $(this).parent().attr('data-info')
 						})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 						.append($('<table style="width:100%;border-spacing:0;margin-bottom:0.5em;"></table>').append($('<tr></tr>')
 							.append($('<td style="width:50%;padding-right:4px;"></td>').append((new OO.ui.ButtonWidget({
-								label: 'Save',
+								label: messages.save,
 								flags: ['progressive']
 							}).$element.css('width', '100%').children().css('width', '100%').parent()).click(function() {
 								var editbox = $(this).parent().parent().parent().parent(),
 									listitem = editbox.parent();
-								listitem.find('.page').text(editbox.find('input[placeholder="Page name or URL"]').val());
-								listitem.attr('data-page', editbox.find('input[placeholder="Page name or URL"]').val());
-								listitem.find('.info').text(editbox.find('input[placeholder="Comment"]').val());
-								if (listitem.find('.info')[0].previousSibling.nodeType != 3 && editbox.find('input[placeholder="Comment"]').val() !== '') {
+								listitem.find('.page').text(editbox.find('.todo-pageNameUrl input').val());
+								listitem.attr('data-page', editbox.find('.todo-pageNameUrl input').val());
+								listitem.find('.info').text(editbox.find('.todo-comment input').val());
+								if (listitem.find('.info')[0].previousSibling.nodeType != 3 && editbox.find('.todo-comment input').val() !== '') {
 									listitem.find('.info').before(' . . ');
 								} else if (
 									listitem.find('.info')[0].previousSibling.nodeType == 3 &&
-									editbox.find('input[placeholder="Comment"]').val() === ''
+									editbox.find('.todo-comment input').val() === ''
 								) {
 									$(listitem.find('.info')[0].previousSibling).remove();
 								}
-								listitem.attr('data-info', editbox.find('input[placeholder="Comment"]').val());
+								listitem.attr('data-info', editbox.find('.todo-comment input').val());
 								var arr = [];
 								listitem.parent().children().each(function() {
 									arr.push([$(this).attr('data-page'), $(this).attr('data-info'), $(this).attr('data-date')]);
@@ -186,7 +279,7 @@ $.when(mw.loader.using([
 							})
 							))
 							.append($('<td style="width:50%;padding-left:4px;"></td>').append((new OO.ui.ButtonWidget({
-								label: 'Cancel',
+								label: messages.cancel,
 								flags: ['destructive']
 							}).$element.css('width', '100%').children().css('width', '100%').parent()).click(function() {
 								var editbox = $(this).parent().parent().parent().parent(),
@@ -201,21 +294,16 @@ $.when(mw.loader.using([
 			.append(array[2] ? (new OO.ui.PopupButtonWidget({
 				icon: 'info',
 				framed: false,
-				label: 'More information',
+				label: messages.moreinfo,
 				invisibleLabel: true,
-				title: 'More information',
+				title: messages.moreinfo,
 				popup: {
-					$content: $('<p></p>').text(
-						'Added: ' +
-						date.getDate() +
-						' ' +
-						mw.config.get('wgMonthNames')[date.getMonth() + 1] +
-						', ' +
-						date.getFullYear() +
-						' at ' +
-						date.getHours() +
-						':' +
-						('' + date.getMinutes()).padStart(2, '0')
+					$content: $('<p></p>').text( messages.addedTime
+					 	.replace( '$dateDate', date.getDate() )
+						.replace( '$dateMonth', mw.config.get('wgMonthNames')[date.getMonth() + 1] )
+						.replace( '$dateYear', date.getFullYear() )
+						.replace( '$dateHours', date.getHours() )
+						.replace( '$dateMinutes', ('' + date.getMinutes()).padStart(2, '0') )
 					),
 					padded: true,
 					align: 'forwards'
@@ -269,7 +357,7 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'undo',
 					invisibleLabel: true,
-					title: 'Undo'
+					title: messages.undo
 				}).$element.click(function() {
 					if (changes[changes.length-undo-2] !== undefined) {
 						save(changes[changes.length-undo-2], false, true);
@@ -280,7 +368,7 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'redo',
 					invisibleLabel: true,
-					title: 'Redo'
+					title: messages.redo
 				}).$element.click(function() {
 					if (changes[changes.length-undo] !== undefined) {
 						save(changes[changes.length-undo], false, true);
@@ -291,9 +379,9 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'trash',
 					invisibleLabel: true,
-					title: 'Clear'
+					title: messages.clear
 				}).$element.click(function() {
-					OO.ui.confirm('Are you sure you want to clear your todo list?').done(function(confirmed) {
+					OO.ui.confirm( messages.clearConfirm ).done(function(confirmed) {
 						if (confirmed) {
 							parent.find('.items').empty();
 							save('', true, true);
@@ -304,7 +392,7 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'download',
 					invisibleLabel: true,
-					title: 'Download'
+					title: messages.download
 				}).$element.click(function() {
 					$($('<a download="todo.json" style="display:none;"></a>')
 						.attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(mw.user.options.get('userjs-todo-script')))
@@ -315,7 +403,7 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'upload',
 					invisibleLabel: true,
-					title: 'Upload'
+					title: messages.upload
 				}).$element.click(function() {
 					loader.click();
 				}))
@@ -323,27 +411,29 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'info',
 					invisibleLabel: true,
-					title: 'Help'
+					title: messages.help
 				}).$element.click(function() {
 					window.open('https://en.wikipedia.org/wiki/User:BrandonXLF/TodoList/Help');
 				}))
 			)
 			.append($('<div style="padding:0 0.5em 0.5em;"></div>')
 				.append((new OO.ui.TextInputWidget({
-					placeholder: 'Page name or URL',
+					placeholder: messages.pageNameUrl,
+					classes: [ 'todo-pageNameUrl' ],
 					value: mw.config.get('wgPageName').replace(/_/g, ' ') != 'Special:BlankPage/todo' ? mw.config.get('wgPageName').replace(/_/g, ' ') : ''
 				})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 				.append((new OO.ui.TextInputWidget({
-					placeholder: 'Comment'
+					placeholder: messages.comment,
+					classes: [ 'todo-comment' ]
 				})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 				.append((new OO.ui.ButtonWidget({
-					label: 'Add'
+					label: messages.add
 				}).$element.css('width', '100%').children().css('width', '100%').parent()).click(function() {
 					var opts = JSON.parse(mw.user.options.get('userjs-todo-script') || '[]'),
 						arr = [];
 
-					arr.push($(this).parent().parent().find('input[placeholder="Page name or URL"]').val());
-					arr.push($(this).parent().parent().find('input[placeholder="Comment"]').val());
+					arr.push($(this).parent().parent().find('.todo-pageNameUrl input').val());
+					arr.push($(this).parent().parent().find('.todo-comment input').val());
 
 					if (!arr.join('')) return;
 
@@ -365,7 +455,7 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'close',
 					invisibleLabel: true,
-					title: 'Close'
+					title: messages.close
 				}).$element.css({float: 'right', marginRight: '0'}).click(function() {
 					parent.remove();
 				})))
@@ -373,7 +463,7 @@ $.when(mw.loader.using([
 					framed: false,
 					icon: 'newWindow',
 					invisibleLabel: true,
-					title: 'Your Todo List'
+					title: messages.yourList
 				}).$element.css('float', 'right').click(function() {
 					location.url = mw.util.getUrl('Special:BlankPage/todo');
 				})))))
@@ -436,15 +526,15 @@ $.when(mw.loader.using([
 		});
 	}
 
-	if (mw.config.get('wgPageName') === 'Special:BlankPage/todo') {
-		document.title = 'Your Todo List - ' + mw.config.get('wgSiteName');
-		$('#firstHeading').text('Your Todo List');
+	if ( ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Blankpage' ) && ( mw.config.get('wgPageName').split('/').pop() === 'todo' ) ) {
+		document.title = messages.yourList + ' – ' + mw.config.get('wgSiteName');
+		$('#firstHeading').text( messages.yourList );
 		parent = mw.util.$content.empty();
 		list();
 
 		link.children().first().click(function(e) {
 			e.preventDefault();
-			mw.notify('Unable to open todo list popup while on the todo list page.', {tag: 'rtbyilounmt7udfnod'});
+			mw.notify( messages.noPopup, {tag: 'rtbyilounmt7udfnod'});
 		});
 	} else {
 		link.children().first().click(function(e) {

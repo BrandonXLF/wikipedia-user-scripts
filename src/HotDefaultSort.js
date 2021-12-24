@@ -4,6 +4,7 @@
 // Documentation at [[User:BrandonXLF/HotDefaultSort]]
 // By [[User:BrandonXLF]]
 
+// <nowiki>
 mw.hook('wikipage.categories').add(function($cats) {
 	var sort = document.createElement('div'),
 		dsort = document.createElement('span'),
@@ -167,5 +168,4 @@ mw.hook('wikipage.categories').add(function($cats) {
 		$cats.append(sort);
 	});
 });
-
-// {{DEFAULTSORT:{{FULLPAGENAME}}}}
+// </nowiki>

@@ -107,7 +107,7 @@ $(function() {
 		});
 	}
 
-	if (window.location.href.match('Special:MovePage') && ! $('p:contains(\'This page has no subpages.\')')[0]) {
+	if (window.location.href.match('Special:MovePage') && !$('p:contains(\'This page has no subpages.\')')[0]) {
 		new OO.ui.ButtonWidget({
 			label: 'Move page and subpages',
 			flags: ['primary', 'progressive']

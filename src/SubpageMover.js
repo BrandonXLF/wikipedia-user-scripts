@@ -1,88 +1,110 @@
 /*** Subpage Mover ***/
 
 // Easily move the subpages of a page with a single click
-// Documention at [[User:BrandonXLF/SubpageMover]]
+// Documentation at [[User:BrandonXLF/SubpageMover]]
 // By [[User:BrandonXLF]]
 
 $(function() {
-	function moveSubpages() {
-		var allowed = false;
+	function Log() {
+		$('#moveSubpages-log').remove();
 
-		$.each(mw.config.get('wgUserGroups'), function(i, v) {
-			if (v == 'extendedconfirmed') {
-				allowed = true;
+		this.el = $('<div>')
+			.appendTo($('#movepage'))
+			.append('<br><hr>')
+			.attr('id', 'moveSubpages-log');
+	}
 
-				var from = $('input[name=wpOldTitle]').val(),
-					to_ns = mw.config.get('wgFormattedNamespaces')[$('select[name=wpNewTitleNs]').val()].replace(' ', '_'),
-					to_page = $('input[name=wpNewTitleMain]').val(),
-					to = (to_ns === '' ? to_page : to_ns + ':' + to_page),
-					reason = $('input[name=wpReason]').val(),
-					talk = $('input[name=wpMovetalk]').prop('checked') ? 'yes' : void 0,
-					watch = $('input[name=wpWatch]').prop('checked') ? 'watch' : void 0;
+	Log.prototype.log = function(html, color) {
+		this.el.append($('<p>').append(html).css('color', color));
+	};
 
-				$.get(mw.config.get('wgScriptPath') + '/api.php', {
-					action: 'query',
-					list: 'prefixsearch',
-					pssearch: from + '/',
-					pslimit: '500',
-					format: 'json'
-				}).done(function(apiQuery) {
-					$('#moveSubpages-log').remove();
+	Log.prototype.createLink = function(page) {
+		return $('<a>').attr('href', mw.util.getUrl(page)).text(page);
+	};
 
-					var log = $('<span>')
-						.appendTo($('#movepage'))
-						.append('<br /><hr />')
-						.attr('id', 'moveSubpages-log');
+	Log.prototype.logFailure = function(from, to, reasonHtml) {
+		this.log(['Failed to move page ', this.createLink(from), ' to ', this.createLink(to), '. Reason: ', reasonHtml], '#d33');
+	};
 
-					function movePage(from, to, noerror) {
-						$.post(mw.config.get('wgScriptPath') + '/api.php', {
-							action: 'move',
-							from: from,
-							to: to,
-							reason: reason,
-							movetalk: talk,
-							watchlist: watch,
-							token: mw.user.tokens.get('csrfToken'),
-							format: 'json'
-						}).done(function(response) {
-							if (response.move) {
-								if (response.move['talkmove-errors']) {
-									var talkpage = from.match(':') ? from.replace(':', ' talk:') : 'Talk:' + from;
-									log.append($('<p>').text(talkpage + ' could not be moved.').css('color', 'red'));
-								} else if (response.move.talkfrom) {
-									log.append(
-										'<p>Successfully moved ' +
-										response.move.talkfrom +
-										' to ' +
-										response.move.talkto +
-										'.</p>'
-									).css('color', 'green');
-								}
-							}
+	Log.prototype.logSuccess = function(from, to) {
+		this.log(['Successfully moved page ', this.createLink(from), ' to ', this.createLink(to), '.'], '#14866d');
+	};
 
-							if (response.error) {
-								log.append($('<p>').text(from + ' could not be moved.').css('color', 'red'));
-								log.append($('<p>').append('&bull; Reason: ' + response.error.info + '</li>').css('color', 'red'));
-							} else {
-								log.append('<p>Successfully moved ' + response.move.from + ' to ' + response.move.to + '.</p>').css('color', 'green');
-								noerror();
-							}
-						});
-					}
-
-					movePage(from, to, function() {
-						apiQuery.query.prefixsearch.forEach(function(info) {
-							if (info.title === from) return;
-							movePage(info.title, info.title.replace(from, to));
-						});
-					});
-				});
+	function movePage(from, to, params, log, onSuccess) {
+		$.post(mw.config.get('wgScriptPath') + '/api.php', $.extend({
+			action: 'move',
+			from: from,
+			to: to,
+			token: mw.user.tokens.get('csrfToken'),
+			format: 'json',
+			formatversion: '2',
+			uselang: 'user',
+			errorformat: 'html',
+			errorlang: 'uselang'
+		}, params)).done(function(response) {
+			if (response.errors) {
+				log.logFailure(from, to, response.errors[0].html);
+				return;
 			}
-		});
 
-		if (!allowed) {
-			mw.notify('You must be at least extended confimed.', {title: 'Cannot move page and subpages', type: 'error'});
+			log.logSuccess(response.move.from, response.move.to);
+
+			if (response.move['talkmove-errors']) {
+				var talkFrom = (from.match(':') ? from.replace(':', ' talk:') : 'Talk:') + from,
+					talkTo = (to.match(':') ? to.replace(':', ' talk:') : 'Talk:') + to;
+
+				log.logFailure(talkFrom, talkTo, response.move['talkmove-errors'][0].html);
+				return;
+			}
+
+			if (response.move.talkfrom) {
+				log.logSuccess(response.move.talkfrom, response.move.talkto);
+			}
+
+			onSuccess && onSuccess();
+		});
+	}
+
+	function moveSubpages() {
+		$('#moveSubpages-log').remove();
+
+		var log = new Log();
+
+		if (mw.config.get('wgUserGroups').indexOf('extendedconfirmed') === -1) {
+			log.log('You must be at least extended confirmed.', 'red');
+			return;
 		}
+
+		var fromTitle = $('input[name="wpOldTitle"]').val(),
+			toNamespaceId = $('select[name="wpNewTitleNs"]').val(),
+			toNamespace = mw.config.get('wgFormattedNamespaces')[toNamespaceId].replace(' ', '_'),
+			toPage = $('input[name=wpNewTitleMain]').val(),
+			toTitle = (toNamespace === '' ? '' : toNamespace) + toPage,
+			params = {
+				reason: $('input[name="wpReason"]').val(),
+				movetalk: $('input[name="wpMovetalk"]').prop('checked') ? true : undefined,
+				noredirect: $('[name="wpLeaveRedirect"]').prop('checked') === false ? true : undefined,
+				watchlist: $('input[name="wpWatch"]').prop('checked') ? 'watch' : 'nochange',
+			};
+
+		$.get(mw.config.get('wgScriptPath') + '/api.php', {
+			action: 'query',
+			list: 'allpages',
+			apprefix: fromTitle + '/',
+			pslimit: '500',
+			format: 'json',
+			formatversion: '2'
+		}).done(function(res) {
+			movePage(fromTitle, toTitle, params, log, function() {
+				var prefixRegex = new RegExp('^' + mw.util.escapeRegExp(fromTitle));
+
+				res.query.allpages.forEach(function(info) {
+					if (info.title === fromTitle) return;
+
+					movePage(info.title, info.title.replace(prefixRegex, toTitle), params, log);
+				});
+			});
+		});
 	}
 
 	if (window.location.href.match('Special:MovePage') && ! $('p:contains(\'This page has no subpages.\')')[0]) {

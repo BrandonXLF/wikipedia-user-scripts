@@ -1,8 +1,8 @@
 /*** Easy Summary ***/
 
 // Easily use the last summary you used or load and save a summary
-// Documentation at [[User:BrandonXLF/EasySummary]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/EasySummary]]
+// By [[w:User:BrandonXLF]]
 
 $(function() {
 	function addLinks(label, field) {

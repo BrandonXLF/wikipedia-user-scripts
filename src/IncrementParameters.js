@@ -1,8 +1,8 @@
 /*** Increment Parameters ***/
 
 // Utility to easily increment numbered parameterex
-// Documentation at [[User:BrandonXLF/IncrementParameters]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/IncrementParameters]]
+// By [[w:User:BrandonXLF]]
 
 
 $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {

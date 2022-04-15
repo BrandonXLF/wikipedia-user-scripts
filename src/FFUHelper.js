@@ -1,8 +1,8 @@
 /*** FFU Helper ***/
 
 // User script to close and resoond to FFU request
-// Documentation at [[User:BrandonXLF/FFUHelper]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/FFUHelper]]
+// By [[w:User:BrandonXLF]]
 // <syntaxhighlight lang=javascript>
 
 mw.hook('wikipage.content').add(function(content) {
@@ -178,7 +178,7 @@ mw.hook('wikipage.content').add(function(content) {
 							text: r,
 							title: mw.config.get('wgPageName'),
 							token: mw.user.tokens.get('csrfToken'),
-							summary: ((type.charAt(0).toUpperCase() + type.slice(1)) + 'ed').replace('ee', 'e').replace('Commented', 'Commented on') + ' request using [[User:BrandonXLF/FFUHelper|FFU Helper]]'
+							summary: ((type.charAt(0).toUpperCase() + type.slice(1)) + 'ed').replace('ee', 'e').replace('Commented', 'Commented on') + ' request using [[w:User:BrandonXLF/FFUHelper|FFU Helper]]'
 						}).done(function() {
 							mw.notify('Finished editing FFU request.');
 							updatePage();
@@ -191,7 +191,7 @@ mw.hook('wikipage.content').add(function(content) {
 								appendtext: '\n\n' + data[type][$('#' + type).attr('data-arraypos')][6].replace(/\$1/, $('#ffuparameter1' + type + ' input').val() || '').replace(/\$2/, $('#ffuparameter2' + type + ' input').val() || '').replace('SECTION', secname.replace(/_/g, ' ') || '') + '~~' + '~~',
 								title: 'User talk:' + $('#ffuuser').val(),
 								token: mw.user.tokens.get('csrfToken'),
-								summary: 'Notifying about [[WP:FFU|FFU]] request using [[User:BrandonXLF/FFUHelper|FFU Helper]]'
+								summary: 'Notifying about [[WP:FFU|FFU]] request using [[w:User:BrandonXLF/FFUHelper|FFU Helper]]'
 							}).done(function() {
 								mw.notify('Finished positing on user talk page.');
 								updatePage();

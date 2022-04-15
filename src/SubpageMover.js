@@ -1,8 +1,8 @@
 /*** Subpage Mover ***/
 
 // Easily move the subpages of a page with a single click
-// Documentation at [[User:BrandonXLF/SubpageMover]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/SubpageMover]]
+// By [[w:User:BrandonXLF]]
 
 $(function() {
 	function Log() {

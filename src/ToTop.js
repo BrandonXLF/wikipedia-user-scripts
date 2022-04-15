@@ -1,8 +1,8 @@
 /*** To Top ***/
 
 // Adds a link to got back to the top of the page from the footer
-// Documentation at [[User:BrandonXLF/ToTop]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/ToTop]]
+// By [[w:User:BrandonXLF]]
 
 $(function() {
 	$('<li>')

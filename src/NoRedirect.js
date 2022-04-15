@@ -1,8 +1,8 @@
 /*** No Redirect Link ***/
 
 // Adds a link beside links to redirects that doesn't get redirected
-// Documentation at [[User:BrandonXLF/NoRedirect]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/NoRedirect]]
+// By [[w:User:BrandonXLF]]
 
 mw.hook('wikipage.content').add(function(content) {
 	content.find('.mw-redirect')

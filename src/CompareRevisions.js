@@ -1,8 +1,8 @@
 /*** Compare Revisions ***/
 
 // Adds a button to the diff page to compare two revisions side-by-side
-// Documentation at [[User:BrandonXLF/CompareRevisions]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/CompareRevisions]]
+// By [[w:User:BrandonXLF]]
 
 $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 	var cache = {};

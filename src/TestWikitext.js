@@ -1,8 +1,8 @@
 /*** Test Wikitext ***/
 
 // Adds a link to conveniently test wikitext
-// Documentation at [[User:BrandonXLF/TestWikitext]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/TestWikitext]]
+// By [[w:User:BrandonXLF]]
 
 $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 	mw.util.addPortletLink('p-cactions', mw.util.getUrl('Special:BlankPage/TestWikitext'), 'Test wikitext');

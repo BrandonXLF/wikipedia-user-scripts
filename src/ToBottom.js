@@ -1,8 +1,8 @@
 /*** To Bottom ***/
 
 // Adds a link in the right navigation menu to got to the bottom of the page
-// Documentation at [[User:BrandonXLF/ToBottom]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/ToBottom]]
+// By [[w:User:BrandonXLF]]
 
 // window.arrow = 'never';   // To always see Bottom
 // window.arrow = 'always;   // To always see ↓ (down arrow)

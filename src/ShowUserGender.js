@@ -1,8 +1,8 @@
 /** Show User Gender **/
 
 // Show the gender of users
-// [[User:BrandonXLF/ShowUserGender]]
-// By [[User:BrandonXLF]]
+// [[w:User:BrandonXLF/ShowUserGender]]
+// By [[w:User:BrandonXLF]]
 
 window.SHOW_USER_GENDER = $.extend({
 	male: ' [he]',

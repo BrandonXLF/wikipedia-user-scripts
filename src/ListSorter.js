@@ -1,13 +1,13 @@
 /*** List sorter  ***/
 
 // Tool to sort bullet-point lists on a page
-// Documentation at [[User:BrandonXLF/ListSorter]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/ListSorter]]
+// By [[w:User:BrandonXLF]]
 
 $(function() {
 	var lang = mw.config.get('wgPageContentLanguage'),
 		title = mw.config.get('wgPageName'),
-		summary = 'Sorted bullet lists using [[User:BrandonXLF/ListSorter|ListSorter]]',
+		summary = 'Sorted bullet lists using [[w:User:BrandonXLF/ListSorter|ListSorter]]',
 		skip = '<includeonly.*?>[\\s\\S]*?<\\/includeonly>|<!--[\\s\\S]*?-->',
 		regex = new RegExp('((?:' + skip + ')*(?:\\n|^)(?:' + skip + ')*)(\\*+)((?:' + skip + '|.)*)', 'g');
 

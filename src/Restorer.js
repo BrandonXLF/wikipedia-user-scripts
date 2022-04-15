@@ -1,13 +1,13 @@
 /*** Restorer ***/
 
 // Easily restore an older version of a page
-// Documentation at [[User:BrandonXLF/Restorer]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/Restorer]]
+// By [[w:User:BrandonXLF]]
 
 $(function() {
 	if (mw.config.get('wgAction') != 'history') return;
 
-	window.restorerSummary = window.restorerSummary || 'Restored revision $ID by [[Special:Contributions/$USER|$USER]] ([[User:BrandonXLF/Restorer|Restorer]])';
+	window.restorerSummary = window.restorerSummary || 'Restored revision $ID by [[Special:Contributions/$USER|$USER]] ([[w:User:BrandonXLF/Restorer|Restorer]])';
 
 	function restore(user, revid) {
 		return new mw.Api().postWithEditToken({

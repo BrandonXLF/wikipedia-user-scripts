@@ -1,8 +1,8 @@
 /*** Update Notifications ***/
 
 // Updates the alert and notification counts every few seconds
-// Documentation at [[User:BrandonXLF/UpdateNotifications]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/UpdateNotifications]]
+// By [[w:User:BrandonXLF]]
 
 $(function() {
 	var crossWiki = mw.user.options.get('echo-cross-wiki-notifications'),

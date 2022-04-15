@@ -1,8 +1,8 @@
 /*** Toggle Sidebar ***/
 
 // Adds a button to show/hide the sidebar in the Vector skin
-// Documentation at [[User:BrandonXLF/ToggleSidebar]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/ToggleSidebar]]
+// By [[w:User:BrandonXLF]]
 
 // VAR: window.hidesidebar = true -- hide by default
 // VAR: window.hidesidebar = false -- do not hide by default (default)

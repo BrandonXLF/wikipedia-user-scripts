@@ -1,8 +1,8 @@
 /*** Collapse sections ***/
 
 // Adds an arrow to sections to make them collasible
-// Documentation at [[User:BrandonXLF/CollaspeSections]]
-// By [[User:BrandonXLF]]
+// Documentation at [[w:User:BrandonXLF/CollaspeSections]]
+// By [[w:User:BrandonXLF]]
 
 // window.collapseSections - Set to true to collapse all sections by default
 

@@ -2,8 +2,8 @@
 /*** Reference Expander ***/
 
 // Expands references that are a link to a expanded reference using {{cite ..}}
-// [[User:BrandonXLF/ReferenceExpander]]
-// By [[User:BrandonXLF]]
+// [[w:User:BrandonXLF/ReferenceExpander]]
+// By [[w:User:BrandonXLF]]
 
 /* global getCitoidRef */
 
@@ -116,7 +116,7 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 						text: rev.content.replace(refRegex, function() {
 							return refs[pos++];
 						}),
-						summary: 'Expanding bare references using [[User:BrandonXLF/ReferenceExpander|ReferenceExpander]]'
+						summary: 'Expanding bare references using [[w:User:BrandonXLF/ReferenceExpander|ReferenceExpander]]'
 					});
 				}
 			}

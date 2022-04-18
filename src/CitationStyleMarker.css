@@ -6,24 +6,24 @@
 
 body:not(.nocsmarker) cite.cs1::after {
 	content: ' CS1';
-	color: #BB44BB;
+	color: #b4b;
 	font-weight: bold;
 }
 
 body:not(.nocsmarker) cite.cs2::after {
 	content: ' CS2';
-	color: #BB4400;
+	color: #b40;
 	font-weight: bold;
 }
 
 body:not(.nocsmarker) .csvan::after {
 	content: ' CSVAN';
-	color: #BB0066;
+	color: #b06;
 	font-weight: bold;
 }
 
 body:not(.nocsmarker) .cslsa::after {
 	content: ' CSLSA';
-	color: #884488;
+	color: #848;
 	font-weight: bold;
 }

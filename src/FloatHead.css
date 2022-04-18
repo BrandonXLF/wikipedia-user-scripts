@@ -7,37 +7,38 @@
 
 /* head */
 #mw-head {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
 }
 
 /* Bottom border */
-#mw-head:before {
-    position: absolute;
-    content: '';
-    top: -1px;
-    left: 11em;
-    right: 0;
-    height: 100%;
-    border-bottom: 1px solid #A7D7F9;
-    z-index: -1;
+#mw-head::before {
+	position: absolute;
+	content: '';
+	top: -1px;
+	left: 11em;
+	right: 0;
+	height: 100%;
+	border-bottom: 1px solid #a7d7f9;
+	z-index: -1;
 }
 
 /* Background */
 #mw-page-base {
-    position: fixed;
-    top: -1px;
-    right: 0;
-    left: 0;
-    z-index: 3;
-    height: 5em;
-    width: 100%;
+	position: fixed;
+	top: -1px;
+	right: 0;
+	left: 0;
+	z-index: 3;
+	height: 5em;
+	width: 100%;
 }
 
-#mw-head, #mw-panel {
+#mw-head,
+#mw-panel {
 	z-index: 4;
 }
 

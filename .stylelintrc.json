@@ -1,0 +1,11 @@
+{
+	"extends": "stylelint-config-standard",
+	"rules": {
+		"indentation": "tab",
+		"comment-empty-line-before": null,
+		"string-quotes": "single",
+		"no-missing-end-of-source-newline": null,
+		"selector-class-pattern": null,
+		"selector-id-pattern": null
+	}
+}

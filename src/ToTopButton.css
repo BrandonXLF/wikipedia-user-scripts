@@ -24,12 +24,12 @@
 
 .topButtonCircle > div {
 	border-left: 7px solid transparent;
-    border-right: 7px solid transparent;
-    border-bottom: 12.5px solid #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+	border-right: 7px solid transparent;
+	border-bottom: 12.5px solid #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .backtotop {

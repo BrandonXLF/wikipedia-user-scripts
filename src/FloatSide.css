@@ -10,29 +10,34 @@
 #sidebar, /* Monobook */
 #mw-site-navigation, /* Timeless */
 #mw-related-navigation /* Timeless right */ {
-    position: fixed;
-    overflow: hidden;
-    height: 100%;
+	position: fixed;
+	overflow: hidden;
+	height: 100%;
 }
+
 #mw-related-navigation /* Timeless right */ {
-	right: calc(calc(calc(100% - 115em) /2) - 1em);
+	right: calc(calc(calc(100% - 115em) / 2) - 1em);
 	padding-bottom: 14em;
 }
+
 #mw-site-navigation /* Timeless */ {
 	padding-bottom: 14em;
 }
+
 #mw-panel:hover, /* Vector */
 #quickbar:hover, /* CologneBlue */
 #mw_portlets:hover, /* Modern */
 #sidebar:hover, /* Monobook */
 #mw-site-navigation:hover, /* Timeless */
 #mw-related-navigation:hover /* Timeless right */ {
-    overflow-y: auto;
-    overflow-x: hidden;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
+
 .skin-timeless #mw-content-wrapper /* Timeless */ {
 	margin: 0 14em;
 }
+
 .skin-monobook .mw-wiki-logo /* Monobook */ {
 	position: fixed;
 }

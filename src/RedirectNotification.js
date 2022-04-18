@@ -1,8 +1,8 @@
 /*** Redirect Notification ***/
 
 // Get notified when you are redirected
-// Documentation at [[w:User:BrandonXLF/RedirectNotification]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/RedirectNotification]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	var redirectedFrom = mw.config.get('wgRedirectedFrom');

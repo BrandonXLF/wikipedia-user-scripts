@@ -1,8 +1,8 @@
 /*** Hot Default Sort ***/
 
 // Adds an default sort key editor at the bottom of the page near the categories
-// Documentation at [[w:User:BrandonXLF/HotDefaultSort]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/HotDefaultSort]]
+// By [[en:w:User:BrandonXLF]]
 
 // <nowiki>
 mw.hook('wikipage.categories').add(function($cats) {
@@ -67,7 +67,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 
 			return {
 				text: main + (main.endsWith('\n') ? '' : '\n\n') + '{{DEFAULTSORT:' + edit.value.trim() + '}}\n' + cats,
-				summary: 'Set {{DEFAULTSORT}} to ' + edit.value + ' using [[w:User:BrandonXLF/HotDefaultSort|Hot Default Sort]]'
+				summary: 'Set {{DEFAULTSORT}} to ' + edit.value + ' using [[en:w:User:BrandonXLF/HotDefaultSort|Hot Default Sort]]'
 			};
 		}).done(function() {
 			dsort.innerText = edit.value;
@@ -83,7 +83,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 		return transformPage(function(rev) {
 			return {
 				text: rev.content.replace(/\n*{{DEFAULTSORT:.*?}}\n*/g, '\n\n'),
-				summary: 'Removed {{DEFAULTSORT}} using [[w:User:BrandonXLF/HotDefaultSort|Hot Default Sort]]'
+				summary: 'Removed {{DEFAULTSORT}} using [[en:w:User:BrandonXLF/HotDefaultSort|Hot Default Sort]]'
 			};
 		}).done(function() {
 			dsort.innerText = mw.config.get('wgTitle');

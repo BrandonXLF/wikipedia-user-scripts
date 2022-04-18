@@ -1,8 +1,8 @@
 /*** AJAX Undo ***/
 
 // Adds a button to undo changes using AJAX to history pages
-// Documentation at [[w:User:BrandonXLF/AJAXUndo]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/AJAXUndo]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	if (mw.config.get('wgAction') != 'history') return;

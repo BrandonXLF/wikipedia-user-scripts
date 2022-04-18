@@ -1,8 +1,8 @@
 /** Quick Edit **/
 
 // Edit sections of a page without leaving the article
-// [[w:User:BrandonXLF/QuickEdit]]
-// By [[w:User:BrandonXLF]]
+// [[en:w:User:BrandonXLF/QuickEdit]]
+// By [[en:w:User:BrandonXLF]]
 
 (function() {
 	var mobile = mw.config.get('skin') === 'minerva',

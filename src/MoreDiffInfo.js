@@ -1,8 +1,8 @@
 /*** More Diff Info ***/
 
 // Adds more information to diff pages such as revision ID, size, and ORES score
-// Documentation at [[w:User:BrandonXLF/MoreDiffInfo]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/MoreDiffInfo]]
+// By [[en:w:User:BrandonXLF]]
 
 /* global moment */
 

@@ -1,8 +1,8 @@
 /*** CSS Image Crop ***/
 
 // A utility to use {{CSS image crop}} to crop an image
-// Documentation at [[w:User:BrandonXLF/CSSImageCrop]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/CSSImageCrop]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	var sampleImg = 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Dew_on_grass_Luc_Viatour.jpg/1920px-Dew_on_grass_Luc_Viatour.jpg';

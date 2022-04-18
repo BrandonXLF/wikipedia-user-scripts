@@ -1,8 +1,8 @@
 /*** Group Contributions By Page ***/
 
 // Groups revisions at Special:Contributions by page
-// Documentation at [[w:User:BrandonXLF/ContribsByPage]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/ContribsByPage]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	if (mw.config.get('wgCanonicalSpecialPageName') != 'Contributions') return;

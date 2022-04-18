@@ -1,8 +1,8 @@
 /*** Watch Doc ***/
 
 // Watch the documentation page of a template when you watch the template
-// Documentation at [[w:User:BrandonXLF/WatchDoc]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/WatchDoc]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	var namespace = mw.config.get('wgNamespaceNumber'),

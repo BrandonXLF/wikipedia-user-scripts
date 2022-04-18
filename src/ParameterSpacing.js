@@ -1,8 +1,8 @@
 /*** Parameter spacing ***/
 
 // Utility to easily manager parameter spacing around the equal sign
-// Documentation at [[w:User:BrandonXLF/ParameterSpacing]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/ParameterSpacing]]
+// By [[en:w:User:BrandonXLF]]
 
 $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 	$(mw.util.addPortletLink('p-tb', '#', 'Parameter spacing')).click(function(e) {

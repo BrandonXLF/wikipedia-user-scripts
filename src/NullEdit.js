@@ -1,8 +1,8 @@
 /*** Null Edit ***/
 
 // Adds a link to perform a [[WP:NULLEDIT]] on the current page
-// Documentation at [[w:User:BrandonXLF/NullEdit]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/NullEdit]]
+// By [[en:w:User:BrandonXLF]]
 
 $(mw.util.addPortletLink('p-cactions', '#', 'Null edit')).click(function(e) {
 	e.preventDefault();

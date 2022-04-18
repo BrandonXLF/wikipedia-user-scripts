@@ -1,8 +1,8 @@
 /*** Mobile View ***/
 
 // Adds a link to see the mobile version of a page
-// Documentation at [[w:User:BrandonXLF/MobileView]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/MobileView]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	mw.util.addPortletLink(

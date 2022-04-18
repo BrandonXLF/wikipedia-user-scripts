@@ -1,8 +1,8 @@
 /*** To Top Button ***/
 
 // Adds a floating "go to top" button on the bottom-right of the screen
-// Documentation at [[w:User:BrandonXLF/TopButton]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/TopButton]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	mw.loader.load('https://en.wikipedia.org/wiki/User:BrandonXLF/ToTopButton.css?action=raw&ctype=text/css', 'text/css');

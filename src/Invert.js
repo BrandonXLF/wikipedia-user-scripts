@@ -1,8 +1,8 @@
 /*** Invert ***/
 
 // Invert the colour of the page
-// Documentation at [[w:User:BrandonXLF/Invert]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/Invert]]
+// By [[en:w:User:BrandonXLF]]
 
 $.when(mw.loader.using('oojs-ui.styles.icons-movement'), $.ready).then(function() {
 	var invert = JSON.parse(mw.user.options.get('userjs-invert') || '[]')[0] || false,
@@ -90,7 +90,7 @@ $.when(mw.loader.using('oojs-ui.styles.icons-movement'), $.ready).then(function(
 					action: 'edit',
 					title: 'User:' + mw.config.get('wgUserName') + '/common.css',
 					text: newtext,
-					summary: 'Modifying [[w:User:BrandonXLF/Invert|invert page]] CSS style',
+					summary: 'Modifying [[en:w:User:BrandonXLF/Invert|invert page]] CSS style',
 					token: mw.user.tokens.get('csrfToken'),
 					format: 'json'
 				}).always(function(a, b) {

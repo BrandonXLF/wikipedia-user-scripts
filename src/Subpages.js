@@ -1,8 +1,8 @@
 /*** Subpages ***/
 
 // Creates a subpages link in the right navigation area
-// Documentation at [[w:User:BrandonXLF/Subpages]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/Subpages]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	mw.util.addPortletLink(

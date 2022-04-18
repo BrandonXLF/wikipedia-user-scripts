@@ -1,8 +1,8 @@
 /*** Global Prefs ***/
 
 // Adds link to Global Preferences
-// Documentation at [[w:User:BrandonXLF/GlobalPrefs]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/GlobalPrefs]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	mw.util.addPortletLink(

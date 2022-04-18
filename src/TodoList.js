@@ -1,8 +1,8 @@
 /*** Todo List ***/
 
 // Adds a todo list that also has a convient popup
-// Documentation at [[w:User:BrandonXLF/TodoList]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/TodoList]]
+// By [[en:w:User:BrandonXLF]]
 
 $.when(mw.loader.using([
 	'mediawiki.user',

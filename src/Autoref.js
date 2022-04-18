@@ -1,8 +1,8 @@
 /*** Autoref ***/
 
 // Insert auto-filled references in the 2010 Wikitext editor like you can in VE
-// Documentation at [[w:User:BrandonXLF/Autoref]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/Autoref]]
+// By [[en:w:User:BrandonXLF]]
 
 /* global getCitoidRef */
 

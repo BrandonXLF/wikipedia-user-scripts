@@ -1,8 +1,8 @@
 /*** Portlet Link Manager ***/
 
 // Easily add and manage custom portlet linls
-// Documentation at [[w:User:BrandonXLF/PortletLinks]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/PortletLinks]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	var vars = ['area', 'url', 'text', 'title', 'id', 'nnode', 'key'],

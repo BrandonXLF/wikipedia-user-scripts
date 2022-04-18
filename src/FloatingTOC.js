@@ -1,8 +1,8 @@
 /*** Floating TOC ***/
 
 // Adds a floating TOC to the page
-// Documentation at [[w:User:BrandonXLF/FloatingTOC]]
-// By [[w:User:BrandonXLF]]
+// Documentation at [[en:w:User:BrandonXLF/FloatingTOC]]
+// By [[en:w:User:BrandonXLF]]
 
 $(function() {
 	var data = JSON.parse(mw.user.options.get('userjs-floatingtoc') || '{}'),

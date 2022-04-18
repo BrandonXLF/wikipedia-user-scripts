@@ -1,3 +1,9 @@
+/*** Find Sources ***/
+
+// Tool for easily adding {{copied}} to a talk page
+// Documentation at [[en:w:User:BrandonXLF/Copied]]
+// By [[en:w:User:BrandonXLF]]
+
 $.when(mw.loader.using('mediawiki.api'), $.ready).then(function() {
 	if (mw.config.get('wgIsMainPage') || mw.config.get('wgNamespaceNumber') !== 0) return;
 

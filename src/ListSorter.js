@@ -1,4 +1,4 @@
-/*** List sorter  ***/
+/*** List Sorter  ***/
 
 // Tool to sort bullet-point lists on a page
 // Documentation at [[en:w:User:BrandonXLF/ListSorter]]

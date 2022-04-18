@@ -1,6 +1,6 @@
 /*** FFU Helper ***/
 
-// User script to close and resoond to FFU request
+// User script to close and respond to FFU request
 // Documentation at [[en:w:User:BrandonXLF/FFUHelper]]
 // By [[en:w:User:BrandonXLF]]
 // <syntaxhighlight lang=javascript>

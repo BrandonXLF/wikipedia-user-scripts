@@ -1,3 +1,15 @@
+/*** Citation Style Marker ***/
+
+// Puts the type of citation style a citation is using next to it
+// Adds a link in the toolbar to toggle the markers
+// Documentation at [[en:w:User:BrandonXLF/CitationStyleMarker]]
+// By [[en:w:User:BrandonXLF]]
+
+// window.CSMarkerMode = 'always'; - Always how the style marker, no option to disable
+// window.CSMarkerMode = 'both'; - Show the markers when there is more than one type of citation of a page
+// window.CSMarkerMode = 'disabled'; - Hide the markers by default
+// window.CSMarkerMode = 'enabled'; - Show the markers by default
+
 $(function() {
 	mw.loader.load('//en.wikipedia.org/w/index.php?title=User:BrandonXLF/CitationStyleMarker.css&action=raw&ctype=text/css', 'text/css');
 	if (window.CSMarkerMode != 'always') {

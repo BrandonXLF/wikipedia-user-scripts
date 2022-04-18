@@ -1,4 +1,4 @@
-/*** Collapse sections ***/
+/*** Collapse Sections ***/
 
 // Adds an arrow to sections to make them collasible
 // Documentation at [[en:w:User:BrandonXLF/CollaspeSections]]

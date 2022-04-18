@@ -1,9 +1,8 @@
 /*** Increment Parameters ***/
 
-// Utility to easily increment numbered parameterex
+// Utility to easily increment numbered parameters
 // Documentation at [[en:w:User:BrandonXLF/IncrementParameters]]
 // By [[en:w:User:BrandonXLF]]
-
 
 $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 	$(mw.util.addPortletLink('p-tb', '#', 'Increment params')).click(function(e) {

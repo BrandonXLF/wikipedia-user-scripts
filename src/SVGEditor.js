@@ -16,10 +16,10 @@ mw.loader.using(['oojs-ui', 'jquery.textSelection']).then(function() {
 			code = new OO.ui.MultilineTextInputWidget({
 				rows: 25,
 				name: 'wpTextbox1',
-				id: 'svgeditoror'
+				id: 'svgeditor'
 			}),
 			comment = new OO.ui.TextInputWidget({
-				id: 'svgeditoror-comment',
+				id: 'svgeditor-comment',
 				label: 'Comment',
 				labelPosition: 'before'
 			}),
@@ -94,10 +94,10 @@ mw.loader.using(['oojs-ui', 'jquery.textSelection']).then(function() {
 		});
 
 		cancel.on('click', function() {
-			$('#editsvg-container').remove();
+			$('#svgeditor-container').remove();
 		});
 
-		container.attr('id', 'svgeditoror-container').addClass('content').append(
+		container.attr('id', 'svgeditor-container').addClass('content').append(
 			lineWrap.$element,
 			code.$element,
 			comment.$element,
@@ -125,7 +125,7 @@ mw.loader.using(['oojs-ui', 'jquery.textSelection']).then(function() {
 				ctx.api.addToToolbar(ctx, {
 					section: 'main',
 					groups: {
-						'editsvg-tools': {
+						'svgeditor-tools': {
 							tools: {
 								lineWrap: {
 									label: 'Toggle line wrap',
@@ -165,28 +165,28 @@ mw.loader.using(['oojs-ui', 'jquery.textSelection']).then(function() {
 
 			mw.loader.addStyleTag('#page-actions-svgeditor .mw-ui-icon:before { background: url(' + iconUrl + '); }');
 		} else {
-			link = $(mw.util.addPortletLink('p-views', '#', 'Edit SVG', 'ca-editsvg', '', '', '#ca-edit'));
+			link = $(mw.util.addPortletLink('p-views', '#', 'Edit SVG', 'ca-svgeditor', '', '', '#ca-edit'));
 		}
 
 		link.on('click', function(e) {
 			e.preventDefault();
 
-			$('#svgeditoror-container').remove();
+			$('#svgeditor-container').remove();
 
 			$.get(url, null, null, 'text').then(showEditor);
 		});
 
 		mw.loader.addStyleTag(
-			'#svgeditoror, #svgeditoror-comment { width: unset !important; max-width: unset !important; marin: none !important; }' +
-			'#svgeditoror textarea { font-family: monospace; resize: vertical; white-space: nowrap; }' +
-			'#svgeditoror textarea.line-wrap { white-space: normal; }' +
-			'#svgeditoror .wikiEditor-ui textarea { border: none !important; }' +
-			'#svgeditoror-container > * { margin: 1em 0; }' +
-			'.skin-minerva #svgeditoror-container { padding: 1em; }' +
+			'#svgeditor, #svgeditor-comment { width: unset !important; max-width: unset !important; marin: none !important; }' +
+			'#svgeditor textarea { font-family: monospace; resize: vertical; white-space: nowrap; }' +
+			'#svgeditor textarea.line-wrap { white-space: normal; }' +
+			'#svgeditor .wikiEditor-ui textarea { border: none !important; }' +
+			'#svgeditor-container > * { margin: 1em 0; }' +
+			'.skin-minerva #svgeditor-container { padding: 1em; }' +
 			'.skin-minerva #svgeditor-linewrap-btn { margin-bottom: -0.5em; }' +
-			'#svgeditoror .group-insert, #svgeditoror .group-format, #svgeditoror .sections { display: none; }' +
-			'#svgeditoror .tabs span.tab-advanced, #svgeditoror .tabs span.tab-characters, #svgeditoror .tabs span.tab-help { display: none; }' +
-			'.codeEditor-ui-toolbar .group-editsvg-tools { display: none; }'
+			'#svgeditor .group-insert, #svgeditor .group-format, #svgeditor .sections { display: none; }' +
+			'#svgeditor .tabs span.tab-advanced, #svgeditor .tabs span.tab-characters, #svgeditor .tabs span.tab-help { display: none; }' +
+			'.codeEditor-ui-toolbar .group-svgeditor-tools { display: none; }'
 		);
 	});
 });

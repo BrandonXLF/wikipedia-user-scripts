@@ -175,7 +175,6 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 				}
 
 				afterRef('Skipped reference without URL.');
-				return;
 			}
 
 			if (refs) {
@@ -190,6 +189,7 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			processDialog.setProgress(100);
 			processDialog.setStatus('Edit saved!');
 			processDialog.log('Edit saved. Reloading...');
+
 			window.location.reload();
 		});
 	});

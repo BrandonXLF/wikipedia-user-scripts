@@ -40,6 +40,7 @@ Most of them should work fine on other MediaWiki wikis, but some scripts are wik
 * ShowUserGender - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ShowUserGender), [JS](/src/ShowUserGender.js)
 * SubpageMover - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/SubpageMover), [JS](/src/SubpageMover.js)
 * Subpages - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/Subpages), [JS](/src/Subpages.js)
+* SVGEditor - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/SVGEditor), [JS](/src/SVGEditor.js)
 * TestWikitext - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/TestWikitext), [JS](/src/TestWikitext.js)
 * ToBottom - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ToBottom), [JS](/src/ToBottom.js)
 * TodoList - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/TodoList), [JS](/src/TodoList.js)

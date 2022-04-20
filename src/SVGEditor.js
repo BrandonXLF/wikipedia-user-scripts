@@ -181,7 +181,8 @@ mw.loader.using(['oojs-ui', 'jquery.textSelection']).then(function() {
 			'#svgeditoror textarea { font-family: monospace; resize: vertical; white-space: nowrap; }' +
 			'#svgeditoror textarea.line-wrap { white-space: normal; }' +
 			'#svgeditoror .wikiEditor-ui textarea { border: none !important; }' +
-			'.skin-minerva #svgeditoror-container, #svgeditoror-container > * { margin: 0.5em; }' +
+			'.skin-minerva #svgeditoror-container, #svgeditoror-container > * { margin: 1em 0; }' +
+			'.skin-minerva #svgeditoror-container { margin: 1em; }' +
 			'.skin-minerva #svgeditor-linewrap-btn { margin-bottom: -0.5em; }' +
 			'#svgeditoror .group-insert, #svgeditoror .group-format, #svgeditoror .sections { display: none; }' +
 			'#svgeditoror .tabs span.tab-advanced, #svgeditoror .tabs span.tab-characters, #svgeditoror .tabs span.tab-help { display: none; }' +

@@ -5,92 +5,76 @@
 // By [[en:w:User:BrandonXLF]]
 
 $.when(mw.loader.using('moment'), $.ready).then(function(require) {
-    var moment = require('moment'),
-        ids = mw.config.get(['wgDiffOldId', 'wgDiffNewId']),
-		DA_IMG = '<img style="height:1em;vertical-align:text-top;" title="Damaging" alt="Damaging" src="' +
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Rating-Christgau-dud.svg/64px-Rating-Christgau-dud.svg.png' +
-			'">',
-		GF_IMG = '<img style="height:1em;vertical-align:text-top;" title="Good faith" alt="Good faith" src="' +
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Ic_thumb_up_48px.svg/32px-Ic_thumb_up_48px.svg.png' +
-			'">';
+	var moment = require('moment'),
+		DA_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Rating-Christgau-dud.svg/64px-Rating-Christgau-dud.svg.png',
+		GF_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Ic_thumb_up_48px.svg/32px-Ic_thumb_up_48px.svg.png';
 
-	if (!ids.wgDiffOldId || !ids.wgDiffNewId) return;
+	function createImage(type, url) {
+		return '<img style="height:1em;vertical-align:text-top;" title="' + type + '" alt="' + type + '" src="' + url + '">';
+	}
 
-	$.get(mw.config.get('wgScriptPath') + '/api.php', {
-		action: 'query',
-		format: 'json',
-		prop: 'revisions',
-		revids: ids.wgDiffOldId + '|' + ids.wgDiffNewId,
-		rvprop: 'ids|size|oresscores|timestamp',
-		rvslots: 'main'
-	}).then(function(result) {
-		var info = [];
+	function getInnerORES(scores) {
+		var innerORES = [];
 
-		for (var page in result.query.pages) {
-			for (var rev in result.query.pages[page].revisions) {
-				info[result.query.pages[page].revisions[rev].revid == ids.wgDiffOldId ? 0 : 1] = result.query.pages[page].revisions[rev];
+		if (scores.damaging) {
+			innerORES.push(Math.round(scores.damaging.true * 100) + '% ' + createImage('Damaging', DA_IMG));
+		}
+
+		if (scores.goodfaith) {
+			innerORES.push(Math.round(scores.goodfaith.true * 100) + '% ' + createImage('Good Faith', GF_IMG));
+		}
+
+		return innerORES.join(' ') || 'No ORES';
+	}
+
+	function generateInfo(revision, previousRevision) {
+		var out = [
+				revision.revid,
+				revision.size.toLocaleString() +' bytes',
+				getInnerORES(revision.oresscores),
+			],
+			help = '<a target="_blank" href="https://en.wikipedia.org/wiki/User:BrandonXLF/MoreDiffInfo#Guide">(?)</a>';
+
+		if (previousRevision) {
+			var diff = revision.size - previousRevision.size;
+
+			out[1] += ' <span style="color:' + (diff < 0 ? '#8b0000' : diff > 0 ? '#006400' : '') + '">(' + (diff > 0 ? '+' : '') + diff + ')</span>';
+
+			out.push(moment(revision.timestamp).from(previousRevision.timestamp, true) + ' later');
+		}
+
+		return out.join(' | ') + ' ' + help;
+	}
+
+	mw.hook('wikipage.diff').add(function() {
+		var ids = mw.config.get(['wgDiffOldId', 'wgDiffNewId']);
+
+		if (!ids.wgDiffOldId || !ids.wgDiffNewId) return;
+
+		new mw.Api().get({
+			action: 'query',
+			prop: 'revisions',
+			revids: [ids.wgDiffOldId, ids.wgDiffNewId],
+			rvprop: ['ids', 'size', 'oresscores', 'timestamp'],
+			rvslots: 'main',
+			formatversion: 2
+		}).then(function(res) {
+			var revisions = res.query.pages[0].revisions,
+				oldRevision,
+				newRevision;
+
+			for (var i = 0; i < revisions.length; i++) {
+				if (revisions[i].revid == ids.wgDiffOldId) {
+					oldRevision = revisions[i];
+				} else if (revisions[i].revid == ids.wgDiffNewId) {
+					newRevision = revisions[i];
+				}
 			}
-		}
 
-		if (!info[0] || !info[1]) return;
+			if (!oldRevision || !newRevision) return;
 
-		var id = '<a href="' +
-				mw.util.getUrl('User:BrandonXLF/MoreDiffInfo#ID') +
-				'">ID</a>: <a href="' +
-				mw.config.get('wgScript') +
-				'?oldid=' +
-				info[0].revid +
-				'">' +
-				info[0].revid +
-				'</a>',
-			size = ' | <a href="' + mw.util.getUrl('User:BrandonXLF/MoreDiffInfo#SIZE') + '">SIZE</a>: ' + info[0].size,
-			ores = '';
-
-		if (info[0].oresscores && info[0].oresscores.damaging) {
-			ores += Math.round(info[0].oresscores.damaging.true * 100) + '% ' + DA_IMG + ' ';
-		}
-
-		if (info[0].oresscores && info[0].oresscores.goodfaith) {
-			ores +=  Math.round(info[0].oresscores.goodfaith.true * 100) + '% ' + GF_IMG;
-		}
-
-		if (ores) {
-			ores = ' | <a href="' + mw.util.getUrl('User:BrandonXLF/MoreDiffInfo#ORES') + '">ORES</a>: ' + ores;
-		}
-
-		$('#mw-diff-otitle2').after($('<div></div>').append(id + size + ores));
-
-		var sizediff = info[1].size - info[0].size,
-			timediff = ' | ' + moment(new Date(info[0].timestamp)).from(new Date(info[1].timestamp)).replace(/ ago$/, ' later');
-
-		id = '<a href="' +
-			mw.util.getUrl('User:BrandonXLF/MoreDiffInfo#ID') +
-			'">ID</a>: <a href="' + mw.config.get('wgScript') +
-			'?oldid=' +
-			info[1].revid + '">' + info[1].revid + '</a>';
-
-		size = ' | <a href="' +
-			mw.util.getUrl('User:BrandonXLF/MoreDiffInfo#SIZE') +
-			'">SIZE</a>: ' + info[1].size + ' (<span style="color:' +
-			(sizediff < 0 ? 'red' : sizediff > 0 ? 'green' : '') + '">' +
-			(sizediff > 0 ? '+' : '') +
-			sizediff +
-			'</span>)';
-
-		ores = '';
-
-		if (info[1].oresscores && info[1].oresscores.damaging) {
-			ores += Math.round(info[1].oresscores.damaging.true * 100) + '% ' + DA_IMG + ' ';
-		}
-
-		if (info[1].oresscores && info[1].oresscores.goodfaith) {
-			ores +=  Math.round(info[1].oresscores.goodfaith.true * 100) + '% ' + GF_IMG;
-		}
-
-		if (ores) {
-			ores = ' | <a href="' + mw.util.getUrl('User:BrandonXLF/MoreDiffInfo#ORES') + '">ORES</a>: ' + ores;
-		}
-
-		$('#mw-diff-ntitle2').after($('<div></div>').append(id + size + ores + timediff));
+			$('#mw-diff-otitle2').after($('<div></div>').append(generateInfo(oldRevision)));
+			$('#mw-diff-ntitle2').after($('<div></div>').append(generateInfo(newRevision, oldRevision)));
+		});
 	});
 });

@@ -4,10 +4,9 @@
 // Documentation at [[en:w:User:BrandonXLF/MoreDiffInfo]]
 // By [[en:w:User:BrandonXLF]]
 
-/* global moment */
-
-$.when(mw.loader.getScript('https://momentjs.com/downloads/moment.min.js'), $.ready).then(function() {
-	var ids = mw.config.get(['wgDiffOldId', 'wgDiffNewId']),
+$.when(mw.loader.using('moment'), $.ready).then(function(require) {
+    var moment = require('moment'),
+        ids = mw.config.get(['wgDiffOldId', 'wgDiffNewId']),
 		DA_IMG = '<img style="height:1em;vertical-align:text-top;" title="Damaging" alt="Damaging" src="' +
 			'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Rating-Christgau-dud.svg/64px-Rating-Christgau-dud.svg.png' +
 			'">',

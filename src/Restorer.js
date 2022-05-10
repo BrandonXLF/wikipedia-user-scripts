@@ -29,16 +29,18 @@ $(function() {
 
 	function addLink(item) {
 		var revid = item.getAttribute('data-mw-revid'),
-			user,
 			links,
+			user,
 			el,
 			parent;
 
 		if (revid == mw.config.get('wgCurRevisionId')) return;
 
+		links = item.querySelector('.comment + .mw-changeslist-links');
+
+		if (!links) return;
+
 		user = item.getElementsByClassName('mw-userlink')[0].textContent.replace('User:', '');
-		links = item.getElementsByClassName('mw-changeslist-links');
-		links = links[links.length - 1];
 		parent = document.createElement('span');
 		el = document.createElement('a');
 

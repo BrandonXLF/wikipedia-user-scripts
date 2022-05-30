@@ -62,5 +62,5 @@
 /* StickyTableHeaders gadget */
 .jquery-tablesorter > thead,
 .mw-sticky-header > thead {
-    top: 5rem !important;
+	top: 5rem !important;
 }

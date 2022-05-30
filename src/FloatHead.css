@@ -1,3 +1,4 @@
+
 /*** Float Head ***/
 
 /* Makes the side menu float and makes it scroll-able */
@@ -7,7 +8,7 @@
 
 /* head */
 #mw-head {
-	position: fixed;
+	position: fixed !important;
 	top: 0;
 	left: 0;
 	right: 0;
@@ -56,4 +57,10 @@
 	top: 5.714em !important;
 	right: -0.004em !important;
 	left: 12.647em !important;
+}
+
+/* StickyTableHeaders gadget */
+.jquery-tablesorter > thead,
+.mw-sticky-header > thead {
+    top: 5rem !important;
 }

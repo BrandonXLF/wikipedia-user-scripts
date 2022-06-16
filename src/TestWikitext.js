@@ -80,6 +80,16 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			localStorage.setItem('testwikitext', value);
 		});
 
+		mw.hook('ext.CodeMirror.switch').add(function(enabled, el) {
+			if (!enabled) return;
+
+			var codeMirror = el[0].CodeMirror;
+
+			codeMirror.on('change', function() {
+				code.setValue(codeMirror.getValue());
+			});
+		});
+
 		mw.loader.using('ext.wikiEditor', function() {
 			mw.addWikiEditor(code.$input);
 			mw.loader.load(['ext.TemplateWizard', 'ext.CodeMirror']);

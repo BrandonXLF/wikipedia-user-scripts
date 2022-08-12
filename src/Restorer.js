@@ -7,52 +7,59 @@
 $(function() {
 	if (mw.config.get('wgAction') != 'history') return;
 
-	window.restorerSummary = window.restorerSummary || 'Restored revision $ID by [[Special:Contributions/$USER|$USER]] ([[en:w:User:BrandonXLF/Restorer|Restorer]])';
+	window.restorerSummary = window.restorerSummary ||
+		'Restored revision $ID by [[Special:Contributions/$USER|$USER]] ([[en:w:User:BrandonXLF/Restorer|Restorer]])';
 
-	function restore(user, revid) {
-		return new mw.Api().postWithEditToken({
-			action: 'edit',
-			pageid: mw.config.get('wgArticleId'),
-			undo: mw.config.get('wgCurRevisionId'),
-			undoafter: revid,
-			summary: window.restorerSummary.replace(/\$ID/g, revid).replace(/\$USER/g, user)
+	function restore(revid) {
+		var api = new mw.Api();
+
+		return api.get({
+			action: 'query',
+			revids: revid,
+			prop: 'revisions',
+			rvprop: 'user',
+			format: 'json',
+			formatversion: '2'
+		}).then(function(res) {
+			var user = res.query.pages[0].revisions[0].user;
+
+			return api.postWithEditToken({
+				action: 'edit',
+				pageid: mw.config.get('wgArticleId'),
+				undo: mw.config.get('wgCurRevisionId'),
+				undoafter: revid,
+				summary: window.restorerSummary.replace(/\$ID/g, revid).replace(/\$USER/g, user)
+			});
 		}).then(
 			function() {
 				mw.notify('Restored revision successfully.');
 				location.reload();
 			},
 			function(_, data) {
-				mw.notify(new mw.Api().getErrorMessage(data), {type: 'error'});
+				mw.notify(api.getErrorMessage(data), {type: 'error'});
 			}
 		);
 	}
 
 	function addLink(item) {
-		var revid = item.getAttribute('data-mw-revid'),
-			links,
-			user,
-			el,
-			parent;
-
+		var revid = item.getAttribute('data-mw-revid');
 		if (revid == mw.config.get('wgCurRevisionId')) return;
 
-		links = item.querySelector('.comment + .mw-changeslist-links');
-
+		var links = item.querySelector('.comment + .mw-changeslist-links');
 		if (!links) return;
 
-		user = item.getElementsByClassName('mw-userlink')[0].textContent.replace('User:', '');
-		parent = document.createElement('span');
-		el = document.createElement('a');
+		var parent = document.createElement('span'),
+			el = document.createElement('a');
 
 		el.addEventListener('click', function() {
 			el.className = 'restorer-loading';
 
-			restore(user, revid).always(function() {
+			restore(revid).always(function() {
 				el.className = '';
 			});
 		});
 
-		el.innerHTML = 'restore';
+		el.textContent = 'restore';
 		parent.appendChild(el);
 		links.appendChild(parent);
 	}

@@ -50,7 +50,7 @@ def edit_file(file, text):
 		print('Skipped file ' + file)
 		return
 	
-	s.post('https://en.wikipedia.org/w/api.php', data={
+	res = s.post('https://en.wikipedia.org/w/api.php', data={
 		'action': 'edit',
 		'title': 'User:' + USERNAME + '/' + file,
 		'token': csrf,
@@ -58,7 +58,7 @@ def edit_file(file, text):
 		'summary': SUMMARY
 	})
 	
-	print('Saved file ' + file)
+	print('Saved file ' + file + ': ' + res.text)
 
 for subdir, dirs, files in os.walk(os.getcwd() + '/src'):
 	for file in files:

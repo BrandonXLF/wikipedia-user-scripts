@@ -27,11 +27,14 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 				action: 'parse',
 				pst: 'true',
 				title: title.getValue() || 'Test Wikitext',
-				text: code.getValue(),
+				text: code.$input.textSelection('getContents'),
 				format: 'json',
 				prop: 'text|displaytitle|categorieshtml|limitreporthtml'
 			}).done(function(r) {
-				output.html('<h1>' + r.parse.displaytitle + '</h1>' + r.parse.text['*'] + r.parse.categorieshtml['*']).append(
+				output.empty().append(
+					$('<h1>').html(r.parse.displaytitle),
+					r.parse.text['*'],
+					r.parse.categorieshtml['*'],
 					new OO.ui.PanelLayout({
 						expanded: false,
 						framed: true,
@@ -83,10 +86,8 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		mw.hook('ext.CodeMirror.switch').add(function(enabled, el) {
 			if (!enabled) return;
 
-			var codeMirror = el[0].CodeMirror;
-
-			codeMirror.on('change', function() {
-				code.setValue(codeMirror.getValue());
+			el[0].CodeMirror.on('change', function(codeMirror) {
+				localStorage.setItem('testwikitext', codeMirror.getValue());
 			});
 		});
 

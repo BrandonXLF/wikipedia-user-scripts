@@ -55,7 +55,8 @@ def edit_file(file, text):
 		'title': 'User:' + USERNAME + '/' + file,
 		'token': csrf,
 		'text': text,
-		'summary': SUMMARY
+		'summary': SUMMARY,
+		'format': 'json'
 	})
 	
 	print('Saved file ' + file + ': ' + res.text)

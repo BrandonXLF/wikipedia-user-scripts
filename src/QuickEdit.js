@@ -482,7 +482,9 @@
 
 		body.on('click', clickHandler);
 		addLinksToChildren(body);
-		mw.hook('wikipage.content').add(addLinksToChildren);
+		mw.hook('wikipage.content').add(function (element) {
+			setTimeout(addLinksToChildren.bind(this, element));
+		});
 	});
 
 	mw.loader.addStyleTag(

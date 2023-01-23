@@ -370,7 +370,7 @@ mw.hook('wikipage.content').add(function(content) {
 
 		if (!editLink.length) return;
 
-		var section = /[?&]v?e?section=T?-?(\d*)/.exec(editLink.attr('href'))[1];
+		var section = /[?&]v?e?section=(T?-?\d*)/.exec(editLink.attr('href'))[1];
 
 		if (heading.next().hasClass('mw-collapsible')) {
 			editLink.siblings().last().after('<span class="mw-editsection" style="background:#dfdfdf;">[closed]</span>');
@@ -384,7 +384,6 @@ mw.hook('wikipage.content').add(function(content) {
 		}, function(type, color) {
 			editLink.siblings().last().after($('<span>')
 				.css('background', color)
-				.attr('data-section', section)
 				.addClass('mw-editsection')
 				.append('[')
 				.append($('<a>')

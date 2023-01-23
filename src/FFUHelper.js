@@ -132,7 +132,7 @@ mw.hook('wikipage.content').add(function(content) {
 	}
 
 	function openInterface(type, section, sectionElement) {
-		var sectionID = sectionElement.find('.mw-headline').attr('id').replace(/_/g, ' '),
+		var sectionName = sectionElement.find('.mw-headline').attr('id').replace(/_/g, ' '),
 			user = getUser(sectionElement),
 			addHoldInput = $('<input>'),
 			notifyUserInput = $('<input>'),
@@ -244,7 +244,7 @@ mw.hook('wikipage.content').add(function(content) {
 
 					$.post(mw.config.get('wgScriptPath') + '/api.php', {
 						action: 'edit',
-						appendtext: '\n\n{{su' + 'bst:ffu talk|' + data[2] + '|section=' + sectionID + '}} ~~' + '~~',
+						appendtext: '\n\n{{su' + 'bst:ffu talk|' + data[2] + '|section=' + sectionName + '}} ~~' + '~~',
 						title: 'User talk:' + userInput.val(),
 						token: mw.user.tokens.get('csrfToken'),
 						summary: 'Notifying about [[WP:FFU|FFU]] request using [[en:w:User:BrandonXLF/FFUHelper|FFU Helper]]'

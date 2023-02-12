@@ -10,188 +10,427 @@
 $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 	e.preventDefault();
 
-	function ProcessDialog(config) {
-		ProcessDialog.super.call(this, config);
+	function syncSize(text1, text2) {
+		text1.styleHeight = -1;
+		text1.adjustSize(true);
+
+		text2.styleHeight = -1;
+		text2.adjustSize(true);
+
+		var height = Math.max(text1.$input.height(), text2.$input.height());
+
+		text1.$input.height(height);
+		text2.$input.height(height);
 	}
 
-	OO.inheritClass(ProcessDialog, OO.ui.ProcessDialog);
+	function MainDialog(config) {
+		MainDialog.super.call(this, config);
+	}
 
-	ProcessDialog.static.name = 'citoidExpandRefs';
-	ProcessDialog.static.title = 'Reference Expander';
-	ProcessDialog.static.actions = [{
-		action: 'close',
-		label: 'Close',
-		flags: ['safe', 'close']
-	}];
+	OO.inheritClass(MainDialog, OO.ui.ProcessDialog);
 
-	ProcessDialog.prototype.initialize = function() {
-		ProcessDialog.super.prototype.initialize.apply(this, arguments);
+	MainDialog.static.name = 'citoidExpandRefs';
+	MainDialog.static.title = 'Reference Expander';
+
+	MainDialog.static.actions = [
+		{
+			label: 'Close',
+			flags: ['safe', 'close'],
+			modes: ['review', 'finishedLog', 'log']
+		},
+		{
+			action: 'back',
+			label: 'View Log',
+			modes: 'review'
+		},
+		{
+			action: 'save',
+			label: 'Save Changes',
+			flags: ['primary', 'progressive'],
+			modes: 'review'
+		},
+		{
+			action: 'continue',
+			label: 'Continue',
+			modes: 'finishedLog'
+		}
+	];
+
+	MainDialog.static.disclaimer = 'You are re&shy;spon&shy;sible for verify&shy;ing the gene&shy;rated refer&shy;ences.' +
+	' Review the content of the new refer&shy;ences and manually preserve comments from the old refer&shy;ences.' +
+	' Un&shy;check a check&shy;box to skip updating the corre&shy;spond&shy;ing refer&shy;ence.';
+
+	MainDialog.prototype.setStatus = function(text) {
+		this.title.setLabel(MainDialog.static.title + ': ' + text);
+	};
+
+	MainDialog.prototype.log = function(msg, color) {
+		this.logElement.append(
+			$('<div>')
+				.append('> ',  msg)
+				.css({
+					color: color,
+					margin: '4px 0'
+				})
+		);
+
+		this.updateSize();
+		this.$body.scrollTop(this.$body.prop('scrollHeight'));
+	};
+
+	MainDialog.prototype.initialize = function() {
+		MainDialog.super.prototype.initialize.apply(this, arguments);
+
+		var dialog = this;
+
+		this.textarea = document.createElement('textarea');
+		this.urlProtocols = mw.config.get('wgUrlProtocols');
+		this.urlProtocolsWithoutRel = mw.config.get('wgUrlProtocols').split('|').filter(function(protocol) {
+			return protocol !== '\\/\\/';
+		}).join('|');
+		// From Parser::EXT_LINK_URL_CLASS
+		this.urlCharacters = '[^<>"\\x00-\\x20\\x7F\\xA0\\u1680\\u2000-\\u200A\\u202F\\u205F\\u3000\\uFFFD]';
+		this.enclosedUrlRegex = new RegExp('\\[((?:' + this.urlProtocols + ')' + this.urlCharacters + '*).?\\]');
+		this.unenclosedUrlRegex = new RegExp('((?:' + this.urlProtocolsWithoutRel + ')' + this.urlCharacters + '*)');
+		this.refRegex = /<ref(?:[^>]+?[^/]|)>.*?<\/ref>/g;
 
 		this.content = new OO.ui.PanelLayout({
 			padded: true,
 			expanded: false
 		});
+
 		this.progressBar = new OO.ui.ProgressBarWidget({
 			progress: false
 		});
-		this.logElement = $('<div>').css('font-family', 'monospace monospace');
+
+		this.logElement = $('<div>').css({
+			wordBreak: 'break-all',
+			color: 'grey'
+		});
+
+		this.reviewElement = $('<div>');
 
 		this.progressBar.$element.css({marginTop: '1em'});
 		this.content.$element.append(this.logElement, this.progressBar.$element);
 		this.$body.append(this.content.$element);
 
-		this.setStatus('Initalizing...');
-	};
+		this.log('Loading page content and scripts...');
 
-	ProcessDialog.prototype.getActionProcess = function() {
-		var dialog = this;
-		return new OO.ui.Process(function() {
-			dialog.close();
+		mw.loader.getScript('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/Citoid.js&action=raw&ctype=text/javascript').then(function() {
+			this.apiEdit = new mw.Api().edit(mw.config.get('wgPageName'), function(rev) {
+				return dialog.expandReferences(rev.content);
+			});
 		});
 	};
 
-	ProcessDialog.prototype.getBodyHeight = function() {
+	MainDialog.prototype.getSetupProcess = function(data) {
+		return MainDialog.super.prototype.getSetupProcess.call(this, data)
+			.next(function() {
+				this.actions.setMode('log');
+				this.setStatus('Loading...');
+			}, this);
+	};
+
+	MainDialog.prototype.incrementDone = function(reference) {
+		this.progressDone++;
+		this.progressBar.setProgress((this.progressDone / this.progressTotal) * 100);
+
+		return $.Deferred().resolve(reference);
+	};
+
+	MainDialog.prototype.getExpandedReference = function(wikitext, startTag, url, endTag) {
+		var dialog = this,
+			link = $('<a>')
+				.css({
+					color: 'inherit',
+					textDecoration: 'underline'
+				})
+				.attr('target', '_blank')
+				.attr('href', url)
+				.text(url);
+
+		return getCitoidRef(url).then(
+			function(expanded) {
+				dialog.log(
+					['Expanded reference to ', link, '.'],
+					'green'
+				);
+
+				return {
+					old: wikitext,
+					new: startTag + expanded + endTag
+				};
+			},
+			function() {
+				dialog.log(
+					['Error expanding reference ', link, '.'],
+					'red'
+				);
+
+				return wikitext;
+			}
+		).always(this.incrementDone.bind(this));
+	};
+
+	MainDialog.prototype.processReference = function(wikitext) {
+		if (wikitext.match(/<ref.*?> *{{/)) {
+			this.log('Skipping already expanded reference.');
+
+			return this.incrementDone(wikitext);
+		}
+
+		var parts = wikitext.match(/(<ref.*?>)(.*?)(<\/ref>)/),
+			startTag = parts[1],
+			refText = parts[2].trim(),
+			endTag = parts[3],
+			match;
+
+		// Unescape HTML escape codes
+		this.textarea.innerHTML = refText;
+		refText = this.textarea.value;
+
+		// Match url in brackets
+		match = refText.match(this.enclosedUrlRegex);
+
+		if (match)
+			return this.getExpandedReference(wikitext, startTag, match[1], endTag);
+
+		// Match url out of brackets
+		match = refText.match(this.unenclosedUrlRegex);
+
+		if (match) {
+			// Remove trailing punctuation
+			// From Parser::makeFreeExternalLink
+			var sep = ',;.:!?';
+			if (match[1].indexOf('(') == -1) sep += ')';
+
+			var trailLength = 0;
+
+			for (var i = match[1].length - 1; i >= 0; i--) {
+				if (sep.indexOf(match[1][i]) == -1)
+					break;
+				else
+					trailLength++;
+			}
+
+			var url = match[1].substring(0, match[1].length - trailLength);
+
+			return this.getExpandedReference(wikitext, startTag, url, endTag);
+		}
+
+		this.log('Skipped reference without URL.');
+
+		return this.incrementDone(wikitext);
+	};
+
+	MainDialog.prototype.showReference = function(reference) {
+		if (!reference.new)
+			return reference;
+
+		var useNew = true,
+			newText = reference.new,
+			checkbox = new OO.ui.CheckboxInputWidget({selected: true}),
+			oldTextInput = new OO.ui.MultilineTextInputWidget({
+				autosize: true,
+				readOnly: true,
+				value: reference.old
+			}),
+			newTextInput = new OO.ui.MultilineTextInputWidget({
+				autosize: true,
+				value: reference.new
+			});
+
+		checkbox.on('change', function(selected) {
+			oldTextInput.setDisabled(!selected);
+			newTextInput.setDisabled(!selected);
+
+			useNew = selected;
+		});
+
+		newTextInput.on('change', function(text) {
+			newText = text;
+		});
+
+		this.reviewElement.append(
+			checkbox.$element.css('margin-right', '0'),
+			oldTextInput.$element.css('word-break', 'break-all'),
+			newTextInput.$element.css('word-break', 'break-all')
+		);
+
+		oldTextInput.on('change', function() {
+			syncSize(oldTextInput, newTextInput);
+		});
+
+		newTextInput.on('change', function() {
+			syncSize(oldTextInput, newTextInput);
+		});
+
+		syncSize(oldTextInput, newTextInput);
+
+		return function() {
+			return useNew ? newText : reference.old;
+		};
+	};
+
+	MainDialog.prototype.prepareReviewElement = function() {
+		this.reviewElement
+			.css({
+				display: 'grid',
+				gridAutoColumns: 'auto 1fr 1fr',
+				gap: '8px'
+			})
+			.append(
+				$('<div>')
+					.html(this.constructor.static.disclaimer)
+					.css({
+						gridColumn: '1 / 4',
+						marginBottom: '8px',
+						fontSize: '0.9em',
+						lineHeight: '1.4em',
+						color: '#54595D'
+					}),
+				$('<div>').text('Old Reference').css({
+					gridColumn: '2',
+					fontWeight: 'bold',
+					textAlign: 'center'
+				}),
+				$('<div>').text('New Reference').css({
+					gridColumn: '3',
+					fontWeight: 'bold',
+					textAlign: 'center'
+				})
+			);
+	};
+
+	MainDialog.prototype.afterExpanded = function(references, content) {
+		var work = false;
+
+		for (var i = 0; i < references.length; i++) {
+			if (!references[i].new) continue;
+
+			work = true;
+			break;
+		}
+
+		if (!work) {
+			this.setStatus('Done');
+			this.log('No references to expand.');
+
+			return this.saveDeferred.reject();
+		}
+
+		this.setStatus('Review');
+		this.log('Showing expanded references for review.');
+		this.actions.setMode('review');
+
+		this.logElement.hide();
+		this.progressBar.$element.hide();
+		this.reviewElement.appendTo(this.content.$element);
+
+		this.prepareReviewElement();
+
+		// Used by save function
+		this.references = references.map(this.showReference.bind(this));
+		this.saveDeferred = $.Deferred();
+		this.pageContent = content;
+
+		return this.saveDeferred.promise();
+	};
+
+	MainDialog.prototype.expandReferences = function(content) {
+		var dialog = this;
+
+		this.progressBar.setProgress(0);
+		this.setStatus('Running...');
+
+		var references = content.match(this.refRegex);
+
+		if (references) {
+			this.progressDone = 0;
+			this.progressTotal = references.length;
+
+			var promises = references.map(this.processReference.bind(this));
+
+			return $.when.apply($, promises).then(function() {
+				return dialog.afterExpanded(Array.prototype.slice.call(arguments), content);
+			});
+		} else {
+			this.setStatus('Done');
+			this.log('No references found on the page.');
+
+			return $.Deferred().reject();
+		}
+	};
+
+	MainDialog.prototype.saveChanges = function() {
+		var dialog = this,
+			pos = 0,
+			newContent = this.pageContent.replace(this.refRegex, function() {
+				var ref = dialog.references[pos++];
+
+				if (typeof ref === 'function')
+					return ref();
+
+				return ref;
+			});
+
+		this.setStatus('Saving...');
+
+		this.saveDeferred.resolve({
+			text: newContent,
+			summary: 'Expanding bare references using [[en:w:User:BrandonXLF/ReferenceExpander|ReferenceExpander]]'
+		});
+
+		return this.apiEdit;
+	};
+
+	MainDialog.prototype.getActionProcess = function(action) {
+		if (action === 'back') {
+			return new OO.ui.Process(function() {
+				this.setStatus('Log');
+				this.actions.setMode('finishedLog');
+
+				this.reviewElement.hide();
+				this.logElement.show();
+
+				this.updateSize();
+				this.$body.scrollTop(this.$body.prop('scrollHeight'));
+			}, this);
+		}
+
+		if (action === 'continue') {
+			return new OO.ui.Process(function() {
+				this.setStatus('Review');
+				this.actions.setMode('review');
+
+				this.logElement.hide();
+				this.reviewElement.show();
+
+				this.updateSize();
+			}, this);
+		}
+
+		if (action === 'save') {
+			return new OO.ui.Process(this.saveChanges.bind(this)).next(function() {
+				this.setStatus('Saved');
+				this.close();
+
+				window.location.reload();
+			}, this);
+		}
+
+		return MainDialog.super.prototype.getActionProcess.call(this, action);
+	};
+
+	MainDialog.prototype.getBodyHeight = function() {
 		return this.content.$element.outerHeight(true);
 	};
 
-	ProcessDialog.prototype.log = function(msg, color) {
-		this.logElement.append($('<div>').text('> ' + msg).css({color: color || 'grey'}));
-		this.updateSize();
-		this.$body.scrollTop(this.$body.prop('scrollHeight'));
-	};
-
-	ProcessDialog.prototype.setStatus = function(text) {
-		this.title.setLabel(ProcessDialog.static.title + ': ' + text);
-	};
-
-	ProcessDialog.prototype.setProgress = function(progress) {
-		this.progressBar.setProgress(progress);
-	};
-
 	var windowManager = new OO.ui.WindowManager();
-
 	$(document.body).append(windowManager.$element);
 
-	var processDialog = new ProcessDialog({
-		size: 'large'
-	});
-
-	windowManager.addWindows([processDialog]);
-	windowManager.openWindow(processDialog);
-
-	processDialog.log('Loading page content and scripts...');
-
-	mw.loader.getScript('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/Citoid.js&action=raw&ctype=text/javascript').then(function() {
-		new mw.Api().edit(mw.config.get('wgPageName'), function(rev) {
-			var urlProtocols = mw.config.get('wgUrlProtocols'),
-				urlProtocolsWithoutRel = mw.config.get('wgUrlProtocols').split('|').filter(function(protocol) {
-					return protocol !== '\\/\\/';
-				}).join('|'),
-				urlCharacters = '[^<>"\\x00-\\x20\\x7F\\xA0\\u1680\\u2000-\\u200A\\u202F\\u205F\\u3000\\uFFFD]', // From Parser::EXT_LINK_URL_CLASS
-				enclosedUrlRegex = new RegExp('\\[((?:' + urlProtocols + ')' + urlCharacters + '*).?\\]'),
-				unenclosedUrlRegex = new RegExp('((?:' + urlProtocolsWithoutRel + ')' + urlCharacters + '*)'),
-				refRegex = /<ref(?:[^>]+?[^/]|)>.*?<\/ref>/g,
-				textarea = document.createElement('textarea'),
-				def = $.Deferred(),
-				refs = rev.content.match(refRegex),
-				done = 0;
-
-			processDialog.setProgress(0);
-			processDialog.setStatus('Expanding references...');
-
-			function afterRef(msg, color) {
-				done++;
-
-				processDialog.log(msg, color);
-				processDialog.setProgress(done / refs.length * 100);
-
-				if (done >= refs.length) {
-					processDialog.setProgress(false);
-					processDialog.setStatus('Saving...');
-					processDialog.log('Saving changes to ' + mw.config.get('wgPageName') + '...');
-
-					var pos = 0;
-
-					def.resolve({
-						text: rev.content.replace(refRegex, function() {
-							return refs[pos++];
-						}),
-						summary: 'Expanding bare references using [[en:w:User:BrandonXLF/ReferenceExpander|ReferenceExpander]]'
-					});
-				}
-			}
-
-			function expandRef(startTag, url, endTag, refIndex) {
-				getCitoidRef(url).then(function(expanded) {
-					refs[refIndex] = startTag + expanded + endTag;
-					afterRef('Expanded reference to "' + url + '".', 'green');
-				}, function() {
-					afterRef('Error expanding reference to "' + url + '".', 'red');
-				});
-			}
-
-			function doRef(refIndex) {
-				if (refs[refIndex].match(/<ref.*?> *{{/)) {
-					afterRef('Skipping already expanded reference.');
-					return;
-				}
-
-				var parts = refs[refIndex].match(/(<ref.*?>)(.*?)(<\/ref>)/),
-					startTag = parts[1],
-					refText = parts[2].trim(),
-					endTag = parts[3],
-					match;
-
-				// Unescape HTML escape codes
-				textarea.innerHTML = refText;
-				refText = textarea.value;
-
-				// Match url in brackets
-				match = refText.match(enclosedUrlRegex);
-
-				if (match) {
-					expandRef(startTag, match[1], endTag, refIndex);
-					return;
-				}
-
-				// Match url out of brackets
-				match = refText.match(unenclosedUrlRegex);
-
-				if (match) {
-					// Remove trailing punctuation
-					// From Parser::makeFreeExternalLink
-					var sep = ',;.:!?';
-					if (match[1].indexOf('(') == -1) sep += ')';
-
-					var trailLength = 0;
-
-					for (var i = match[1].length - 1; i >= 0; i--) {
-						if (sep.indexOf(match[1][i]) == -1) break;
-						else trailLength++;
-					}
-
-					expandRef(startTag, match[1].substring(0, match[1].length - trailLength), endTag, refIndex);
-					return;
-				}
-
-				afterRef('Skipped reference without URL.');
-			}
-
-			if (refs) {
-				for (var i = 0; i < refs.length; i++) doRef(i);
-			} else {
-				processDialog.log('No references found on the page.');
-				def.resolve({text: rev.content});
-			}
-
-			return def.promise();
-		}).then(function() {
-			processDialog.setProgress(100);
-			processDialog.setStatus('Edit saved!');
-			processDialog.log('Edit saved. Reloading...');
-
-			window.location.reload();
-		});
-	});
+	var dialog = new MainDialog({size: 'large'});
+	windowManager.addWindows([dialog]);
+	windowManager.openWindow(dialog);
 });
 // </nowiki>

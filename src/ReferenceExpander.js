@@ -346,12 +346,15 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			this.progressTotal = references.length;
 
 			var dialog = this,
-				promises = references.map(this.processReference.bind(this));
+				promises = references.map(this.processReference.bind(this)),
+				promise = $.when.apply($, promises);
 
-			return $.when.apply($, promises).then(function() {
+			promise.always(function() {
 				dialog.progressBar.$element.remove();
 				dialog.progressBar = undefined;
+			});
 
+			return promise.then(function() {
 				return dialog.showReview(Array.prototype.slice.call(arguments), content);
 			});
 		} else {

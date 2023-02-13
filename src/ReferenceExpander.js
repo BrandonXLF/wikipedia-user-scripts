@@ -329,32 +329,29 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 	};
 
 	MainDialog.prototype.expandReferences = function(content) {
-		this.progressBar = new OO.ui.ProgressBarWidget({
-			progress: 0
-		});
-
-		this.$foot.append(
-			this.progressBar.$element.css('margin', '1em')
-		);
-
 		this.setStatus('Expanding...');
 
 		var references = content.match(this.refRegex);
 
 		if (references) {
+			this.progressBar = new OO.ui.ProgressBarWidget({
+				progress: 0
+			});
+
+			this.$foot.append(
+				this.progressBar.$element.css('margin', '1em')
+			);
+
 			this.progressDone = 0;
 			this.progressTotal = references.length;
 
 			var dialog = this,
-				promises = references.map(this.processReference.bind(this)),
-				promise = $.when.apply($, promises);
+				promises = references.map(this.processReference.bind(this));
 
-			promise.always(function() {
+			return $.when.apply($, promises).then(function() {
 				dialog.progressBar.$element.remove();
 				dialog.progressBar = undefined;
-			});
 
-			return promise.then(function() {
 				return dialog.showReview(Array.prototype.slice.call(arguments), content);
 			});
 		} else {

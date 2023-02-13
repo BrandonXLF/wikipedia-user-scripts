@@ -36,7 +36,7 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 		{
 			label: 'Close',
 			flags: ['safe', 'close'],
-			modes: ['review', 'finishedLog', 'log']
+			modes: ['review', 'finishedLog', 'log', 'done']
 		},
 		{
 			action: 'back',
@@ -53,6 +53,11 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			action: 'continue',
 			label: 'Continue',
 			modes: 'finishedLog'
+		},
+		{
+			label: 'Done',
+			flags: ['primary'],
+			modes: 'done'
 		}
 	];
 
@@ -81,8 +86,6 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 	MainDialog.prototype.initialize = function() {
 		MainDialog.super.prototype.initialize.apply(this, arguments);
 
-		var dialog = this;
-
 		this.textarea = document.createElement('textarea');
 		this.urlProtocols = mw.config.get('wgUrlProtocols');
 		this.urlProtocolsWithoutRel = mw.config.get('wgUrlProtocols').split('|').filter(function(protocol) {
@@ -99,10 +102,6 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			expanded: false
 		});
 
-		this.progressBar = new OO.ui.ProgressBarWidget({
-			progress: false
-		});
-
 		this.logElement = $('<div>').css({
 			wordBreak: 'break-all',
 			color: 'grey'
@@ -110,24 +109,14 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 
 		this.reviewElement = $('<div>');
 
-		this.progressBar.$element.css({marginTop: '1em'});
-		this.content.$element.append(this.logElement, this.progressBar.$element);
+		this.content.$element.append(this.logElement);
 		this.$body.append(this.content.$element);
-
-		this.log('Loading page content and scripts...');
-
-		mw.loader.getScript('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/Citoid.js&action=raw&ctype=text/javascript').then(function() {
-			dialog.apiEdit = new mw.Api().edit(mw.config.get('wgPageName'), function(rev) {
-				return dialog.expandReferences(rev.content);
-			});
-		});
 	};
 
 	MainDialog.prototype.getSetupProcess = function(data) {
 		return MainDialog.super.prototype.getSetupProcess.call(this, data)
 			.next(function() {
-				this.actions.setMode('log');
-				this.setStatus('Loading...');
+				this.executeAction('load');
 			}, this);
 	};
 
@@ -302,7 +291,7 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			);
 	};
 
-	MainDialog.prototype.afterExpanded = function(references, content) {
+	MainDialog.prototype.showReview = function(references, content) {
 		var work = false;
 
 		for (var i = 0; i < references.length; i++) {
@@ -314,17 +303,17 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 
 		if (!work) {
 			this.setStatus('Done');
+			this.actions.setMode('done');
 			this.log('No references to expand.');
 
 			return $.Deferred().reject();
 		}
 
 		this.setStatus('Review');
-		this.log('Showing expanded references for review.');
 		this.actions.setMode('review');
+		this.log('Showing expanded references for review.');
 
 		this.logElement.hide();
-		this.progressBar.$element.hide();
 		this.reviewElement.appendTo(this.content.$element);
 
 		this.prepareReviewElement();
@@ -334,14 +323,21 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 		this.saveDeferred = $.Deferred();
 		this.pageContent = content;
 
-		return this.saveDeferred.promise();
+		this.updateSize();
+
+		return true;
 	};
 
 	MainDialog.prototype.expandReferences = function(content) {
-		var dialog = this;
+		this.progressBar = new OO.ui.ProgressBarWidget({
+			progress: 0
+		});
 
-		this.progressBar.setProgress(0);
-		this.setStatus('Running...');
+		this.$foot.append(
+			this.progressBar.$element.css('margin', '1em')
+		);
+
+		this.setStatus('Expanding...');
 
 		var references = content.match(this.refRegex);
 
@@ -349,13 +345,18 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			this.progressDone = 0;
 			this.progressTotal = references.length;
 
-			var promises = references.map(this.processReference.bind(this));
+			var dialog = this,
+				promises = references.map(this.processReference.bind(this));
 
 			return $.when.apply($, promises).then(function() {
-				return dialog.afterExpanded(Array.prototype.slice.call(arguments), content);
+				dialog.progressBar.$element.remove();
+				dialog.progressBar = undefined;
+
+				return dialog.showReview(Array.prototype.slice.call(arguments), content);
 			});
 		} else {
 			this.setStatus('Done');
+			this.actions.setMode('done');
 			this.log('No references found on the page.');
 
 			return $.Deferred().reject();
@@ -381,10 +382,65 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			summary: 'Expanding bare references using [[en:w:User:BrandonXLF/ReferenceExpander|ReferenceExpander]]'
 		});
 
+		this.apiEdit.catch(function(_, data) {
+			var msg = new mw.Api().getErrorMessage(data);
+
+			dialog.setStatus('Error');
+			dialog.actions.setMode('done');
+			dialog.showErrors(new OO.ui.Error(msg, {recoverable: false}));
+		});
+
 		return this.apiEdit;
 	};
 
 	MainDialog.prototype.getActionProcess = function(action) {
+		if (action === 'load') {
+			return new OO.ui.Process(function() {
+				this.setStatus('Loading...');
+				this.actions.setMode('log');
+				this.log('Loading script...');
+
+				var dialog = this,
+					request = mw.loader.getScript('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/Citoid.js&action=raw&ctype=text/javascript');
+
+				return request.then(
+					function() {
+						dialog.executeAction('expand');
+					},
+					function() {
+						dialog.setStatus('Error');
+						dialog.actions.setMode('done');
+						dialog.log('Failed to load script. Check your internet connection and rerun the script.', 'red');
+
+						return $.Deferred().resolve();
+					}
+				);
+			}, this);
+		}
+
+		if (action === 'expand') {
+			return new OO.ui.Process(function() {
+				var dialog = this,
+					deferred = $.Deferred();
+
+				this.log('Loading page content...');
+
+				this.apiEdit = new mw.Api().edit(mw.config.get('wgPageName'), function(rev) {
+					var referencesExpanded = dialog.expandReferences(rev.content);
+
+					referencesExpanded.always(function() {
+						deferred.resolve();
+					});
+
+					return referencesExpanded.then(function() {
+						return dialog.saveDeferred;
+					});
+				});
+
+				return deferred.promise();
+			}, this);
+		}
+
 		if (action === 'back') {
 			return new OO.ui.Process(function() {
 				this.setStatus('Log');
@@ -415,15 +471,19 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 				var dialog = this;
 
 				return this.saveChanges().then(function() {
-					dialog.setStatus('Saved');
 					dialog.close();
-
 					window.location.reload();
 				});
 			}, this);
 		}
 
 		return MainDialog.super.prototype.getActionProcess.call(this, action);
+	};
+
+	OO.ui.Dialog.prototype.onActionClick = function(action) {
+		if (this.currentAction === 'save' && this.isPending()) return;
+
+		this.executeAction(action.getAction());
 	};
 
 	MainDialog.prototype.getBodyHeight = function() {

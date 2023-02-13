@@ -117,7 +117,7 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 		this.log('Loading page content and scripts...');
 
 		mw.loader.getScript('https://en.wikipedia.org/w/index.php?title=User:BrandonXLF/Citoid.js&action=raw&ctype=text/javascript').then(function() {
-			this.apiEdit = new mw.Api().edit(mw.config.get('wgPageName'), function(rev) {
+			dialog.apiEdit = new mw.Api().edit(mw.config.get('wgPageName'), function(rev) {
 				return dialog.expandReferences(rev.content);
 			});
 		});
@@ -316,7 +316,7 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 			this.setStatus('Done');
 			this.log('No references to expand.');
 
-			return this.saveDeferred.reject();
+			return $.Deferred().reject();
 		}
 
 		this.setStatus('Review');
@@ -411,11 +411,15 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 		}
 
 		if (action === 'save') {
-			return new OO.ui.Process(this.saveChanges.bind(this)).next(function() {
-				this.setStatus('Saved');
-				this.close();
+			return new OO.ui.Process(function() {
+				var dialog = this;
 
-				window.location.reload();
+				return this.saveChanges().then(function() {
+					dialog.setStatus('Saved');
+					dialog.close();
+
+					window.location.reload();
+				});
 			}, this);
 		}
 

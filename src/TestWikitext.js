@@ -26,6 +26,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 			$.post(mw.config.get('wgScriptPath') + '/api.php', {
 				action: 'parse',
 				pst: 'true',
+				disableeditsection: 'true',
 				title: title.getValue() || 'Test Wikitext',
 				text: code.$input.textSelection('getContents'),
 				format: 'json',

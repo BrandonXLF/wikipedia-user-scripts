@@ -63,8 +63,8 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 
 	MainDialog.static.disclaimer = new OO.ui.HtmlSnippet(
 		'<strong>Reminder</strong>: You are responsible for all changes made by this script.' +
-		' Review the new references to make sure they include all the information contained in the old references.' +
-		' Uncheck a checkbox to skip updating the corresponding reference.'
+		' Edit the new references to make sure they include all the information contained in the old references.' +
+		' You may uncheck a checkbox to skip expanding the corresponding reference.'
 	);
 
 	MainDialog.prototype.setStatus = function(text) {

@@ -61,9 +61,11 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 		}
 	];
 
-	MainDialog.static.disclaimer = 'You are re&shy;spon&shy;sible for verify&shy;ing the gene&shy;rated refer&shy;ences.' +
-	' Review the content of the new refer&shy;ences and manually preserve comments from the old refer&shy;ences.' +
-	' Un&shy;check a check&shy;box to skip updating the corre&shy;spond&shy;ing refer&shy;ence.';
+	MainDialog.static.disclaimer = new OO.ui.HtmlSnippet(
+		'<strong>Reminder</strong>: You are responsible for all changes made by this script.' +
+		' Review the new references to make sure they include all the information contained in the old references.' +
+		' Uncheck a checkbox to skip updating the corresponding reference.'
+	);
 
 	MainDialog.prototype.setStatus = function(text) {
 		this.title.setLabel(MainDialog.static.title + ': ' + text);
@@ -262,6 +264,14 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 	};
 
 	MainDialog.prototype.prepareReviewElement = function() {
+		var notice = new OO.ui.MessageWidget({
+			type: 'warning',
+			label: this.constructor.static.disclaimer
+		});
+
+		notice.$icon.css('background-position', '0 center');
+		notice.$label.css('margin-left', '2.25em');
+
 		this.reviewElement
 			.css({
 				display: 'grid',
@@ -269,15 +279,10 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 				gap: '8px'
 			})
 			.append(
-				$('<div>')
-					.html(this.constructor.static.disclaimer)
-					.css({
-						gridColumn: '1 / 4',
-						marginBottom: '8px',
-						fontSize: '0.9em',
-						lineHeight: '1.4em',
-						color: '#54595D'
-					}),
+				notice.$element.css({
+					gridColumn: '1 / 4',
+					marginBottom: '8px'
+				}),
 				$('<div>').text('Old Reference').css({
 					gridColumn: '2',
 					fontWeight: 'bold',

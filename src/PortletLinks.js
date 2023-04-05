@@ -10,22 +10,28 @@ $(function() {
 		i = 0,
 		links = JSON.parse(mw.user.options.get('userjs-portletmanager') || '[]');
 
+	function randHex() {
+		return Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+	}
+
 	function randColor() {
-		return '#' +
-		Math.floor(Math.random() * 256).toString(16).padStart(2, '0') +
-		Math.floor(Math.random() * 256).toString(16).padStart(2, '0') +
-		Math.floor(Math.random() * 256).toString(16).padStart(2, '0');
+		return '#' + randHex() + randHex() + randHex();
 	}
 
 	function startedit(e) {
 		e.stopPropagation();
+
 		$('.plm .focused').removeClass('focused');
+
 		var el = $(this);
+
 		$('#largeeditor').val(el.val()).off('input keypress paste click').attr('placeholder', '');
+
 		$('#largeeditor').on('input keypress paste', function() {
 			el.addClass('focused');
 			el.val(this.value);
 		});
+
 		$('#largeeditor').on('click', function(e) {
 			e.stopPropagation();
 			el.addClass('focused');
@@ -56,28 +62,34 @@ $(function() {
 				);
 
 		for (i = 0; i < vars.length; i++) {
-			var td = $('<td>').appendTo(tr);
+			var td = $('<td>').appendTo(tr),
+				input = vars[i] === 'area'
+					? $('<select>')
+					: $('<input>')
+						.val(link ? link[vars[i]] : '')
+						.css('width', '100%')
+						.click(startedit);
 
-			(vars[i] === 'area' ? $('<select>') : $('<input>').val(link ? link[vars[i]] : '').css('width', '100%').click(startedit))
+			input
 				.on('input keypress paste', syncedit)
 				.attr('data-name', vars[i])
 				.appendTo(td);
 
 			if (vars[i] === 'area') {
-				for (j = 0; j < areas.length; j++) {
-					td.children().append($('<option>' + areas[j] + '</option>').attr('selected', areas[j] == link.area ? '' : null));
-				}
+				for (j = 0; j < areas.length; j++)
+					td.children().append(
+						$('<option>' + areas[j] + '</option>')
+							.attr('selected', areas[j] == link.area ? '' : null)
+					);
 			}
 
-			if (vars[i] == 'key') {
+			if (vars[i] == 'key')
 				td.children().css('width', '3em');
-			}
 		}
 
 		$('#editor tr:last').before(tr);
-
-		return;
 	}
+
 	function addLinks() {
 		var link;
 
@@ -85,8 +97,9 @@ $(function() {
 
 		for (i = 0; i < links.length; i++) {
 			link = links[i];
+
 			try {
-				mw.util.addPortletLink(
+				var linkEl = mw.util.addPortletLink(
 					link.area,
 					/^(https|http|):?\/\/.*/.exec(link.url)
 						? link.url.replace(/\$PAGENAME\$/g, encodeURIComponent(mw.config.get('wgPageName')))
@@ -96,13 +109,16 @@ $(function() {
 					link.title,
 					link.key,
 					link.nnode
-				).className += ' plm-portletitem';
+				);
+
+				linkEl.className += ' plm-portletitem';
 			} catch (e) {
 				console.error('PortletLinks.js: Unable to add portlet link to #' + link.area + ' for ' + link.url);
 			}
 		}
 
 		link = mw.util.addPortletLink('p-navigation', mw.util.getUrl('Special:BlankPage/PortletManager'), '(edit portlet links)');
+
 		if (link) link.className += ' plm-portletitem';
 	}
 
@@ -112,35 +128,52 @@ $(function() {
 
 		$('#editor').find('[data-row]').each(function() {
 			var item = {};
+
 			$(this).find('[data-name]').each(function() {
 				item[this.getAttribute('data-name')] = this.value;
 			});
+
 			links.push(item);
 		});
 
 		el.src = 'https://upload.wikimedia.org/wikipedia/commons/7/7a/Ajax_loader_metal_512.gif';
 		el.title = 'Saving...';
 		el.style.cursor = 'initial';
+
 		mw.user.options.set('userjs-portletmanager', JSON.stringify(links));
 
-		(new mw.Api()).saveOption('userjs-portletmanager', JSON.stringify(links)).done(function(r) {
-			addLinks();
-			el.src = 'https://upload.wikimedia.org/wikipedia/commons/9/97/PICOL_icon_Floppy_disk.svg';
-			el.title = 'Save';
-			el.style.cursor = 'Pointer';
-			mw.notify(
-				r.options == 'success'
-					? 'Saved portlet links sucessfully!'
-					: 'An error occurred while saving.', {
-					tag: 'gdsfgfdgfd',
-					type: r.options == 'success' ? 'notice' : 'error'
-				});
-		}).fail(function() {
-			el.src = 'https://upload.wikimedia.org/wikipedia/commons/9/97/PICOL_icon_Floppy_disk.svg';
-			el.title = 'Save';
-			el.style.cursor = 'Pointer';
-			mw.notify('An error occurred while saving.', {tag: 'gdsfgfdgfd', type: 'error'});
-		});
+		new mw.Api()
+			.saveOption('userjs-portletmanager', JSON.stringify(links))
+			.done(function(r) {
+				addLinks();
+
+				el.src = 'https://upload.wikimedia.org/wikipedia/commons/9/97/PICOL_icon_Floppy_disk.svg';
+				el.title = 'Save';
+				el.style.cursor = 'Pointer';
+
+				mw.notify(
+					r.options == 'success'
+						? 'Saved portlet links successfully!'
+						: 'An error occurred while saving.',
+					{
+						tag: 'portletlinks',
+						type: r.options == 'success' ? 'notice' : 'error'
+					}
+				);
+			})
+			.fail(function() {
+				el.src = 'https://upload.wikimedia.org/wikipedia/commons/9/97/PICOL_icon_Floppy_disk.svg';
+				el.title = 'Save';
+				el.style.cursor = 'Pointer';
+
+				mw.notify(
+					'An error occurred while saving.',
+					{
+						tag: 'portletlinks',
+						type: 'error'
+					}
+				);
+			});
 	}
 
 	addLinks();
@@ -150,25 +183,30 @@ $(function() {
 
 		for (i = 0; i < areas.length; i ++) {
 			var color = randColor();
+
 			$('#' + areas[i]).css({outline: '2px solid ' + color, outlineOffset: Math.round(Math.random() * 2) - 4 + 'px'});
-			el.append($('<div>').css({
-				border: '1px solid #000',
-				display: 'inline-block',
-				width: '1em',
-				height: '1em',
-				background: color,
-				marginRight: '5px',
-				verticalAlign: 'middle',
-				marginBottom: '5px'
-			})).append($('<div>')
-				.text(areas[i])
+
+			el.append($('<div>')
 				.css({
+					border: '1px solid #000',
+					display: 'inline-block',
+					width: '1em',
+					height: '1em',
+					background: color,
 					marginRight: '5px',
 					verticalAlign: 'middle',
-					marginBottom: '5px',
-					display: 'inline-block'
-				})
-			);
+					marginBottom: '5px'
+				}))
+				.append($('<div>')
+					.text(areas[i])
+					.css({
+						marginRight: '5px',
+						verticalAlign: 'middle',
+						marginBottom: '5px',
+						display: 'inline-block'
+					})
+				);
+
 			mw.util.addPortletLink(areas[i], '#', areas[i].toUpperCase());
 		}
 	}
@@ -178,16 +216,15 @@ $(function() {
 		mw.util.$content.addClass('plm');
 
 		mw.util.addCSS(
-			'.plm input:focus,.plm select:focus,.plm textarea:focus, .plm .focused{outline:0;border-color:#36c;box-shadow:inset 0 0 0 1px #36c;}' +
-			'.plm button,.plm input,.plm select{border:1px solid #888;padding:4px;box-sizing:border-box;}' +
-			'.plm select{padding:3px 4px;}' +
-			'#editor th{border:1px solid #888;padding:2px;}'
+			'.plm input:focus, .plm select:focus, .plm textarea:focus, .plm .focused { outline:0; border-color: #36c; box-shadow: inset 0 0 0 1px #36c; }' +
+			'.plm button, .plm input, .plm select { border: 1px solid #888; padding: 4px; box-sizing: border-box; }' +
+			'.plm select {padding: 3px 4px; }' +
+			'#editor th { border: 1px solid #888; padding: 2px; }'
 		);
 
 		$(document).click(function() {
 			$('.plm .focused').removeClass('focused');
 			$('#largeeditor').off('input keypress paste click').val('').attr('placeholder', 'Select a cell to edit it.');
-
 		});
 
 		mw.loader.getScript('https://code.jquery.com/ui/1.12.1/jquery-ui.min.js').then(function() {

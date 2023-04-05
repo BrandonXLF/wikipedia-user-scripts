@@ -213,7 +213,6 @@ $(function() {
 
 	if (mw.config.get('wgPageName') === 'Special:BlankPage/PortletManager') {
 		document.title = 'Manage custom portlet links - ' + mw.config.get('wgSiteName');
-		mw.util.$content.addClass('plm');
 
 		mw.util.addCSS(
 			'.plm input:focus, .plm select:focus, .plm textarea:focus, .plm .focused { outline:0; border-color: #36c; box-shadow: inset 0 0 0 1px #36c; }' +
@@ -228,7 +227,8 @@ $(function() {
 		});
 
 		mw.loader.getScript('https://code.jquery.com/ui/1.12.1/jquery-ui.min.js').then(function() {
-			mw.util.$content.empty()
+			mw.util.$content.find('.mw-body-content').empty()
+				.addClass('plm')
 				.append('<h1>Manage custom portlet links</h1>')
 				.append($('<table id="editor" cellspacing="0" cellpadding="0" style="margin-top:1em;border:1px solid #888;"><tr class="nodrag"><td rowspan="2" style="border:1px solid #888;text-align:center;padding:4px;"><img title="Save" style="cursor:pointer;height:1.5em;" id="savecell" src="https://upload.wikimedia.org/wikipedia/commons/9/97/PICOL_icon_Floppy_disk.svg"></td><td colspan="7"><input style="width:100%;border-bottom-width:1px;" id="largeeditor" placeholder="Select a cell to edit it."></td><tr class="nodrag"><th style="width:1%;">Area</th><th>URL</th><th>Text</th><th>Tooltip</th><th>ID</th><th>Next node</th><th style="width:1px;">Key</th></tr></table>').sortable({items: 'tr:not(.nodrag)', handle: '.drag'}).wrap('<div style="margin-top:0.5em;border: 1px solid #a2a9b1;border-radius:2px;padding:10px 5px;">'))
 				.append('<div style="margin-top:1em;border:2px solid #888;padding:5px;"><p>Remember to save your changes! <a target="_blank" href="' + mw.config.get('wgArticlePath').replace('$1', 'Special:MyPage/common.js') + '">Your common.js</a>. <a target="_blank" href="' + mw.config.get('wgArticlePath').replace('$1', 'Special:MyPage/common.css') + '">Your common.css</a>. <a target="_blank" href="' + mw.config.get('wgScript') + '?showportlets=true">Show portlets</a>.</p><table><tr><th style="text-align:left;">Area</th><td>The portlet link region to add the link.</td></tr><tr><th style="text-align:left;">URL</th><td>The target URL of the link. Use <code>$PAGENAME$</code> for the current full page name. Use <code>//</code> to link to a full URL.</tr><tr><th style="text-align:left;">Text</th><td>The text to show as the link. There is no default.</td></tr><tr><th style="text-align:left;">ID</th><td>The ID of the link HTML element.</td></tr><tr><th style="text-align:left;">Tooltip</th><td>Tooltip (title) to show for the link.</td></tr><tr><th style="text-align:left;">Next&nbsp;node&nbsp;&nbsp;</th><td>CSS selector for the node that comes after the link. Use <code><i>selector</i> + *</code> to have the selector be the previous node.</td></tr><tr><th style="text-align:left;">Key</th><td>The access key for the link. See <a href="https://en.wikipedia.org/wiki/Access_key">the article on access keys</a> for more information.</td></tr></table></div>');

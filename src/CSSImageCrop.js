@@ -101,7 +101,7 @@ $(function() {
 		desc = $('<input style="width:100%;margin:2px 0;padding:1px 2px;">').on('change', makecode);
 
 	if (mw.config.get('wgCanonicalSpecialPageName') == 'Blankpage' && window.location.href.includes('CSSImageCrop')) {
-		mw.util.$content
+		mw.util.$content.find('.mw-body-content')
 			.html('<h1>CSS Image Crop</h1>')
 			.append($('<table>')
 				.append($('<tr>')

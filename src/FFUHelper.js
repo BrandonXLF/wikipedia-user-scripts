@@ -119,14 +119,14 @@ mw.hook('wikipage.content').add(function(content) {
 
 		while (user === '' && element[0]) {
 			if (!element.is(currentInterface)) {
-				user = element.find('a[href*="Special:Contributions"], a[href*="User:"]').attr('href') || '';
+				user = element.find('.userlink').attr('href') || '';
 			}
 
 			element = element.next();
 		}
 
-		user = (user.match(/.*(?:user:|User:|\/)(.*)$/) || [''])[1];
-		user = (user.match(/(.*?)&.*/) || [''])[1] || user;
+		user = decodeURIComponent(user).match(/.*(?:[Uu]ser:|\/)([^?&]+)/);
+		user = user ? user[1] : '';
 
 		return user;
 	}

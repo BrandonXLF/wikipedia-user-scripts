@@ -30,10 +30,23 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 				title: title.getValue() || 'Test Wikitext',
 				text: code.$input.textSelection('getContents'),
 				format: 'json',
-				prop: 'text|displaytitle|categorieshtml|limitreporthtml'
+				prop: 'text|displaytitle|categorieshtml|limitreporthtml|indicators'
 			}).done(function(r) {
 				output.empty().append(
-					$('<h1>').html(r.parse.displaytitle),
+					$('<div>')
+						.addClass('test-wikitext-header')
+						.append(
+							$('<div>')
+								.addClass('test-wikitext-indicators')
+								.append(
+									$.map(r.parse.indicators, function(indicator) {
+										return $('<div>')
+											.attr('id', 'mw-indicator-' + indicator.name)
+											.html(indicator['*']);
+									})
+								),
+							$('<h1>').html(r.parse.displaytitle)
+						),
 					r.parse.text['*'],
 					r.parse.categorieshtml['*'],
 					new OO.ui.PanelLayout({
@@ -122,6 +135,8 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 		'#testwikitext .wikiEditor-ui-view { border: none; }' +
 		'#testwikitext .wikiEditor-ui-top { border: 1px solid #a2a9b1; border-bottom: none; }' +
 		'#testwikitext .wikiEditor-ui .oo-ui-textInputWidget .oo-ui-inputWidget-input { font-family: monospace; border-radius: 0; }' +
-		'#testwikitext .CodeMirror { border: 1px solid #a2a9b1; }'
+		'#testwikitext .CodeMirror { border: 1px solid #a2a9b1; }' +
+		'.test-wikitext-header { position: relative; }' +
+		'.test-wikitext-header .test-wikitext-indicators { position: absolute; right: 0; }'
 	);
 });

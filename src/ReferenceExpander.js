@@ -7,6 +7,7 @@
 
 /* global getCitoidRef */
 
+/* comment out to disable per [[Wikipedia:Miscellany for deletion/User:BrandonXLF/ReferenceExpander]], talk page request --Writ Keeper 21 June 2023
 $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 	e.preventDefault();
 
@@ -502,4 +503,5 @@ $(mw.util.addPortletLink('p-tb', '#', 'Expand references')).click(function(e) {
 	windowManager.addWindows([dialog]);
 	windowManager.openWindow(dialog);
 });
+*/
 // </nowiki>

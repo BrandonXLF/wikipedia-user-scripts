@@ -14,7 +14,7 @@ mw.hook('wikipage.content').add(function(content) {
 	content.find('.mw-parser-output :header:has(*)').each(function() {
 		var level = +this.nodeName[1],
 			heading = $(this),
-			icon = $('<i class="mw-ui-icon-before mw-ui-icon-small mw-ui-icon mw-ui-icon-collapse" style="margin-left:-0.8em;"></i>');
+			icon = $('<i class="mw-ui-icon-before mw-ui-icon-small mw-ui-icon mw-ui-icon-collapse"></i>');
 
 		icon.click(function() {
 			var levelMatch = 'h1';

@@ -87,7 +87,7 @@ $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 
 		IncrementParametersDialog.prototype.getActionProcess = function(action) {
 			return new OO.ui.Process(function() {
-				if (!action) return this.close();
+				if (!action) return this.close().closed;
 
 				text.setValue(text.getValue().replace(regex[opts.getValue()], function(match, prefix, num, suffix) {
 					if (

@@ -217,19 +217,19 @@ $(function() {
 			);
 
 		repos(west, function(e) {
-			area.css('left', clamp(0, e.pageX - parent.position().left, parent.width() - parseInt(area.css('right'))));
+			area.css('left', clamp(0, e.pageX - parent.offset().left, parent.width() - parseInt(area.css('right'))));
 		});
 
 		repos(east, function(e) {
-			area.css('right', clamp(0, parent.width() - e.pageX + parent.position().left, parent.width() - parseInt(area.css('left'))));
+			area.css('right', clamp(0, parent.width() - e.pageX + parent.offset().left, parent.width() - parseInt(area.css('left'))));
 		});
 
 		repos(north, function(e) {
-			area.css('top', clamp(0, e.pageY - parent.position().top, parent.height() - parseInt(area.css('bottom'))));
+			area.css('top', clamp(0, e.pageY - parent.offset().top, parent.height() - parseInt(area.css('bottom'))));
 		});
 
 		repos(south, function(e) {
-			area.css('bottom', clamp(0, parent.height() - e.pageY + parent.position().top, parent.height() - parseInt(area.css('top'))));
+			area.css('bottom', clamp(0, parent.height() - e.pageY + parent.offset().top, parent.height() - parseInt(area.css('top'))));
 		});
 
 		repos(area, function(e) {

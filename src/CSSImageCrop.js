@@ -16,6 +16,7 @@ $(function() {
 	function update() {
 		var mult = img.width() / size.val(),
 			mult2 = size.val() / img.width();
+
 		area.css({
 			left: clamp(0, left.val(), (parent.width() * mult2)  - parseInt(area.css('right'))) * mult + 'px',
 			top: clamp(0, top.val(), (parent.height() * mult2)  - parseInt(area.css('bottom'))) * mult + 'px',
@@ -23,15 +24,18 @@ $(function() {
 			bottom: clamp(0, (parent.height() * mult2)  - height.val() - top.val(), (parent.height() * mult2) - parseInt(area.css('top'))) * mult + 'px'
 
 		});
+
 		setcode();
 	}
 
 	function setcode() {
 		var mult = size.val() / img.width();
+
 		width.val(Math.round(area.width() * mult));
 		height.val(Math.round(area.height() * mult));
 		left.val(Math.round(area.position().left * mult));
 		top.val(Math.round(area.position().top * mult));
+
 		makecode();
 	}
 
@@ -53,14 +57,17 @@ $(function() {
 	function repos(ele, func) {
 		ele.on('mousedown', function(e) {
 			e.stopPropagation();
+
 			function move(e) {
 				func(e);
 				setcode();
 			}
+
 			function up() {
 				$(document.body).off('mousemove', move);
 				$(document.body).off('mouseup', up);
 			}
+
 			$(document.body).on('mousemove', move);
 			$(document.body).on('mouseup', up);
 		});
@@ -73,6 +80,7 @@ $(function() {
 				$('#img').attr('data-loaded', 'true');
 				return;
 			}
+
 			$('#img').width($('#img').get(0).naturalWidth);
 			size.val($('#img').get(0).naturalWidth);
 		}),
@@ -231,7 +239,9 @@ $(function() {
 				parseInt(area.css('top')) + e.originalEvent.movementY,
 				parseInt(area.css('bottom')) - e.originalEvent.movementY
 			];
+
 			if (pos[0] < 0 || pos[1] < 0 || pos[2] < 0 || pos[3] < 0) return;
+
 			area.css('left', pos[0]);
 			area.css('right', pos[1]);
 			area.css('top', pos[2]);

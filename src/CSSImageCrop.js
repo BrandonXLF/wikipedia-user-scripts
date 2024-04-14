@@ -25,10 +25,10 @@ $(function() {
 
 		});
 
-		setcode();
+		setCode();
 	}
 
-	function setcode() {
+	function setCode() {
 		var mult = size.val() / img.width();
 
 		width.val(Math.round(area.width() * mult));
@@ -36,10 +36,10 @@ $(function() {
 		left.val(Math.round(area.position().left * mult));
 		top.val(Math.round(area.position().top * mult));
 
-		makecode();
+		makeCode();
 	}
 
-	function makecode() {
+	function makeCode() {
 		textarea.val(
 			'{{CSS image crop\n' +
 			'|Image  = ' + file.val() + '\n' +
@@ -60,7 +60,7 @@ $(function() {
 
 			function move(e) {
 				func(e);
-				setcode();
+				setCode();
 			}
 
 			function up() {
@@ -91,7 +91,7 @@ $(function() {
 		file = $('<input style="width:100%;margin:2px 0;padding:1px 2px;" placeholder="File" value="Dew on grass Luc Viatour.jpg">').on('change', function() {
 			img.attr('src', 'https://en.wikipedia.org/wiki/Special:Filepath/' + file.val());
 		}),
-		size = $('<input type="number" style="width:100%;margin:2px 0;padding:1px 2px;" placeholder="Base width" value="300">').on('change', setcode),
+		size = $('<input type="number" style="width:100%;margin:2px 0;padding:1px 2px;" placeholder="Base width" value="300">').on('change', setCode),
 		textarea = $('<textarea readonly rows="10" style="width:100%;max-width:100%;margin:2px 0 10px;padding:1px 2px;resize:vertical;">'),
 		width = $('<input type="number" style="width:100%;margin:2px 0;padding:1px 2px;">').on('change', update),
 		height = $('<input type="number" style="width:100%;margin:2px 0;padding:1px 2px;">').on('change', update),
@@ -105,8 +105,8 @@ $(function() {
 			'<option>left</option>' +
 			'<option>center</option>' +
 			'</select>'
-		).on('change', makecode),
-		desc = $('<input style="width:100%;margin:2px 0;padding:1px 2px;">').on('change', makecode);
+		).on('change', makeCode),
+		desc = $('<input style="width:100%;margin:2px 0;padding:1px 2px;">').on('change', makeCode);
 
 	if (mw.config.get('wgCanonicalSpecialPageName') == 'Blankpage' && window.location.href.includes('CSSImageCrop')) {
 		document.title = 'CSS Image Crop - ' + mw.config.get('wgSiteName');

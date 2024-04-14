@@ -188,19 +188,20 @@ $(function() {
 			portletItem.find('a').text('Hide templates');
 		}
 
-		$.get('https://en.wikipedia.org/api/rest_v1/page/html/' + encodeURIComponent(mw.config.get('wgPageName'))).then(function(html) {
-			var doc = new DOMParser().parseFromString(html, 'text/html'),
-				parserOutput = $('.mw-parser-output'),
+		new mw.Api().get({
+			formatversion: 2,
+			action: 'parse',
+			page: mw.config.get('wgPageName'),
+			parsoid: true
+		}).then(function(res) {
+			var parserOutput = $('.mw-parser-output'),
 				container = $('<div class="show-templates-container">');
 
 			parserOutput.css('display', 'none');
 			container.insertBefore(parserOutput);
 
-			container.addClass('mw-parser-output');
-			container.html($('body', doc).html());
+			container.html(res.parse.text);
 			mw.hook('wikipage.content').fire(container);
-
-			$('link[rel="stylesheet"], style', doc).appendTo(container);
 
 			addListeners();
 

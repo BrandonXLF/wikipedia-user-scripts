@@ -1,7 +1,7 @@
 /*** Find Sources ***/
 
-// Tool for easily adding {{copied}} to a talk page
-// Documentation at [[en:w:User:BrandonXLF/Copied]]
+// Add {{Find sources mainspace}} below the title of articles you view
+// Documentation at [[en:w:User:BrandonXLF/FindSources]]
 // By [[en:w:User:BrandonXLF]]
 
 $.when(mw.loader.using('mediawiki.api'), $.ready).then(function() {

@@ -42,7 +42,7 @@ $(function() {
 	function makeCode() {
 		textarea.val(
 			'{{CSS image crop\n' +
-			'|Image  = ' + file.val() + '\n' +
+			'|Image = ' + file.val() + '\n' +
 			'|bSize = ' + size.val() + '\n' +
 			'|cWidth = ' + width.val() + '\n' +
 			'|cHeight = ' + height.val() + '\n' +

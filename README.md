@@ -37,6 +37,7 @@ Most of them should work fine on other MediaWiki wikis, but some scripts are wik
 * ReferenceExpander - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ReferenceExpander), [JS](/src/ReferenceExpander.js)
 * Restorer - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/Restorer), [JS](/src/Restorer.js)
 * ShowRevisionID - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ShowRevisionID), [JS](/src/ShowRevisionID.js)
+* ShowTemplates - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ShowTemplates), [JS](/src/ShowTemplates.js)
 * ShowUserGender - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/ShowUserGender), [JS](/src/ShowUserGender.js)
 * SubpageMover - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/SubpageMover), [JS](/src/SubpageMover.js)
 * Subpages - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/Subpages), [JS](/src/Subpages.js)

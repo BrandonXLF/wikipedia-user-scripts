@@ -224,8 +224,8 @@ $(function() {
 	'</defs></svg>').appendTo(document.body);
 
 	mw.loader.addStyleTag(
-		'.show-templates-template { filter: url(#show-templates-filter); background: white !important; } ' +
-		'.show-templates-template.current { filter: url(#show-templates-hover-filter); }' +
+		'.show-templates-template:not(section) { filter: url(#show-templates-filter); background: white !important; } ' +
+		'.show-templates-template.current:not(section) { filter: url(#show-templates-hover-filter); }' +
 		'.show-templates-part { padding: 4px 0; }' +
 		'.show-templates-part code { padding: 0 4px; white-space: pre-wrap; }' +
 		'.show-templates-part > * { margin: 4px 0; }' +

@@ -31,10 +31,20 @@ $(function() {
 
 		for (var i = 0; i < sortables.length; i++) {
 			var sortable = sortables[i],
+				items = $(sortables[i]).children(),
+				list = $('<ul>').append(
+					items.slice(0, 2).map(function() {
+						return this.cloneNode(true);
+					}),
+					items.length >= 3 && $('<li>').text('…')
+				),
 				cnt = $('<div>'),
 				preview = $('<div>');
 
-			preview.css({overflow: 'hidden', maxHeight: '2.75em', pointerEvents: 'none'}).appendTo(cnt).append(sortable.cloneNode(true));
+			preview.css({
+				overflow: 'hidden',
+				pointerEvents: 'none'
+			}).appendTo(cnt).append(list);
 
 			if (sortable.listSortChildren.length) {
 				$('<div>').css({paddingTop: '12px'}).appendTo(cnt).append(recursiveShow(sortable.listSortChildren).$element);
@@ -200,4 +210,10 @@ $(function() {
 		e.preventDefault();
 		sort();
 	});
+
+	mw.loader.addStyleTag(
+		'#listsorterui .oo-ui-multiselectWidget-group { overflow: hidden; }' +
+		'#listsorterui .oo-ui-checkboxMultioptionWidget.oo-ui-labelElement { width: 100%; margin-top: 0.5em; }' +
+		'#listsorterui li { white-space: nowrap; }'
+	);
 });

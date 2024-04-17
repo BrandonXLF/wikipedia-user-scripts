@@ -109,7 +109,7 @@ $(function() {
 				}
 
 				var sort = new OO.ui.ButtonInputWidget({
-						label: 'Sort selected',
+						label: 'Sort and review',
 						flags: ['primary', 'progressive']
 					}),
 					select = new OO.ui.ButtonInputWidget({

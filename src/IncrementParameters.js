@@ -7,9 +7,9 @@
 $.when(mw.loader.using('oojs-ui'), $.ready).then(function() {
 	$(mw.util.addPortletLink('p-tb', '#', 'Increment params')).click(function(e) {
 		var regex = {
-				all: new RegExp('\\|(\\s*[^ =|_-]?[^ =|]*?\\s*)([1-9]\\d*)(\\s*[^ =|]*?[^ =|]?\\s*)=', 'g'),
-				suffix: new RegExp('\\|(\\s*(?:header|label|data|rowclass|class)*?\\s*)([1-9]\\d*)(\\s*[^ =|]*?[^ =|]?\\s*)=', 'g'),
-				infobox: new RegExp('\\|(\\s*(?:header|label|data|rowclass|class)*?\\s*)([1-9]\\d*)(\\s*)=', 'g')
+				all: /\|(\s*[^ =|_-]?[^ =|]*?\s*)([1-9]\d*)(\s*[^ =|]*?[^ =|]?\s*)=/g,
+				suffix: /\|(\s*(?:header|label|data|rowclass|class)*?\s*)([1-9]\d*)(\s*[^ =|]*?[^ =|]?\s*)=/g,
+				infobox: /\|(\s*(?:header|label|data|rowclass|class)*?\s*)([1-9]\d*)(\s*)=/g
 			},
 			opts = new OO.ui.RadioSelectInputWidget({
 				value: 'all',

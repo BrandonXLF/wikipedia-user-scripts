@@ -5,9 +5,11 @@
 // By [[en:w:User:BrandonXLF]]
 
 $(function() {
-	var portletItem = $(mw.util.addPortletLink('p-tb', '#', 'Show templates'));
+	var protletLink = $(mw.util.addPortletLink('p-tb', '#', 'Show templates')).find('a');
 
-	portletItem.click(function() {
+	protletLink.click(function(e) {
+		e.preventDefault();
+
 		var popup = new OO.ui.PopupWidget({
 				padded: true,
 				hideWhenOutOfView: false,
@@ -182,10 +184,10 @@ $(function() {
 
 		if ($('.show-templates-container').remove()[0]) {
 			$('.mw-parser-output').show();
-			portletItem.find('a').text('Show templates');
+			protletLink.text('Show templates');
 			return;
 		} else {
-			portletItem.find('a').text('Hide templates');
+			protletLink.text('Hide templates');
 		}
 
 		new mw.Api().get({

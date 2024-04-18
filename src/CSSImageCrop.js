@@ -22,7 +22,6 @@ $(function() {
 			top: clamp(0, top.val(), (parent.height() * mult2)  - parseInt(area.css('bottom'))) * mult + 'px',
 			right: clamp(0, (parent.width() * mult2) - width.val() - left.val(), (parent.width() * mult2) - parseInt(area.css('left'))) * mult + 'px',
 			bottom: clamp(0, (parent.height() * mult2)  - height.val() - top.val(), (parent.height() * mult2) - parseInt(area.css('top'))) * mult + 'px'
-
 		});
 
 		setCode();

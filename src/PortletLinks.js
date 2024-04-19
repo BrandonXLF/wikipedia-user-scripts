@@ -105,7 +105,7 @@ $(function() {
 						? link.url.replace(/\$PAGENAME\$/g, encodeURIComponent(mw.config.get('wgPageName')))
 						: mw.util.getUrl(link.url.replace(/\$PAGENAME\$/g, encodeURIComponent(mw.config.get('wgPageName')))),
 					link.text,
-					link.id,
+					link.id || 'plm-portletitem-' + (i + 1),
 					link.title,
 					link.key,
 					link.nnode

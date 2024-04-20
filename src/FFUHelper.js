@@ -249,7 +249,7 @@ mw.hook('wikipage.content').add(function(content) {
 						token: mw.user.tokens.get('csrfToken'),
 						summary: 'Notifying about [[WP:FFU|FFU]] request using [[en:w:User:BrandonXLF/FFUHelper|FFU Helper]]'
 					}).done(function() {
-						mw.notify('Finished positing on user talk page.');
+						mw.notify('Posted notice on user talk page.');
 						maybeUpdatePage();
 					});
 				}

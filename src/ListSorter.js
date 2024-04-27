@@ -31,18 +31,22 @@ $(function() {
 		for (var i = 0; i < sortables.length; i++) {
 			var sortable = sortables[i],
 				items = $(sortables[i]).children(),
-				list = $('<ul>').append(
-					items.slice(0, 2).map(function() {
-						return this.cloneNode(true);
-					}),
-					items.length >= 3 && $('<li>').text('…')
-				),
+				list = $('<ul>'),
 				cnt = $('<div>'),
 				preview = $('<div>');
 
+			items.slice(0, 2).each(function() {
+				return $('<li>').text(this.textContent).appendTo(list);
+			});
+
+			if (items.length >= 3) {
+				$('<li>').text('…').appendTo(list);
+			}
+
 			preview.css({
 				overflow: 'hidden',
-				pointerEvents: 'none'
+				pointerEvents: 'none',
+				whiteSpace: 'nowrap'
 			}).appendTo(cnt).append(list);
 
 			if (sortable.listSortChildren.length) {

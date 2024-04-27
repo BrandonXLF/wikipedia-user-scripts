@@ -8,8 +8,7 @@ $(function() {
 	var lang = mw.config.get('wgPageContentLanguage'),
 		title = mw.config.get('wgPageName'),
 		summary = 'Sorted bullet lists using [[en:w:User:BrandonXLF/ListSorter|ListSorter]]',
-		skip = '<includeonly.*?>[\\s\\S]*?<\\/includeonly>|<!--[\\s\\S]*?-->',
-		regex = new RegExp('((?:' + skip + ')*(?:\\n|^)(?:' + skip + ')*)(\\*+)((?:' + skip + '|.)*)', 'g');
+		regex = /(\n|^)(\*+)(.*)/g;
 
 	function sortList(list) {
 		var children = Array.prototype.slice.call(list.children);

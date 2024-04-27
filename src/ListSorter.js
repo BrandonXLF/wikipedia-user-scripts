@@ -11,9 +11,17 @@ $(function() {
 		regex = /(\n|^)(\*+)(.*)/g;
 
 	function unattachedInnerText(el) {
+		var parent = el.parentNode,
+			tmp = parent ? document.createElement('i') : null;
+
+		parent && parent.replaceChild(tmp, el);
 		document.body.appendChild(el);
+
 		var text = el.innerText;
+
 		document.body.removeChild(el);
+		parent && parent.replaceChild(el, tmp);
+
 		return text;
 	}
 

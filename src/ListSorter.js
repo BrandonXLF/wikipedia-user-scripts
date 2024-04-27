@@ -36,7 +36,7 @@ $(function() {
 				preview = $('<div>');
 
 			items.slice(0, 2).each(function() {
-				return $('<li>').text(this.textContent).appendTo(list);
+				return $('<li>').text(this.innerText).appendTo(list);
 			});
 
 			if (items.length >= 3) {

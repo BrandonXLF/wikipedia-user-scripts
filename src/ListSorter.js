@@ -10,13 +10,22 @@ $(function() {
 		summary = 'Sorted bullet lists using [[en:w:User:BrandonXLF/ListSorter|ListSorter]]',
 		regex = /(\n|^)(\*+)(.*)/g;
 
+	function unattachedInnerText(el) {
+		document.body.appendChild(el);
+		var text = el.innerText;
+		document.body.removeChild(el);
+		return text;
+	}
+
 	function sortList(list) {
 		var children = Array.prototype.slice.call(list.children);
 
 		while (list.firstChild) list.removeChild(list.firstChild);
 
 		children.sort(function(a, b) {
-			return a.innerText.trim().localeCompare(b.innerText.trim(), lang, {sensitivity: 'accent'});
+			return unattachedInnerText(a).trim().localeCompare(
+				unattachedInnerText(b).trim(), lang, {sensitivity: 'accent'}
+			);
 		});
 
 		for (var i = 0; i < children.length; i++) list.appendChild(children[i]);
@@ -36,7 +45,7 @@ $(function() {
 				preview = $('<div>');
 
 			items.slice(0, 2).each(function() {
-				return $('<li>').text(this.innerText).appendTo(list);
+				return $('<li>').text(unattachedInnerText(this)).appendTo(list);
 			});
 
 			if (items.length >= 3) {

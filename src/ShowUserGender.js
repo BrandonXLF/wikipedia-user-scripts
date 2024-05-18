@@ -10,14 +10,14 @@ window.SHOW_USER_GENDER = $.extend({
 	unknown: ' [?]',
 }, window.SHOW_USER_GENDER);
 
-(function() {
+mw.hook('wikipage.content').add(function(content) {
 	var USER_NS = mw.config.get('wgFormattedNamespaces')[2] + ':';
 
 	function getUser(el) {
 		return decodeURIComponent(el.href).match(/^.*\/(.*?)$/)[1].replace(/_/g, ' ').match(/(index\.php\?title=|)([^&]*).*?/)[2];
 	}
 
-	var elements = $('.userlink').filter(function() {
+	var elements = content.find('.userlink').filter(function() {
 			return getUser(this).startsWith(USER_NS);
 		}),
 
@@ -34,6 +34,7 @@ window.SHOW_USER_GENDER = $.extend({
 	for (var i = 0; i < users.length; i += 50) {
 		var reqUsers = users.slice(i, i + 50);
 		requests++;
+
 		new mw.Api().get({
 			action: 'query',
 			list: 'users',
@@ -55,4 +56,4 @@ window.SHOW_USER_GENDER = $.extend({
 			}
 		});
 	}
-})();
+});

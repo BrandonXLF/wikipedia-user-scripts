@@ -42,7 +42,6 @@ window.SHOW_USER_GENDER = $.extend({
 		}).then(function(res) {
 			done++;
 			res = res.query.users;
-			console.log(res);
 
 			for (var i = 0; i < res.length; i++) {
 				genders[res[i].name] = res[i].gender;

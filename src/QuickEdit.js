@@ -115,7 +115,9 @@
 
 	function showEditor(el) {
 		var progress = new OO.ui.ProgressBarWidget(),
-			heading = el.closest(':header'),
+			// https://www.mediawiki.org/wiki/Heading_HTML_changes
+			// Cannot use .closet() because DiscussionTools nests an h2 within a .mw-heading
+			heading = el.parents(':header, .mw-heading').last(),
 			matcher = heading.nextUntil.bind(heading),
 			inserter = heading.after.bind(heading),
 			targetEl = el.siblings('.quickedit-target').last(),
@@ -164,9 +166,10 @@
 			});
 
 			var levelMatch = 'h1';
-			for (var i = 2; i <= level; i++) levelMatch += ',h' + i + ':has(*)';
+			for (var i = 2; i <= level; i++)
+				levelMatch += ',h' + i + ':has(*), .mw-heading' + i;
 
-			var partSection = matcher(':header:has(*)'),
+			var partSection = matcher(':header:has(*), .mw-heading'),
 				fullSection = matcher(levelMatch),
 				textarea = new OO.ui.MultilineTextInputWidget({
 					rows: 1,

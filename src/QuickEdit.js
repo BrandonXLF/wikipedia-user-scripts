@@ -116,7 +116,7 @@
 	function showEditor(el) {
 		var progress = new OO.ui.ProgressBarWidget(),
 			// https://www.mediawiki.org/wiki/Heading_HTML_changes
-			// Cannot use .closet() because DiscussionTools nests an h2 within a .mw-heading
+			// Cannot use .closest() because DiscussionTools nests an h2 within a .mw-heading
 			heading = el.parents(':header, .mw-heading').last(),
 			matcher = heading.nextUntil.bind(heading),
 			inserter = heading.after.bind(heading),

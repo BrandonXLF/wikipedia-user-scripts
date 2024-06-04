@@ -16,120 +16,121 @@ $.when(mw.loader.using([
 ]), $.ready).then(function() {
 	var messages = function() {
 		var translations = {
-			en: {
-				todoPortlet: 'Todo',
-				todoHover: 'Click to see your todo list',
-				saving: 'Saving changes...',
-				drag: 'Drag',
-				delete: 'Delete',
-				edit: 'Edit',
-				pageNameUrl: 'Page name or URL',
-				comment: 'Comment',
-				save: 'Save',
-				cancel: 'Cancel',
-				moreinfo: 'More information',
-				undo: 'Undo',
-				redo: 'Redo',
-				clear: 'Clear',
-				clearConfirm: 'Are you sure you want to clear your todo list?',
-				download: 'Download',
-				upload: 'Upload',
-				help: 'Help',
-				add: 'Add',
-				close: 'Close',
-				yourList: 'Your todo list',
-				noPopup: 'Unable to open todo list popup while on the todo list page.',
-				addedTime: 'Added: $dateDate $dateMonth, $dateYear at $dateHours:$dateMinutes'
+				en: {
+					todoPortlet: 'Todo',
+					todoHover: 'Click to see your todo list',
+					saving: 'Saving changes...',
+					drag: 'Drag',
+					delete: 'Delete',
+					edit: 'Edit',
+					pageNameUrl: 'Page name or URL',
+					comment: 'Comment',
+					save: 'Save',
+					cancel: 'Cancel',
+					moreinfo: 'More information',
+					undo: 'Undo',
+					redo: 'Redo',
+					clear: 'Clear',
+					clearConfirm: 'Are you sure you want to clear your todo list?',
+					download: 'Download',
+					upload: 'Upload',
+					help: 'Help',
+					add: 'Add',
+					close: 'Close',
+					yourList: 'Your todo list',
+					noPopup: 'Unable to open todo list popup while on the todo list page.',
+					addedTime: 'Added: $dateDate $dateMonth, $dateYear at $dateHours:$dateMinutes'
+				},
+				nb: {
+					todoPortlet: 'Huskeliste',
+					todoHover: 'Klikk for å se huskelista di',
+					saving: 'Lagrer endringer …',
+					drag: 'Dra',
+					delete: 'Slett',
+					edit: 'Rediger',
+					pageNameUrl: 'Sidenavn eller URL',
+					comment: 'Merknad',
+					save: 'Lagre',
+					cancel: 'Avbryt',
+					moreinfo: 'Mer informasjon',
+					undo: 'Angre',
+					redo: 'Angre angring',
+					clear: 'Tøm',
+					clearConfirm: 'Er du sikker på at du vil tømme huskelista di?',
+					download: 'Last ned',
+					upload: 'Last opp',
+					help: 'Hjelp',
+					add: 'Legg til',
+					close: 'Lukk',
+					yourList: 'Huskelista di',
+					noPopup: 'Kan ikke åpne oppsprettsboksen med huskelista mens du er på huskelistesiden.',
+					addedTime: 'Lagt til: $dateDate. $dateMonth $dateYear kl. $dateHours.$dateMinutes'
+				},
+				nn: {
+					todoPortlet: 'Hugseliste',
+					todoHover: 'Klikk for å sjå hugselista di',
+					saving: 'Lagrar endringar …',
+					drag: 'Dra',
+					delete: 'Slett',
+					edit: 'Endre',
+					pageNameUrl: 'Sidenamn eller URL',
+					comment: 'Merknad',
+					save: 'Lagre',
+					cancel: 'Avbryt',
+					moreinfo: 'Meir informasjon',
+					undo: 'Angre',
+					redo: 'Angre angring',
+					clear: 'Tøm',
+					clearConfirm: 'Er du sikker på at du vil tømme hugselista di?',
+					download: 'Last ned',
+					upload: 'Last opp',
+					help: 'Hjelp',
+					add: 'Legg til',
+					close: 'Lukk',
+					yourList: 'Hugselista di',
+					noPopup: 'Kan ikkje opna oppsprettsboksen med hugselista mens du er på hugselistesida.',
+					addedTime: 'Lagt til: $dateDate. $dateMonth $dateYear kl. $dateHours.$dateMinutes'
+				},
+				ka: {
+					todoPortlet: 'გასაკეთებელი',
+					todoHover: 'დააწკაპეთ თქვენი გასაკეთებლების სიის სანახავად',
+					saving: 'ინახება…',
+					drag: 'გადაადგილება',
+					delete: 'წაშლა',
+					edit: 'რედაქტირება',
+					pageNameUrl: 'გვერდის სახელი ან ბმული',
+					comment: 'კომენტარი',
+					save: 'შენახვა',
+					cancel: 'გაუქმება',
+					moreinfo: 'მეტი ინფორმაცია',
+					undo: 'უკან დაბრუნება',
+					redo: 'წინ დაბრუნება',
+					clear: 'გასუფთავება',
+					clearConfirm: 'დარწმუნებული ხართ, რომ თქვენი სიის გასუფთავება გსურთ?',
+					download: 'ჩამოტვირთვა',
+					upload: 'ატვირთვა',
+					help: 'დახმარება',
+					add: 'დამატება',
+					close: 'დახურვა',
+					yourList: 'თქვენი გასაკეთებლების სია',
+					noPopup: 'გასაკეთებლების სიის გვერდზე ყოფნის დროს შეუძლებელია სიის ფანჯრის გახსნა.',
+					addedTime: 'დამატების თარიღი: $dateDate $dateMonth, $dateYear; $dateHours:$dateMinutes'
+				}
 			},
-			nb: {
-				todoPortlet: 'Huskeliste',
-				todoHover: 'Klikk for å se huskelista di',
-				saving: 'Lagrer endringer …',
-				drag: 'Dra',
-				delete: 'Slett',
-				edit: 'Rediger',
-				pageNameUrl: 'Sidenavn eller URL',
-				comment: 'Merknad',
-				save: 'Lagre',
-				cancel: 'Avbryt',
-				moreinfo: 'Mer informasjon',
-				undo: 'Angre',
-				redo: 'Angre angring',
-				clear: 'Tøm',
-				clearConfirm: 'Er du sikker på at du vil tømme huskelista di?',
-				download: 'Last ned',
-				upload: 'Last opp',
-				help: 'Hjelp',
-				add: 'Legg til',
-				close: 'Lukk',
-				yourList: 'Huskelista di',
-				noPopup: 'Kan ikke åpne oppsprettsboksen med huskelista mens du er på huskelistesiden.',
-				addedTime: 'Lagt til: $dateDate. $dateMonth $dateYear kl. $dateHours.$dateMinutes'
-			},
-			nn: {
-				todoPortlet: 'Hugseliste',
-				todoHover: 'Klikk for å sjå hugselista di',
-				saving: 'Lagrar endringar …',
-				drag: 'Dra',
-				delete: 'Slett',
-				edit: 'Endre',
-				pageNameUrl: 'Sidenamn eller URL',
-				comment: 'Merknad',
-				save: 'Lagre',
-				cancel: 'Avbryt',
-				moreinfo: 'Meir informasjon',
-				undo: 'Angre',
-				redo: 'Angre angring',
-				clear: 'Tøm',
-				clearConfirm: 'Er du sikker på at du vil tømme hugselista di?',
-				download: 'Last ned',
-				upload: 'Last opp',
-				help: 'Hjelp',
-				add: 'Legg til',
-				close: 'Lukk',
-				yourList: 'Hugselista di',
-				noPopup: 'Kan ikkje opna oppsprettsboksen med hugselista mens du er på hugselistesida.',
-				addedTime: 'Lagt til: $dateDate. $dateMonth $dateYear kl. $dateHours.$dateMinutes'
-			},
-			ka: {
-				todoPortlet: 'გასაკეთებელი',
-				todoHover: 'დააწკაპეთ თქვენი გასაკეთებლების სიის სანახავად',
-				saving: 'ინახება…',
-				drag: 'გადაადგილება',
-				delete: 'წაშლა',
-				edit: 'რედაქტირება',
-				pageNameUrl: 'გვერდის სახელი ან ბმული',
-				comment: 'კომენტარი',
-				save: 'შენახვა',
-				cancel: 'გაუქმება',
-				moreinfo: 'მეტი ინფორმაცია',
-				undo: 'უკან დაბრუნება',
-				redo: 'წინ დაბრუნება',
-				clear: 'გასუფთავება',
-				clearConfirm: 'დარწმუნებული ხართ, რომ თქვენი სიის გასუფთავება გსურთ?',
-				download: 'ჩამოტვირთვა',
-				upload: 'ატვირთვა',
-				help: 'დახმარება',
-				add: 'დამატება',
-				close: 'დახურვა',
-				yourList: 'თქვენი გასაკეთებლების სია',
-				noPopup: 'გასაკეთებლების სიის გვერდზე ყოფნის დროს შეუძლებელია სიის ფანჯრის გახსნა.',
-				addedTime: 'დამატების თარიღი: $dateDate $dateMonth, $dateYear; $dateHours:$dateMinutes'
-			}
-		},
 			chain = mw.language.getFallbackLanguageChain(),
 			len = chain.length,
 			ret = {},
 			i = len - 1;
-		while ( i >= 0 ) {
-			if ( translations.hasOwnProperty( chain[ i ] ) ) {
-      	$.extend( ret, translations[ chain[ i ] ] );
-    	}
-    	i = i - 1;
-  	}
+		while (i >= 0) {
+			if (translations.hasOwnProperty(chain[ i ])) {
+				$.extend(ret, translations[ chain[ i ] ]);
+			}
+
+			i = i - 1;
+		}
 		return ret;
 	}();
-	
+
 	mw.util.addCSS(
 		'.userjs-todo-list .item:hover .act { visibility: visible !important; }' +
 		'[data-drop="above"]::before { display: block; border-top: 2px solid #066; margin-top: -2px; content: ""; }' +
@@ -183,7 +184,7 @@ $.when(mw.loader.using([
 
 		mw.user.options.set('userjs-todo-script', what);
 		req++;
-		parent.find('.status').text( messages.saving );
+		parent.find('.status').text(messages.saving);
 
 		api.saveOption('userjs-todo-script', what).done(function() {
 			req--;
@@ -207,7 +208,7 @@ $.when(mw.loader.using([
 			list();
 
 			if (req > 0) {
-				parent.find('.status').text( messages.saving );
+				parent.find('.status').text(messages.saving);
 			}
 		}
 	}
@@ -233,7 +234,7 @@ $.when(mw.loader.using([
 			.attr('data-page', array[0] || '')
 			.attr('data-info', array[1] || '')
 			.attr('data-date', array[2] || '')
-			.append((new OO.ui.IconWidget({icon: 'draggable', title: messages.drag })).$element
+			.append((new OO.ui.IconWidget({icon: 'draggable', title: messages.drag})).$element
 				.css({cursor: 'move', height: '1.2em', width: '1.2em', minWidth: 'unset', minHeight: 'unset', marginRight: '0.5em'})
 				.on('mousedown', function() {
 					$(this).parent().attr('draggable', 'true');
@@ -266,12 +267,12 @@ $.when(mw.loader.using([
 					$('<div style="border:1px solid #a2a9b1;padding:0 4px;margin:0.5em 0;border-radius:4px;"></div>')
 						.append((new OO.ui.TextInputWidget({
 							placeholder: messages.pageNameUrl,
-							classes: [ 'todo-pageNameUrl' ],
+							classes: ['todo-pageNameUrl'],
 							value: $(this).parent().attr('data-page')
 						})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 						.append((new OO.ui.TextInputWidget({
 							placeholder: messages.comment,
-							classes: [ 'todo-comment' ],
+							classes: ['todo-comment'],
 							value: $(this).parent().attr('data-info')
 						})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 						.append($('<table style="width:100%;border-spacing:0;margin-bottom:0.5em;"></table>').append($('<tr></tr>')
@@ -323,12 +324,12 @@ $.when(mw.loader.using([
 				invisibleLabel: true,
 				title: messages.moreinfo,
 				popup: {
-					$content: $('<p></p>').text( messages.addedTime
-					 	.replace( '$dateDate', date.getDate() )
-						.replace( '$dateMonth', mw.config.get('wgMonthNames')[date.getMonth() + 1] )
-						.replace( '$dateYear', date.getFullYear() )
-						.replace( '$dateHours', date.getHours() )
-						.replace( '$dateMinutes', ('' + date.getMinutes()).padStart(2, '0') )
+					$content: $('<p></p>').text(messages.addedTime
+						.replace('$dateDate', date.getDate())
+						.replace('$dateMonth', mw.config.get('wgMonthNames')[date.getMonth() + 1])
+						.replace('$dateYear', date.getFullYear())
+						.replace('$dateHours', date.getHours())
+						.replace('$dateMinutes', ('' + date.getMinutes()).padStart(2, '0'))
 					),
 					padded: true,
 					align: 'forwards'
@@ -406,7 +407,7 @@ $.when(mw.loader.using([
 					invisibleLabel: true,
 					title: messages.clear
 				}).$element.click(function() {
-					OO.ui.confirm( messages.clearConfirm ).done(function(confirmed) {
+					OO.ui.confirm(messages.clearConfirm).done(function(confirmed) {
 						if (confirmed) {
 							parent.find('.items').empty();
 							save('', true, true);
@@ -444,12 +445,12 @@ $.when(mw.loader.using([
 			.append($('<div style="padding:0 0.5em 0.5em;"></div>')
 				.append((new OO.ui.TextInputWidget({
 					placeholder: messages.pageNameUrl,
-					classes: [ 'todo-pageNameUrl' ],
+					classes: ['todo-pageNameUrl'],
 					value: mw.config.get('wgPageName').replace(/_/g, ' ') != 'Special:BlankPage/todo' ? mw.config.get('wgPageName').replace(/_/g, ' ') : ''
 				})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 				.append((new OO.ui.TextInputWidget({
 					placeholder: messages.comment,
-					classes: [ 'todo-comment' ]
+					classes: ['todo-comment']
 				})).$element.css({maxWidth: 'unset', margin: '4px 0'}))
 				.append((new OO.ui.ButtonWidget({
 					label: messages.add
@@ -524,42 +525,45 @@ $.when(mw.loader.using([
 	}
 
 	function repos(pos, css, pvar, cond, pcss, ccss) {
-		return $('<div style="pointer-events:all;position:absolute;"></div>').attr('id', pos + 'gfdgfdgfd').css('cursor', pos + '-resize').css(css).on('mousedown', function(e) {
-			if (e.target !== this) return;
+		return $('<div style="pointer-events:all;position:absolute;"></div>')
+			.attr('id', pos + 'gfdgfdgfd')
+			.css('cursor', pos + '-resize')
+			.css(css).on('mousedown', function(e) {
+				if (e.target !== this) return;
 
-			var p = parent,
-				c = p.find('.userjs-todo-list'),
-				q = eval(pvar),
-				b = $(document.body);
+				var p = parent,
+					c = p.find('.userjs-todo-list'),
+					q = eval(pvar),
+					b = $(document.body);
 
-			b.css('user-select', 'none');
+				b.css('user-select', 'none');
 
-			function move(e) {
-				if (eval(cond)) return;
-				(new Function('e', 'p', 'q', 'p.css(' + pcss + ')'))(e, p, q);
-				(new Function('e', 'c', 'q', 'c.css(' + ccss + ')'))(e, c, q);
-			}
+				function move(e) {
+					if (eval(cond)) return;
+					(new Function('e', 'p', 'q', 'p.css(' + pcss + ')'))(e, p, q);
+					(new Function('e', 'c', 'q', 'c.css(' + ccss + ')'))(e, c, q);
+				}
 
-			function up() {
-				b.css('user-select', '');
-				b.off('mousemove', move);
-				b.off('mouseup', up);
-			}
+				function up() {
+					b.css('user-select', '');
+					b.off('mousemove', move);
+					b.off('mouseup', up);
+				}
 
-			b.on('mousemove', move);
-			b.on('mouseup', up);
-		});
+				b.on('mousemove', move);
+				b.on('mouseup', up);
+			});
 	}
 
-	if ( ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Blankpage' ) && ( mw.config.get('wgPageName').split('/').pop() === 'todo' ) ) {
+	if ((mw.config.get('wgCanonicalSpecialPageName') === 'Blankpage') && (mw.config.get('wgPageName').split('/').pop() === 'todo')) {
 		document.title = messages.yourList + ' – ' + mw.config.get('wgSiteName');
-		$('#firstHeading').text( messages.yourList );
+		$('#firstHeading').text(messages.yourList);
 		parent = mw.util.$content.empty();
 		list();
 
 		link.children().first().click(function(e) {
 			e.preventDefault();
-			mw.notify( messages.noPopup, {tag: 'rtbyilounmt7udfnod'});
+			mw.notify(messages.noPopup, {tag: 'rtbyilounmt7udfnod'});
 		});
 	} else {
 		link.children().first().click(function(e) {

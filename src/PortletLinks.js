@@ -6,7 +6,18 @@
 
 $(function() {
 	var vars = ['area', 'url', 'text', 'title', 'id', 'nnode', 'key'],
-		areas = ['p-cactions', 'p-personal', 'p-views', 'p-tb', 'left-navigation', 'p-navigation', 'p-interaction', 'footer', 'footer-places'],
+		areas = [
+			'p-cactions',
+			'p-personal',
+			'p-personal-sticky-header',
+			'p-views',
+			'p-tb',
+			'left-navigation',
+			'p-navigation',
+			'p-interaction',
+			'footer',
+			'footer-places'
+		],
 		i = 0,
 		links = JSON.parse(mw.user.options.get('userjs-portletmanager') || '[]');
 
@@ -217,7 +228,7 @@ $(function() {
 		mw.util.addCSS(
 			'.plm input:focus, .plm select:focus, .plm textarea:focus, .plm .focused { outline:0; border-color: #36c; box-shadow: inset 0 0 0 1px #36c; }' +
 			'.plm button, .plm input, .plm select { border: 1px solid #888; padding: 4px; box-sizing: border-box; }' +
-			'.plm select {padding: 3px 4px; }' +
+			'.plm select { padding: 3px 4px; max-width: 10em; }' +
 			'#editor th { border: 1px solid #888; padding: 2px; }'
 		);
 

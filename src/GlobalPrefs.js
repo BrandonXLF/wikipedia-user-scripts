@@ -5,13 +5,15 @@
 // By [[en:w:User:BrandonXLF]]
 
 $(function() {
-	mw.util.addPortletLink(
-		'p-personal',
-		mw.config.get('wgArticlePath').replace('$1', 'Special:GlobalPreferences'),
-		window.globalprefs || '(Global)',
-		'globalpreferences',
-		'Go to Special:GlobalPreferences',
-		'',
-		$('#pt-preferences').next()
-	);
+	['', '-sticky-header'].forEach(suffix => {
+		mw.util.addPortletLink(
+			'p-personal' + suffix,
+			mw.config.get('wgArticlePath').replace('$1', 'Special:GlobalPreferences'),
+			window.globalprefs || '(Global)',
+			'globalpreferences',
+			'Go to Special:GlobalPreferences',
+			'',
+			$('#pt-preferences' + suffix).next()
+		);
+	});
 });

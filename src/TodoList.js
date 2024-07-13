@@ -152,17 +152,21 @@ $.when(mw.loader.using([
 
 	var api = new mw.Api(),
 		links = $(
-			['', '-sticky-header'].map(function(suffix) {
-				return mw.util.addPortletLink(
-					'p-personal' + suffix,
-					mw.util.getUrl('Special:BlankPage/todo'),
-					messages.todoPortlet,
-					'userjs-todo',
-					messages.todoHover,
-					'd',
-					'#pt-preferences' + suffix
-				);
-			})
+			['', '-sticky-header']
+				.map(function(suffix) {
+					return mw.util.addPortletLink(
+						'p-personal' + suffix,
+						mw.util.getUrl('Special:BlankPage/todo'),
+						messages.todoPortlet,
+						'userjs-todo',
+						messages.todoHover,
+						'd',
+						'#pt-preferences' + suffix
+					);
+				})
+				.filter(function(elOrNull) {
+					return elOrNull !== null;
+				})
 		),
 		changes = [mw.user.options.get('userjs-todo-script')],
 		undo = 0,

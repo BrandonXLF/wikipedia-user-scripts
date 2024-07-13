@@ -67,7 +67,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 
 			return {
 				text: main + (main.endsWith('\n') ? '' : '\n\n') + '{{DEFAULTSORT:' + edit.value.trim() + '}}\n' + cats,
-				summary: 'Set {{DEFAULTSORT}} to ' + edit.value + ' using [[en:w:User:BrandonXLF/HotDefaultSort|Hot Default Sort]]'
+				summary: 'Set {{DEFAULTSORT}} to ' + edit.value + ' using [[en:w:User:BrandonXLF/HotDefaultSort|HotDefaultSort]]'
 			};
 		}).done(function() {
 			dsort.innerText = edit.value;
@@ -83,7 +83,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 		return transformPage(function(rev) {
 			return {
 				text: rev.content.replace(/\n*{{DEFAULTSORT:.*?}}\n*/g, '\n\n'),
-				summary: 'Removed {{DEFAULTSORT}} using [[en:w:User:BrandonXLF/HotDefaultSort|Hot Default Sort]]'
+				summary: 'Removed {{DEFAULTSORT}} using [[en:w:User:BrandonXLF/HotDefaultSort|HotDefaultSort]]'
 			};
 		}).done(function() {
 			dsort.innerText = mw.config.get('wgTitle');

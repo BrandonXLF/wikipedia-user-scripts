@@ -149,14 +149,18 @@ $.when(mw.loader.using([
 	}
 
 	var api = new mw.Api(),
-		link = $(mw.util.addPortletLink(
-			'p-personal',
-			mw.util.getUrl('Special:BlankPage/todo'),
-			messages.todoPortlet,
-			'userjs-todo',
-			messages.todoHover,
-			'd',
-			'#pt-preferences')
+		links = $(
+			['', '-sticky-header'].map(function(suffix) {
+				return mw.util.addPortletLink(
+					'p-personal' + suffix,
+					mw.util.getUrl('Special:BlankPage/todo'),
+					messages.todoPortlet,
+					'userjs-todo',
+					messages.todoHover,
+					'd',
+					'#pt-preferences' + suffix
+				);
+			})
 		),
 		changes = [mw.user.options.get('userjs-todo-script')],
 		undo = 0,
@@ -299,7 +303,6 @@ $.when(mw.loader.using([
 									arr.push([$(this).attr('data-page'), $(this).attr('data-info'), $(this).attr('data-date')]);
 								});
 								save(arr);
-								link.find('.redo').remove();
 								listitem.find('.edit').css('display', 'inline-block');
 								editbox.remove();
 							})
@@ -561,13 +564,16 @@ $.when(mw.loader.using([
 		parent = mw.util.$content.empty();
 		list();
 
-		link.children().first().click(function(e) {
+		links.find('a').click(function(e) {
 			e.preventDefault();
 			mw.notify(messages.noPopup, {tag: 'rtbyilounmt7udfnod'});
 		});
 	} else {
-		link.children().first().click(function(e) {
+		links.find('a').click(function(e) {
 			e.preventDefault();
+
+			var link = $(e.target).closest(links);
+
 			if ($('#userjs-todo-popup')[0]) {
 				$('#userjs-todo-popup').remove();
 				return;

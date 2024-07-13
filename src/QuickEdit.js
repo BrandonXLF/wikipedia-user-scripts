@@ -184,7 +184,8 @@
 				save = new OO.ui.ButtonInputWidget({
 					label: 'Save',
 					title: 'Save your changes',
-					flags: ['primary', 'progressive']
+					flags: ['primary', 'progressive'],
+					accessKey: 's'
 				}),
 				preview = new OO.ui.ButtonInputWidget({
 					label: 'Preview',

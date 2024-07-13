@@ -7,6 +7,7 @@ Most of them should work fine on other MediaWiki wikis, but some scripts are wik
 <!-- Update using py update-readme.py -->
 ## List
 
+* AddCopied - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/AddCopied), [JS](/src/AddCopied.js)
 * AJAXUndo - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/AJAXUndo), [JS](/src/AJAXUndo.js)
 * Autoref - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/Autoref), [JS](/src/Autoref.js)
 * CitationStyleMarker - [Doc](https://en.wikipedia.org/wiki/User:BrandonXLF/CitationStyleMarker), [CSS](/src/CitationStyleMarker.css), [JS](/src/CitationStyleMarker.js)

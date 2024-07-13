@@ -132,7 +132,13 @@ mw.hook('wikipage.content').add(function(content) {
 	}
 
 	function openInterface(type, section, sectionElement) {
-		var sectionName = sectionElement.find('.mw-headline').attr('id').replace(/_/g, ' '),
+		var idElement = sectionElement.find('.mw-headline');
+
+		if (!idElement.length) {
+			idElement = sectionElement.find(':header');
+		}
+
+		var sectionName = idElement.attr('id').replace(/_/g, ' '),
 			user = getUser(sectionElement),
 			addHoldInput = $('<input>'),
 			notifyUserInput = $('<input>'),

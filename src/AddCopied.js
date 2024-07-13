@@ -1,4 +1,11 @@
 // <nowiki>
+
+/*** Add Copied ***/
+
+// Tool to add {{copied}} to the source and target page when copying content.
+// Documentation at [[en:w:User:BrandonXLF/AddCopied]]
+// By [[en:w:User:BrandonXLF]]
+
 $.when(mw.loader.using(['oojs-ui', 'mediawiki.widgets']), $.ready).then(function() {
 	const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
 			'August', 'September', 'October', 'November', 'December'],

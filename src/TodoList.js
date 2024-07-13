@@ -678,7 +678,8 @@ $.when(mw.loader.using([
 
 			ispopup = true;
 
-			parent = $('<div style="overflow:auto;min-height:3em;z-index:' + (mw.config.get('skin') === 'minerva' ? '3' : '4') + ';box-shadow:0 2px 2px 0 rgba(0,0,0,0.25);color:#222;min-width:20em;position:fixed;right:1em;background-color:white;border-radius:4px;border: 1px solid #a2a9b1;font-size:0.75rem;max-width:100vw;max-height:100vh;" id="userjs-todo-popup"></div>')
+			parent = $(
+				'<div style="overflow:auto;min-height:3em;z-index:' + (mw.config.get('skin') === 'minerva' ? '3' : '4') + ';box-shadow:0 2px 2px 0 rgba(0,0,0,0.25);color:var(--color-base, #202122);min-width:20em;position:fixed;right:1em;background-color:var(--background-color-base, white);border-radius:4px;border: 1px solid #a2a9b1;font-size:0.75rem;max-width:100vw;max-height:100vh;" id="userjs-todo-popup"></div>')
 				.appendTo(document.body)
 				.css('top', link.position().top + link.height() + 8 + 'px')
 				.append($('<div style="pointer-events:none;position:absolute;top:0;left:0;bottom:0;right:0;"></div>')

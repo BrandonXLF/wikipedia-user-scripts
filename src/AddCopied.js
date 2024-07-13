@@ -2,7 +2,7 @@
 
 /*** Add Copied ***/
 
-// Tool to add {{copied}} to the source and target page when copying content.
+// Add {{copied}} to the source and target talk page when copying content
 // Documentation at [[en:w:User:BrandonXLF/AddCopied]]
 // By [[en:w:User:BrandonXLF]]
 

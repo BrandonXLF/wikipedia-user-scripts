@@ -10,7 +10,7 @@ $.when(mw.loader.using('moment'), $.ready).then(function(require) {
 		GF_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Ic_thumb_up_48px.svg/32px-Ic_thumb_up_48px.svg.png';
 
 	function createImage(type, url) {
-		return '<img style="height:1em;vertical-align:text-top;" title="' + type + '" alt="' + type + '" src="' + url + '">';
+		return '<img class="morediffinto-icon" title="' + type + '" alt="' + type + '" src="' + url + '">';
 	}
 
 	function getInnerORES(scores) {
@@ -78,3 +78,9 @@ $.when(mw.loader.using('moment'), $.ready).then(function(require) {
 		});
 	});
 });
+
+mw.loader.addStyleTag(
+	'.morediffinto-icon { height: 1em; vertical-align: text-top; }' +
+	'@media screen { .skin-theme-clientpref-night .morediffinto-icon { filter: invert(1); } }' +
+	'@media screen and ( prefers-color-scheme: dark) { html.skin-theme-clientpref-os .morediffinto-icon { filter: invert(1); } }'
+);

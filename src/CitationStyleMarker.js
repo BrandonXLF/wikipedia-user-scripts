@@ -27,7 +27,7 @@ $(function() {
 			var enabled = document.body.classList.contains('nocsmarker');
 			e.preventDefault();
 			document.body.classList[enabled ? 'remove' : 'add']('nocsmarker');
-			portlet.innerText = enabled ? 'Hide CS maker' : 'Show CS marker';
+			portlet.innerText = enabled ? 'Hide CS marker' : 'Show CS marker';
 		});
 
 		if (window.CSMarkerMode == 'disabled' || window.CSMarkerMode == 'both' && typeCount < 2) {

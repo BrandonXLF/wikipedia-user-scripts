@@ -6,7 +6,10 @@
 // <syntaxhighlight lang=javascript>
 
 mw.hook('wikipage.content').add(function(content) {
-	if (mw.config.get('wgPageName') !== 'Wikipedia:Files_for_upload') return;
+	if (
+		mw.config.get('wgPageName') !== 'Wikipedia:Files_for_upload' &&
+		mw.config.get('wgPageName') !== 'User:BrandonXLF/F'
+	) return;
 
 	var currentInterface,
 		// Template data (TEMPLATE, DESCRIPTION, USER TALK MESSAGE TYPE, PARAMETER 1, PARAMETER 2)
@@ -149,30 +152,44 @@ mw.hook('wikipage.content').add(function(content) {
 			options.push(createOption(templates[type][i], i === 0));
 		}
 
+		var actionButtons;
+
 		function onSave() {
+			actionButtons.prop('disabled', true);
+
 			var selectedOption = $('#ffu-selected'),
 				shouldNotifyUser = notifyUserInput.prop('checked');
 
-			if (!selectedOption.length) return;
+			if (!selectedOption.length) {
+				actionButtons.prop('disabled', false);
+				return;
+			}
 
 			if (shouldNotifyUser && !userInput.val()) {
 				mw.notify('No username given to notify.', {
 					type: 'error'
 				});
 
+				actionButtons.prop('disabled', false);
 				return;
 			}
+
+			var data = selectedOption.data('ffu'),
+				api = new mw.Api();
+
+			mw.notify('Fetching page text...');
 
 			$.get(mw.config.get('wgScript'), {
 				title: mw.config.get('wgPageName'),
 				action: 'raw',
 				section: section
-			}).done(function(text) {
-				var data = selectedOption.data('ffu'),
-					// Substitute parameters
-					code = data[0]
-						.replace(/\$1/, $('#ffu-parameter-1 input').val() || '')
-						.replace(/\$2/, $('#ffu-parameter-2 input').val() || '');
+			}).then(function(text) {
+				mw.notify('Updating FFU request...');
+
+				// Substitute parameters
+				var code = data[0]
+					.replace(/\$1/, $('#ffu-parameter-1 input').val() || '')
+					.replace(/\$2/, $('#ffu-parameter-2 input').val() || '');
 
 				text += '\n:' + code + ' ~~' + '~~';
 
@@ -193,77 +210,76 @@ mw.hook('wikipage.content').add(function(content) {
 					text += '\n{{su' + 'bst:ffu b}}';
 				}
 
-				var requestsDone = 0,
-					totalRequests = 1;
-
-				// Reload the page if all request are done
-				function maybeUpdatePage() {
-					requestsDone++;
-
-					if (requestsDone === totalRequests) {
-						mw.notify('Reloading page...');
-
-						$.get(mw.config.get('wgScriptPath') + '/api.php', {
-							action: 'parse',
-							page: mw.config.get('wgPageName'),
-							prop: 'text|categorieshtml',
-							format: 'json'
-						}).done(function(res) {
-							var contentText = $('#mw-content-text'),
-								catLinks = $('#catlinks');
-
-							contentText.find('.mw-parser-output').replaceWith(res.parse.text['*']);
-							mw.hook('wikipage.content').fire(contentText);
-
-							catLinks.replaceWith(res.parse.categorieshtml['*']);
-							mw.hook('wikipage.categories').fire(catLinks);
-
-							mw.notify('Page reloaded.');
-						});
-					}
-				}
-
-				mw.notify('Editing FFU request...');
-
 				var editSummary = {
 					'accept': 'Accepted',
 					'decline': 'Declined',
 					'comment': 'Commented on'
 				}[type] + ' request using [[en:w:User:BrandonXLF/FFUHelper|FFU Helper]]';
 
-				$.post(mw.config.get('wgScriptPath') + '/api.php', {
+				return api.postWithEditToken({
 					action: 'edit',
 					section: section,
 					text: text,
 					title: mw.config.get('wgPageName'),
-					token: mw.user.tokens.get('csrfToken'),
 					summary: editSummary
-				}).done(function() {
+				}).then(function() {
 					mw.notify('Finished editing FFU request.');
-					maybeUpdatePage();
 				});
+			}).then(function() {
+				if (!shouldNotifyUser) return;
 
-				if (shouldNotifyUser) {
-					totalRequests++;
+				mw.notify('Posting on user talk page...');
 
-					mw.notify('Posting on user talk page...');
+				return api.postWithEditToken({
+					action: 'edit',
+					appendtext: '\n\n{{su' + 'bst:ffu talk|' + data[2] + '|section=' + sectionName + '}} ~~' + '~~',
+					title: 'User talk:' + userInput.val(),
+					summary: 'Notifying about [[WP:FFU|FFU]] request using [[en:w:User:BrandonXLF/FFUHelper|FFU Helper]]'
+				}).then(function() {
+					mw.notify('Posted notice on user talk page.');
+				});
+			}).then(function() {
+				mw.notify('Reloading page...');
 
-					$.post(mw.config.get('wgScriptPath') + '/api.php', {
-						action: 'edit',
-						appendtext: '\n\n{{su' + 'bst:ffu talk|' + data[2] + '|section=' + sectionName + '}} ~~' + '~~',
-						title: 'User talk:' + userInput.val(),
-						token: mw.user.tokens.get('csrfToken'),
-						summary: 'Notifying about [[WP:FFU|FFU]] request using [[en:w:User:BrandonXLF/FFUHelper|FFU Helper]]'
-					}).done(function() {
-						mw.notify('Posted notice on user talk page.');
-						maybeUpdatePage();
-					});
-				}
+				$.get(mw.config.get('wgScriptPath') + '/api.php', {
+					action: 'parse',
+					page: mw.config.get('wgPageName'),
+					prop: 'text|categorieshtml',
+					format: 'json'
+				}).done(function(res) {
+					var contentText = $('#mw-content-text'),
+						catLinks = $('#catlinks');
+
+					contentText.find('.mw-parser-output').replaceWith(res.parse.text['*']);
+					mw.hook('wikipage.content').fire(contentText);
+
+					catLinks.replaceWith(res.parse.categorieshtml['*']);
+					mw.hook('wikipage.categories').fire(catLinks);
+
+					mw.notify('Page reloaded.');
+				});
+			}).fail(function(_, data) {
+				mw.notify(new mw.Api().getErrorMessage(data), {type: 'error'});
+				actionButtons.prop('disabled', false);
 			});
 		}
 
 		if (currentInterface)
 			currentInterface.remove();
+
+		actionButtons = $()
+			.add($('<button>')
+				.css('margin', '4px')
+				.text('Save')
+				.click(onSave)
+			)
+			.add($('<button>')
+				.css('margin', '4px')
+				.text('Cancel')
+				.click(function() {
+					currentInterface.remove();
+				})
+			);
 
 		currentInterface = $('<p>')
 			.css({
@@ -338,18 +354,7 @@ mw.hook('wikipage.content').add(function(content) {
 			)
 			.append($('<div>')
 				.css('margin', '4px 0 0 -4px')
-				.append($('<button>')
-					.css('margin', '4px')
-					.text('Save')
-					.click(onSave)
-				)
-				.append($('<button>')
-					.css('margin', '4px')
-					.text('Cancel')
-					.click(function() {
-						currentInterface.remove();
-					})
-				)
+				.append(actionButtons)
 			)
 			.append(
 				'<div style="margin-top:4px;">[' +

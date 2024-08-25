@@ -6,10 +6,7 @@
 // <syntaxhighlight lang=javascript>
 
 mw.hook('wikipage.content').add(function(content) {
-	if (
-		mw.config.get('wgPageName') !== 'Wikipedia:Files_for_upload' &&
-		mw.config.get('wgPageName') !== 'User:BrandonXLF/F'
-	) return;
+	if (mw.config.get('wgPageName') !== 'Wikipedia:Files_for_upload') return;
 
 	var currentInterface,
 		// Template data (TEMPLATE, DESCRIPTION, USER TALK MESSAGE TYPE, PARAMETER 1, PARAMETER 2)

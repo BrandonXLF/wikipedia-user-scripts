@@ -356,7 +356,7 @@
 					buttons.$element.css({
 						border: '1px solid #a2a9b1',
 						borderWidth: '0 1px',
-						padding: '0px 8px 0'
+						padding: '0 8px 8px 8px'
 					}),
 					title !== mw.config.get('wgPageName') ? $('<div>').css({
 						border: '1px solid #a2a9b1',

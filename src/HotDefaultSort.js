@@ -120,6 +120,7 @@ mw.hook('wikipage.categories').add(function($cats) {
 		dflt.style.marginLeft = '0.25em';
 		dflt.style.display = unset ? 'inline' : 'none';
 		dflt.style.fontStyle = 'italic';
+		dflt.className = 'hds-no-key';
 
 		status.style.marginLeft = '0.25em';
 		status.style.display = 'none';

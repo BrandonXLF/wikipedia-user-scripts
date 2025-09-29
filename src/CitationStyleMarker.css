@@ -16,14 +16,8 @@ body:not(.nocsmarker) cite.cs2::after {
 	font-weight: bold;
 }
 
-body:not(.nocsmarker) .csvan::after {
-	content: ' CSVAN';
-	color: #b06;
-	font-weight: bold;
-}
-
-body:not(.nocsmarker) .cslsa::after {
-	content: ' CSLSA';
+body:not(.nocsmarker) .csblue::after {
+	content: ' CSBLUE';
 	color: #848;
 	font-weight: bold;
 }

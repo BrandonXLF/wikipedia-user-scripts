@@ -14,7 +14,7 @@ $(function() {
 	mw.loader.load('//en.wikipedia.org/w/index.php?title=User:BrandonXLF/CitationStyleMarker.css&action=raw&ctype=text/css', 'text/css');
 	if (window.CSMarkerMode != 'always') {
 		var portletItem = mw.util.addPortletLink('p-tb', '#', 'Hide CS marker'),
-			classes = ['cs1', 'cs2', 'csvan', 'calsa'],
+			classes = ['cs1', 'cs2', 'csblue'],
 			typeCount = classes.reduce(function(acc, cur) {
 				return acc + !!document.getElementsByClassName(cur).length;
 			}, 0);

@@ -6,8 +6,8 @@
 
 $.when(mw.loader.using('moment'), $.ready).then(function(require) {
 	var moment = require('moment'),
-		DA_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Rating-Christgau-dud.svg/64px-Rating-Christgau-dud.svg.png',
-		GF_IMG = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Ic_thumb_up_48px.svg/32px-Ic_thumb_up_48px.svg.png';
+		DA_IMG = 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Rating-Christgau-dud.svg',
+		GF_IMG = 'https://upload.wikimedia.org/wikipedia/commons/2/21/Ic_thumb_up_48px.svg';
 
 	function createImage(type, url) {
 		return '<img class="morediffinto-icon" title="' + type + '" alt="' + type + '" src="' + url + '">';

@@ -371,6 +371,10 @@
 				)
 			);
 
+			if (mobile) {
+				editor.addClass('mf-collapsible-content');
+			}
+
 			inserter(editor);
 		}, function() {
 			el.removeClass('quickedit-loading');
@@ -475,9 +479,9 @@
 		element.find('#quickedit-editor, .quickedit-section').remove();
 		element.find('.mw-editsection').each(function() {
 			$('[href*="section="]', this).last().after(
-				mobile ? '' : '<span class="quickedit-section"> | </span>',
+				mobile ? '' : '<span class="quickedit-section mw-editsection-divider"> | </span>',
 				$('<a>')
-					.html(mobile ? '&nbsp;Q' : 'quick edit')
+					.html(mobile ? 'Q' : 'quick edit')
 					.addClass('quickedit-section quickedit-editlink')
 					.attr('href', '#')
 			).addClass('quickedit-target');
@@ -496,6 +500,7 @@
 		'.skin-minerva .mw-editsection { white-space: nowrap; }' +
 		'.skin-minerva .content .collapsible-heading .quickedit-section { visibility: hidden; }' +
 		'.skin-minerva .content .collapsible-heading.open-block .quickedit-section { visibility: visible; }' +
+		'.skin-minerva .content .collapsible-heading .mw-editsection-divider { margin-right: 1rem; }' +
 		'.quickedit-hide { display: none !important; }' +
 		'.quickedit-loading, .quickedit-heading { color: #777; }'
 	);

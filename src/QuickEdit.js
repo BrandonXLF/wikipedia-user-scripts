@@ -497,10 +497,7 @@
 	});
 
 	mw.loader.addStyleTag(
-		'.skin-minerva .mw-editsection { white-space: nowrap; }' +
-		'.skin-minerva .content .collapsible-heading .quickedit-section { visibility: hidden; }' +
-		'.skin-minerva .content .collapsible-heading.open-block .quickedit-section { visibility: visible; }' +
-		'.skin-minerva .content .collapsible-heading .quickedit-editlink { margin-right: 1rem; }' +
+		'.skin-minerva .quickedit-editlink { margin-right: 1rem; }' +
 		'.quickedit-hide { display: none !important; }' +
 		'.quickedit-loading, .quickedit-heading { color: #777; }'
 	);

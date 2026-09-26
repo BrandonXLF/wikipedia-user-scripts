@@ -17,7 +17,7 @@ mw.hook('wikipage.content').add(function(content) {
 		return decodeURIComponent(el.href).match(/^.*\/(.*?)$/)[1].replace(/_/g, ' ').match(/(index\.php\?title=|)([^&]*).*?/)[2];
 	}
 
-	var elements = content.find('.userlink').filter(function() {
+	var elements = content.find('.mw-userlink').filter(function() {
 			return getUser(this).startsWith(USER_NS);
 		}),
 

@@ -153,7 +153,7 @@ mw.loader.using(['oojs-ui', 'jquery.textSelection']).then(function() {
 
 		var url = $('#file > a').attr('href');
 
-		if (!/.+svg$/.test(url)) return;
+		if (!/.+svg(?:\?.+|)$/.test(url)) return;
 
 		var link;
 
